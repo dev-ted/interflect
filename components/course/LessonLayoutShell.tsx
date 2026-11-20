@@ -219,7 +219,7 @@ function LessonLayoutInner({ children }: { children: ReactNode }) {
 
             <Link
               href={courseSlug ? `/courses/${courseSlug}` : "/courses"}
-              className="inline-flex min-w-0 shrink items-center gap-1.5 font-bold text-[#111116] transition-colors hover:text-[#D93817] dark:text-[#FAFAF5] dark:hover:text-[#FF6B4A]"
+              className="inline-flex min-w-0 shrink items-center gap-1.5 rounded-lg font-bold text-[#111116] transition-colors hover:text-[#D93817] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2563EB] dark:text-[#FAFAF5] dark:hover:text-[#FF6B4A]"
             >
               <ArrowLeft className="h-4 w-4 shrink-0" aria-hidden="true" />
               <span className="truncate">

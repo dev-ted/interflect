@@ -128,7 +128,7 @@ export function LearnlyQuizCard({ quiz }: LearnlyQuizCardProps) {
                         "border-[#D93817] bg-[#FF5A36]/20 text-[#111116] dark:border-[#FF6B4A] dark:bg-[#FF5A36]/20 dark:text-[#FAFAF5]";
                     } else {
                       cardClasses =
-                        "border-[#18181B]/10 bg-[#FFFBF2]/50 text-[#52525B] opacity-65 dark:border-[#2A2A3B] dark:bg-[#12121A]/40 dark:text-[#8C8CA1]";
+                        "border-[#18181B]/15 bg-[#F6EFE0]/60 text-[#52525B] dark:border-[#2A2A3B] dark:bg-[#12121A]/70 dark:text-[#B4B4C6]";
                     }
                   } else if (isSelected) {
                     cardClasses =

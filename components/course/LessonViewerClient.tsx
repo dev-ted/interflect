@@ -386,7 +386,7 @@ export function LessonViewerClient() {
           <Link
             href={`/courses/${data.course.slug}/lessons/${data.prevLesson.slug}`}
             scroll={false}
-            className="tactile-btn-sm inline-flex min-h-11 items-center gap-2 rounded-xl bg-white px-4 py-2.5 text-sm font-bold text-[#111116] hover:bg-[#F6EFE0] dark:bg-[#16161F] dark:text-[#FAFAF5] dark:hover:bg-[#1F1F2D]"
+            className="tactile-btn-sm inline-flex min-h-11 min-w-0 items-center gap-2 rounded-xl bg-white px-4 py-2.5 text-sm font-bold text-[#111116] hover:bg-[#F6EFE0] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2563EB] dark:bg-[#16161F] dark:text-[#FAFAF5] dark:hover:bg-[#1F1F2D]"
           >
             <ArrowLeft className="h-4 w-4 shrink-0" aria-hidden="true" />
             <span className="max-w-[180px] truncate">
@@ -401,7 +401,7 @@ export function LessonViewerClient() {
           <Link
             href={`/courses/${data.course.slug}/lessons/${data.nextLesson.slug}`}
             scroll={false}
-            className="tactile-btn inline-flex min-h-11 items-center gap-2 rounded-xl bg-[#FF5A36] px-4 py-2.5 text-sm font-extrabold text-[#111116] hover:bg-[#FF6E4E]"
+            className="tactile-btn inline-flex min-h-11 min-w-0 items-center gap-2 rounded-xl bg-[#FF5A36] px-4 py-2.5 text-sm font-extrabold text-[#111116] hover:bg-[#FF6E4E] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2563EB]"
           >
             <span className="max-w-[180px] truncate">
               Next: {data.nextLesson.title}

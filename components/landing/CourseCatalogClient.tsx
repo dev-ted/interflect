@@ -83,19 +83,19 @@ export function CourseCatalogClient() {
           <SegmentedControlIndicator className="absolute top-(--segmented-control-indicator-top) left-(--segmented-control-indicator-left) -z-10 h-(--segmented-control-indicator-height) w-(--segmented-control-indicator-width) rounded-lg border-2 border-[#18181B] bg-[#FFB800] transition-[top,left,width,height] duration-200 data-[activation-direction=none]:transition-none dark:border-[#18181B]" />
           <SegmentedControlItem
             value="all"
-            className="min-h-9 cursor-pointer rounded-lg px-4 py-1.5 text-sm font-bold text-[#52525B] data-checked:text-[#111116] dark:text-[#B4B4C6] dark:data-checked:text-[#111116]"
+            className="min-h-10 cursor-pointer rounded-lg px-4 py-1.5 text-sm font-bold text-[#52525B] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2563EB] data-checked:text-[#111116] sm:min-h-9 dark:text-[#B4B4C6] dark:data-checked:text-[#111116]"
           >
             All
           </SegmentedControlItem>
           <SegmentedControlItem
             value="free"
-            className="min-h-9 cursor-pointer rounded-lg px-4 py-1.5 text-sm font-bold text-[#52525B] data-checked:text-[#111116] dark:text-[#B4B4C6] dark:data-checked:text-[#111116]"
+            className="min-h-10 cursor-pointer rounded-lg px-4 py-1.5 text-sm font-bold text-[#52525B] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2563EB] data-checked:text-[#111116] sm:min-h-9 dark:text-[#B4B4C6] dark:data-checked:text-[#111116]"
           >
             Free
           </SegmentedControlItem>
           <SegmentedControlItem
             value="pro"
-            className="min-h-9 cursor-pointer rounded-lg px-4 py-1.5 text-sm font-bold text-[#52525B] data-checked:text-[#111116] dark:text-[#B4B4C6] dark:data-checked:text-[#111116]"
+            className="min-h-10 cursor-pointer rounded-lg px-4 py-1.5 text-sm font-bold text-[#52525B] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2563EB] data-checked:text-[#111116] sm:min-h-9 dark:text-[#B4B4C6] dark:data-checked:text-[#111116]"
           >
             Pro
           </SegmentedControlItem>
@@ -106,8 +106,9 @@ export function CourseCatalogClient() {
         <div className="mt-5 flex flex-wrap gap-2">
           <button
             type="button"
+            aria-pressed={category === "all"}
             onClick={() => setCategory("all")}
-            className={`min-h-9 cursor-pointer rounded-full border-2 px-3.5 py-1 text-xs font-extrabold transition-all ${
+            className={`min-h-11 cursor-pointer rounded-full border-2 px-3.5 py-1 text-xs font-extrabold transition-all focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2563EB] sm:min-h-9 ${
               category === "all"
                 ? "border-[#18181B] bg-[#111116] text-[#FFFBF2] shadow-[2px_2px_0_0_#FF5A36] dark:border-[#FAFAF5] dark:bg-[#FAFAF5] dark:text-[#111116]"
                 : "border-[#18181B]/30 bg-white text-[#52525B] hover:border-[#18181B] hover:bg-[#F6EFE0] hover:text-[#111116] dark:border-[#3A3A52] dark:bg-[#16161F] dark:text-[#B4B4C6] dark:hover:text-[#FAFAF5]"
@@ -119,8 +120,9 @@ export function CourseCatalogClient() {
             <button
               key={cat}
               type="button"
+              aria-pressed={category === cat}
               onClick={() => setCategory(cat)}
-              className={`min-h-9 cursor-pointer rounded-full border-2 px-3.5 py-1 text-xs font-extrabold transition-all ${
+              className={`min-h-11 cursor-pointer rounded-full border-2 px-3.5 py-1 text-xs font-extrabold transition-all focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2563EB] sm:min-h-9 ${
                 category === cat
                   ? "border-[#18181B] bg-[#111116] text-[#FFFBF2] shadow-[2px_2px_0_0_#FF5A36] dark:border-[#FAFAF5] dark:bg-[#FAFAF5] dark:text-[#111116]"
                   : "border-[#18181B]/30 bg-white text-[#52525B] hover:border-[#18181B] hover:bg-[#F6EFE0] hover:text-[#111116] dark:border-[#3A3A52] dark:bg-[#16161F] dark:text-[#B4B4C6] dark:hover:text-[#FAFAF5]"

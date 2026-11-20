@@ -20,7 +20,7 @@ export default function CourseDetailPage({
       <Suspense
         fallback={
           <div className="mx-auto max-w-5xl px-4 py-12">
-            <div className="h-64 animate-pulse rounded-3xl bg-zinc-100 dark:bg-zinc-900" />
+            <div className="h-64 animate-pulse rounded-3xl border-2 border-[#18181B]/20 bg-[#F6EFE0] dark:border-[#323244] dark:bg-[#16161F]" />
           </div>
         }
       >

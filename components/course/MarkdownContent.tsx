@@ -40,9 +40,9 @@ function CodeBlock({
     <div className="my-5 overflow-hidden rounded-2xl border-2 border-[#18181B] bg-[#12121A] shadow-[4px_4px_0_0_#111116] dark:border-[#3A3A52] dark:shadow-[4px_4px_0_0_#000000]">
       <div className="flex items-center justify-between border-b-2 border-[#2A2A3B] bg-[#1B1B27] px-4 py-2 text-xs text-[#B4B4C6]">
         <div className="flex items-center gap-2">
-          <span className="h-2.5 w-2.5 rounded-full bg-[#FF5A36]" />
-          <span className="h-2.5 w-2.5 rounded-full bg-[#FFB800]" />
-          <span className="h-2.5 w-2.5 rounded-full bg-[#00B87C]" />
+          <span aria-hidden="true" className="h-2.5 w-2.5 rounded-full bg-[#FF5A36]" />
+          <span aria-hidden="true" className="h-2.5 w-2.5 rounded-full bg-[#FFB800]" />
+          <span aria-hidden="true" className="h-2.5 w-2.5 rounded-full bg-[#00B87C]" />
           <span className="ml-1.5 rounded-md bg-[#12121A] px-2 py-0.5 font-mono text-[11px] font-bold text-[#FFB800] uppercase">
             {language || "code"}
           </span>
@@ -51,7 +51,7 @@ function CodeBlock({
           type="button"
           onClick={handleCopy}
           aria-label="Copy code block"
-          className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-[#3A3A52] bg-[#12121A] px-2.5 py-1 text-xs font-bold text-[#FAFAF5] transition-colors hover:border-[#FFB800] hover:text-[#FFB800]"
+          className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-[#3A3A52] bg-[#12121A] px-2.5 py-1 text-xs font-bold text-[#FAFAF5] transition-colors hover:border-[#FFB800] hover:text-[#FFB800] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFB800]"
         >
           {copied ? (
             <>
