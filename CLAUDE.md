@@ -47,3 +47,17 @@ Whenever creating, editing, or debugging Eve agents:
 - Inside any `defineDynamic` function, wrap every network request, database query, API call, and sandbox read in `ctx.memo(key, fn)` because `defineDynamic` runs before every model call.
 
 <!-- eve-end -->
+
+<!-- multi-agent-workflow-start -->
+
+## Multi-Agent Orchestration & Git Workflow
+
+- **Regular commits:** Commit clean, verified milestones regularly on `main` (never commit `.env.local` or secrets).
+- **Isolated worktrees:** Spawn delegated coding agents in isolated git worktrees (`isolation: "worktree"`) so parallel agents never step on each other's files. The coordinator reviews, merges, and verifies on `main`.
+- **Isolated Convex cloud dev deployment per worktree (Convex Agent Mode):** Every T3 Code worktree provisions its own isolated Convex cloud dev deployment under `sonny-sangha-a0b7d:lms-platform` with a scoped deploy key so parallel agents never collide with `main`'s dev deployment (`dev:artful-rhinoceros-303`):
+  ```bash
+  pnpm install --frozen-lockfile && npx convex deployment create --type=dev "sonny-sangha-a0b7d:lms-platform:dev/$USER-t3code/$(basename "$PWD" | sed 's/^t3code-//')" --expiration "in 5 days" --select && npx convex deployment token create agent-token --save-env && npx convex env set CLERK_JWT_ISSUER_DOMAIN https://splendid-vervet-7893.clerk.accounts.dev && npx convex dev --once
+  ```
+  Never commit `.env.local`. Only the coordinator pushes merged `convex/` changes to `main`'s shared cloud dev deployment (`dev:artful-rhinoceros-303`).
+
+<!-- multi-agent-workflow-end -->
