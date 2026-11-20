@@ -194,25 +194,25 @@ export function LearnlyWidget() {
               setOpen(false);
             }
           }}
-          className="mb-3 flex h-[min(620px,calc(100vh-6rem))] w-[min(420px,calc(100vw-2rem))] flex-col overflow-hidden rounded-2xl border border-zinc-200/90 bg-white shadow-2xl shadow-zinc-950/15 ring-1 ring-zinc-950/5 dark:border-zinc-800 dark:bg-zinc-950 dark:shadow-black/50 dark:ring-white/10"
+          className="mb-3 flex h-[min(620px,calc(100vh-6rem))] w-[min(420px,calc(100vw-2rem))] flex-col overflow-hidden rounded-3xl border-2 border-[#18181B] bg-[#FFFBF2] shadow-[6px_6px_0_0_#111116] dark:border-[#3A3A52] dark:bg-[#0D0D12] dark:shadow-[6px_6px_0_0_#000000]"
         >
-          <header className="flex items-center justify-between gap-3 border-b border-zinc-200/80 bg-zinc-50/90 px-4 py-3 dark:border-zinc-800/80 dark:bg-zinc-900/90">
+          <header className="flex items-center justify-between gap-3 border-b-2 border-[#18181B] bg-[#14141D] px-4 py-3 text-[#FAFAF5] dark:border-[#323244]">
             <div className="flex min-w-0 items-center gap-2.5">
-              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-indigo-600 text-white shadow-xs">
+              <span className="flex h-9 w-9 -rotate-3 shrink-0 items-center justify-center rounded-xl border-2 border-[#111116] bg-[#FFB800] text-[#111116] shadow-[2px_2px_0_0_#000000]">
                 <Sparkles className="h-4 w-4" aria-hidden="true" />
               </span>
               <div className="min-w-0">
                 <div className="flex items-center gap-1.5">
-                  <h2 className="truncate text-sm font-semibold text-zinc-950 dark:text-white">
+                  <h2 className="font-display truncate text-sm font-extrabold text-[#FAFAF5]">
                     Learnly AI Tutor
                   </h2>
-                  <span className="inline-flex items-center gap-0.5 rounded-full bg-indigo-100 px-1.5 py-0.5 text-[10px] font-semibold text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300">
-                    <Crown className="h-2.5 w-2.5" aria-hidden="true" />
+                  <span className="inline-flex items-center gap-0.5 rounded-full border border-[#111116] bg-[#2563EB] px-2 py-0.5 text-[10px] font-extrabold text-white">
+                    <Crown className="h-2.5 w-2.5 text-[#FFB800]" aria-hidden="true" />
                     PRO
                   </span>
                 </div>
-                <p className="truncate text-[11px] text-zinc-600 dark:text-zinc-400">
-                  Context-aware tutor & quiz engine
+                <p className="truncate text-[11px] text-[#B4B4C6]">
+                  Context-aware tutor &amp; quiz engine
                 </p>
               </div>
             </div>
@@ -222,7 +222,7 @@ export function LearnlyWidget() {
                 <Button
                   aria-label="Clear Learnly conversation"
                   onClick={handleReset}
-                  className="inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg text-zinc-600 transition-colors hover:bg-zinc-200/70 hover:text-zinc-950 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-white"
+                  className="inline-flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl text-[#B4B4C6] transition-colors hover:bg-[#1F1F2D] hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFB800]"
                 >
                   <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
                 </Button>
@@ -230,7 +230,7 @@ export function LearnlyWidget() {
               <Button
                 aria-label="Close Learnly AI Tutor"
                 onClick={() => setOpen(false)}
-                className="inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg text-zinc-600 transition-colors hover:bg-zinc-200/70 hover:text-zinc-950 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-white"
+                className="inline-flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl text-[#B4B4C6] transition-colors hover:bg-[#1F1F2D] hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFB800]"
               >
                 <X className="h-4 w-4" aria-hidden="true" />
               </Button>
@@ -240,25 +240,25 @@ export function LearnlyWidget() {
           {!hasProAccess ? (
             <div className="flex flex-1 flex-col justify-between p-5">
               <div className="space-y-4">
-                <div className="inline-flex items-center gap-1.5 rounded-full border border-indigo-200 bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700 dark:border-indigo-800/80 dark:bg-indigo-950/70 dark:text-indigo-300">
+                <div className="inline-flex items-center gap-1.5 rounded-full border-2 border-[#18181B] bg-[#FFB800] px-3 py-0.5 text-xs font-extrabold text-[#111116] shadow-[2px_2px_0_0_#111116]">
                   <Lock className="h-3 w-3" aria-hidden="true" />
                   Pro Exclusive Feature
                 </div>
 
                 <div>
-                  <h3 className="text-lg font-semibold tracking-tight text-zinc-950 dark:text-white">
+                  <h3 className="font-display text-lg font-extrabold tracking-tight text-[#111116] dark:text-[#FAFAF5]">
                     Study faster with your personal AI Tutor
                   </h3>
-                  <p className="mt-1.5 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
+                  <p className="mt-1.5 text-sm leading-relaxed text-[#52525B] dark:text-[#B4B4C6]">
                     Learnly reads the exact lesson you are studying, tracks your
                     Convex progress, and generates interactive quizzes on demand.
                   </p>
                 </div>
 
-                <ul className="space-y-2.5 rounded-xl border border-zinc-200/80 bg-zinc-50/70 p-3.5 text-xs text-zinc-700 dark:border-zinc-800 dark:bg-zinc-900/70 dark:text-zinc-300">
+                <ul className="space-y-2.5 rounded-2xl border-2 border-[#18181B] bg-white p-4 text-xs text-[#111116] shadow-[3px_3px_0_0_#111116] dark:border-[#3A3A52] dark:bg-[#16161F] dark:text-[#E4E4EE] dark:shadow-[3px_3px_0_0_#000000]">
                   <li className="flex items-start gap-2">
                     <CheckCircle2
-                      className="mt-0.5 h-4 w-4 shrink-0 text-indigo-600 dark:text-indigo-400"
+                      className="mt-0.5 h-4 w-4 shrink-0 text-[#00B87C]"
                       aria-hidden="true"
                     />
                     <span>
@@ -268,7 +268,7 @@ export function LearnlyWidget() {
                   </li>
                   <li className="flex items-start gap-2">
                     <CheckCircle2
-                      className="mt-0.5 h-4 w-4 shrink-0 text-indigo-600 dark:text-indigo-400"
+                      className="mt-0.5 h-4 w-4 shrink-0 text-[#2563EB] dark:text-[#60A5FA]"
                       aria-hidden="true"
                     />
                     <span>
@@ -278,7 +278,7 @@ export function LearnlyWidget() {
                   </li>
                   <li className="flex items-start gap-2">
                     <CheckCircle2
-                      className="mt-0.5 h-4 w-4 shrink-0 text-indigo-600 dark:text-indigo-400"
+                      className="mt-0.5 h-4 w-4 shrink-0 text-[#D93817] dark:text-[#FF6B4A]"
                       aria-hidden="true"
                     />
                     <span>
@@ -293,7 +293,7 @@ export function LearnlyWidget() {
                 <Link
                   href="/pricing"
                   onClick={() => setOpen(false)}
-                  className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-xs transition-colors hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                  className="tactile-btn inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-[#FF5A36] px-4 py-2.5 text-sm font-extrabold text-[#111116] hover:bg-[#FF6E4E] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2563EB]"
                 >
                   <Crown className="h-4 w-4" aria-hidden="true" />
                   Upgrade to Pro
@@ -303,7 +303,7 @@ export function LearnlyWidget() {
                   <SignInButton mode="modal">
                     <button
                       type="button"
-                      className="inline-flex w-full cursor-pointer items-center justify-center rounded-xl border border-zinc-300 bg-white px-4 py-2.5 text-sm font-semibold text-zinc-900 transition-colors hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100 dark:hover:bg-zinc-800"
+                      className="tactile-btn-sm inline-flex min-h-11 w-full cursor-pointer items-center justify-center rounded-xl bg-white px-4 py-2.5 text-sm font-bold text-[#111116] hover:bg-[#F6EFE0] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2563EB] dark:bg-[#16161F] dark:text-[#FAFAF5] dark:hover:bg-[#1F1F2D]"
                     >
                       Already Pro? Sign In
                     </button>
@@ -313,12 +313,12 @@ export function LearnlyWidget() {
             </div>
           ) : (
             <>
-              <div className="flex items-center gap-2 border-b border-zinc-200/70 bg-white px-4 py-2 dark:border-zinc-800/80 dark:bg-zinc-950">
-                <span className="inline-flex max-w-full items-center gap-1.5 rounded-full border border-indigo-200/80 bg-indigo-50/70 px-2.5 py-0.5 text-[11px] font-medium text-indigo-800 dark:border-indigo-900/70 dark:bg-indigo-950/50 dark:text-indigo-200">
+              <div className="flex items-center gap-2 border-b-2 border-[#18181B]/15 bg-[#F6EFE0] px-4 py-2 dark:border-[#2A2A3B] dark:bg-[#16161F]">
+                <span className="inline-flex max-w-full items-center gap-1.5 rounded-full border border-[#18181B]/25 bg-white px-2.5 py-0.5 text-[11px] font-bold text-[#111116] dark:border-[#3A3A52] dark:bg-[#1F1F2D] dark:text-[#FAFAF5]">
                   {context.pageType === "lesson" ? (
-                    <BookOpen className="h-3 w-3 shrink-0" aria-hidden="true" />
+                    <BookOpen className="h-3 w-3 shrink-0 text-[#D93817] dark:text-[#FF6B4A]" aria-hidden="true" />
                   ) : (
-                    <Compass className="h-3 w-3 shrink-0" aria-hidden="true" />
+                    <Compass className="h-3 w-3 shrink-0 text-[#2563EB] dark:text-[#60A5FA]" aria-hidden="true" />
                   )}
                   <span className="truncate">Viewing: {viewingLabel}</span>
                 </span>
@@ -326,16 +326,16 @@ export function LearnlyWidget() {
 
               <div
                 aria-live="polite"
-                className="flex-1 space-y-4 overflow-y-auto px-4 py-4"
+                className="flex-1 space-y-4 overflow-y-auto overscroll-contain px-4 py-4"
               >
                 {messages.length === 0 ? (
                   <div className="space-y-4 pt-2">
-                    <div className="rounded-2xl border border-zinc-200/80 bg-zinc-50/80 p-4 dark:border-zinc-800 dark:bg-zinc-900/70">
-                      <p className="text-sm font-semibold text-zinc-950 dark:text-white">
+                    <div className="rounded-2xl border-2 border-[#18181B] bg-white p-4 shadow-[3px_3px_0_0_#111116] dark:border-[#3A3A52] dark:bg-[#16161F] dark:shadow-[3px_3px_0_0_#000000]">
+                      <p className="font-display text-sm font-extrabold text-[#111116] dark:text-[#FAFAF5]">
                         Hi{user?.firstName ? `, ${user.firstName}` : ""}! How can
                         I help you learn today?
                       </p>
-                      <p className="mt-1 text-xs leading-relaxed text-zinc-600 dark:text-zinc-400">
+                      <p className="mt-1 text-xs leading-relaxed text-[#52525B] dark:text-[#B4B4C6]">
                         {context.pageType === "lesson" && context.lessonTitle
                           ? `I have full context on "${context.lessonTitle}" and your learning progress.`
                           : "I can inspect your live courses, check your progress, and build interactive quizzes."}
@@ -343,7 +343,7 @@ export function LearnlyWidget() {
                     </div>
 
                     <div className="space-y-2">
-                      <p className="text-[11px] font-semibold tracking-wide text-zinc-500 uppercase dark:text-zinc-400">
+                      <p className="text-[11px] font-extrabold tracking-wide text-[#52525B] uppercase dark:text-[#B4B4C6]">
                         Suggested for this page
                       </p>
                       <div className="flex flex-wrap gap-2">
@@ -352,7 +352,7 @@ export function LearnlyWidget() {
                             key={chip}
                             disabled={loading}
                             onClick={() => void sendMessage(chip)}
-                            className="cursor-pointer rounded-xl border border-zinc-200 bg-white px-3 py-1.5 text-left text-xs font-medium text-zinc-800 transition-colors hover:border-indigo-300 hover:bg-indigo-50/60 hover:text-indigo-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-200 dark:hover:border-indigo-700 dark:hover:bg-indigo-950/50 dark:hover:text-indigo-300"
+                            className="tactile-btn-sm cursor-pointer rounded-xl bg-white px-3 py-1.5 text-left text-xs font-bold text-[#111116] hover:bg-[#FFB800] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2563EB] dark:bg-[#16161F] dark:text-[#FAFAF5] dark:hover:bg-[#FFB800] dark:hover:text-[#111116]"
                           >
                             {chip}
                           </Button>
@@ -377,10 +377,10 @@ export function LearnlyWidget() {
                               {msg.toolCalls.map((toolName) => (
                                 <span
                                   key={`${msg.id}-${toolName}`}
-                                  className="inline-flex items-center gap-1 rounded-md border border-zinc-200 bg-zinc-100 px-1.5 py-0.5 text-[10px] font-medium text-zinc-700 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300"
+                                  className="inline-flex items-center gap-1 rounded-md border border-[#18181B]/25 bg-[#F6EFE0] px-1.5 py-0.5 text-[10px] font-bold text-[#111116] dark:border-[#3A3A52] dark:bg-[#1F1F2D] dark:text-[#E4E4EE]"
                                 >
                                   <Wrench
-                                    className="h-2.5 w-2.5 text-indigo-600 dark:text-indigo-400"
+                                    className="h-2.5 w-2.5 text-[#2563EB] dark:text-[#60A5FA]"
                                     aria-hidden="true"
                                   />
                                   {TOOL_LABELS[toolName] ?? toolName}
@@ -390,10 +390,10 @@ export function LearnlyWidget() {
                           )}
 
                         <div
-                          className={`max-w-[92%] rounded-2xl px-3.5 py-2.5 text-sm ${
+                          className={`max-w-[92%] rounded-2xl border-2 px-3.5 py-2.5 text-sm ${
                             isUser
-                              ? "bg-indigo-600 text-white"
-                              : "border border-zinc-200/80 bg-zinc-50/90 text-zinc-900 dark:border-zinc-800 dark:bg-zinc-900/90 dark:text-zinc-100"
+                              ? "border-[#18181B] bg-[#2563EB] font-medium text-white shadow-[2px_2px_0_0_#111116]"
+                              : "border-[#18181B]/20 bg-white text-[#111116] shadow-[2px_2px_0_0_rgba(17,17,22,0.12)] dark:border-[#3A3A52] dark:bg-[#16161F] dark:text-[#FAFAF5]"
                           }`}
                         >
                           {isUser ? (
@@ -425,9 +425,9 @@ export function LearnlyWidget() {
                 )}
 
                 {loading && (
-                  <div className="flex items-center gap-2 text-xs text-zinc-600 dark:text-zinc-400">
+                  <div className="flex items-center gap-2 text-xs font-bold text-[#52525B] dark:text-[#B4B4C6]">
                     <Loader2
-                      className="h-3.5 w-3.5 animate-spin text-indigo-600 dark:text-indigo-400"
+                      className="h-3.5 w-3.5 animate-spin text-[#FF5A36]"
                       aria-hidden="true"
                     />
                     <span>Learnly is thinking...</span>
@@ -437,7 +437,7 @@ export function LearnlyWidget() {
                 {error && (
                   <div
                     role="alert"
-                    className="rounded-xl border border-rose-200 bg-rose-50 px-3 py-2 text-xs text-rose-800 dark:border-rose-900/70 dark:bg-rose-950/50 dark:text-rose-200"
+                    className="rounded-xl border-2 border-[#D93817] bg-[#FF5A36]/15 px-3 py-2 text-xs font-semibold text-[#111116] dark:text-[#FAFAF5]"
                   >
                     {error}
                   </div>
@@ -448,9 +448,9 @@ export function LearnlyWidget() {
 
               <form
                 onSubmit={handleSubmit}
-                className="border-t border-zinc-200/80 bg-zinc-50/80 p-3 dark:border-zinc-800/80 dark:bg-zinc-900/80"
+                className="border-t-2 border-[#18181B] bg-[#F6EFE0] p-3 dark:border-[#323244] dark:bg-[#16161F]"
               >
-                <div className="flex items-end gap-2 rounded-xl border border-zinc-300/90 bg-white px-3 py-2 focus-within:border-indigo-500 focus-within:ring-2 focus-within:ring-indigo-500/20 dark:border-zinc-700 dark:bg-zinc-950">
+                <div className="flex items-end gap-2 rounded-2xl border-2 border-[#18181B] bg-white px-3 py-2 focus-within:border-[#2563EB] dark:border-[#3A3A52] dark:bg-[#0D0D12]">
                   <Textarea
                     ref={inputRef}
                     autoResize
@@ -465,15 +465,15 @@ export function LearnlyWidget() {
                         void sendMessage(input);
                       }
                     }}
-                    className="max-h-28 min-h-[24px] flex-1 resize-none bg-transparent text-sm text-zinc-950 placeholder:text-zinc-500 focus:outline-none dark:text-zinc-50 dark:placeholder:text-zinc-400"
+                    className="max-h-28 min-h-[24px] flex-1 resize-none bg-transparent text-sm text-[#111116] placeholder:text-[#71717A] focus:outline-none dark:text-[#FAFAF5] dark:placeholder:text-[#8C8CA1]"
                   />
                   <Button
                     type="submit"
                     disabled={loading || input.trim().length === 0}
                     aria-label="Send message"
-                    className="inline-flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded-lg bg-indigo-600 text-white transition-colors hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 data-disabled:cursor-not-allowed data-disabled:opacity-45"
+                    className="inline-flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-xl border-2 border-[#18181B] bg-[#FF5A36] text-[#111116] transition-colors hover:bg-[#FF6E4E] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2563EB] data-disabled:cursor-not-allowed data-disabled:opacity-45"
                   >
-                    <ArrowUp className="h-4 w-4" aria-hidden="true" />
+                    <ArrowUp className="h-4 w-4 stroke-[2.5]" aria-hidden="true" />
                   </Button>
                 </div>
               </form>
@@ -486,12 +486,12 @@ export function LearnlyWidget() {
         aria-label="Open Learnly AI Tutor"
         aria-expanded={open}
         onClick={() => setOpen((prev) => !prev)}
-        className="group inline-flex h-13 cursor-pointer items-center gap-2 rounded-full bg-indigo-600 px-4 text-sm font-semibold text-white shadow-lg shadow-indigo-600/30 transition-all hover:bg-indigo-500 hover:shadow-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:bg-indigo-500 dark:shadow-indigo-950/60 dark:hover:bg-indigo-400"
+        className="tactile-btn group inline-flex h-13 cursor-pointer items-center gap-2 rounded-full bg-[#2563EB] px-5 text-sm font-extrabold text-white hover:bg-[#1D4ED8] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#111116] dark:focus-visible:outline-[#FFB800]"
       >
         {open ? (
           <X className="h-5 w-5" aria-hidden="true" />
         ) : (
-          <Sparkles className="h-5 w-5" aria-hidden="true" />
+          <Sparkles className="h-5 w-5 text-[#FFB800]" aria-hidden="true" />
         )}
         <span>{open ? "Close Learnly" : "Ask Learnly"}</span>
       </Button>

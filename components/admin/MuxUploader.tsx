@@ -277,24 +277,24 @@ export function MuxUploader({
 
   return (
     <div className="space-y-5">
-      <div className="rounded-xl border border-zinc-200 bg-zinc-50/70 p-4 dark:border-zinc-800 dark:bg-zinc-900/60">
+      <div className="rounded-2xl border-2 border-[#18181B] bg-[#F6EFE0]/80 p-4 shadow-[3px_3px_0_0_#111116] dark:border-[#3A3A52] dark:bg-[#12121A] dark:shadow-[3px_3px_0_0_#000000]">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
-            <h3 className="text-sm font-semibold text-zinc-950 dark:text-zinc-50">
+            <h3 className="font-display text-sm font-extrabold text-[#111116] dark:text-[#FAFAF5]">
               Direct Upload to Mux Video
             </h3>
-            <p className="mt-0.5 text-xs text-zinc-500 dark:text-zinc-400">
+            <p className="mt-0.5 text-xs text-[#52525B] dark:text-[#B4B4C6]">
               Streams video straight from your browser to Mux with adaptive HLS
               encoding.
             </p>
           </div>
           {hasPlaybackId ? (
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-0.5 text-xs font-medium text-emerald-700 dark:border-emerald-900/70 dark:bg-emerald-950/60 dark:text-emerald-300">
+            <span className="inline-flex items-center gap-1.5 rounded-full border-2 border-[#18181B] bg-[#00B87C] px-2.5 py-0.5 text-xs font-extrabold text-[#111116]">
               <CheckCircle2 className="h-3.5 w-3.5" aria-hidden="true" />
               {muxStatus === "waiting" ? "Processing" : "Mux Ready"}
             </span>
           ) : (
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-zinc-200 bg-white px-2.5 py-0.5 text-xs font-medium text-zinc-600 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-400">
+            <span className="inline-flex items-center gap-1.5 rounded-full border-2 border-[#18181B]/25 bg-white px-2.5 py-0.5 text-xs font-bold text-[#52525B] dark:border-[#3A3A52] dark:bg-[#16161F] dark:text-[#B4B4C6]">
               <Film className="h-3.5 w-3.5" aria-hidden="true" />
               No Video Attached
             </span>
@@ -304,29 +304,28 @@ export function MuxUploader({
         <div className="mt-4">
           <label
             htmlFor={fileInputId}
-            className={`flex cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed px-4 py-6 text-center transition-colors ${
+            className={`flex cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed px-4 py-6 text-center transition-colors ${
               isBusy
-                ? "pointer-events-none border-indigo-300 bg-indigo-50/50 dark:border-indigo-800 dark:bg-indigo-950/20"
-                : "border-zinc-300 bg-white hover:border-indigo-400 hover:bg-indigo-50/30 dark:border-zinc-700 dark:bg-zinc-950 dark:hover:border-indigo-500/70 dark:hover:bg-indigo-950/20"
+                ? "pointer-events-none border-[#2563EB] bg-[#2563EB]/10 dark:border-[#60A5FA] dark:bg-[#2563EB]/15"
+                : "border-[#18181B]/40 bg-white hover:border-[#FF5A36] hover:bg-[#FFFBF2] dark:border-[#3A3A52] dark:bg-[#16161F] dark:hover:border-[#FFB800] dark:hover:bg-[#1F1F2D]"
             }`}
           >
             {isBusy ? (
               <Loader2
-                className="h-7 w-7 animate-spin text-indigo-600 dark:text-indigo-400"
+                className="h-7 w-7 animate-spin text-[#2563EB] dark:text-[#60A5FA]"
                 aria-hidden="true"
               />
             ) : (
-              <UploadCloud
-                className="h-7 w-7 text-zinc-400 dark:text-zinc-500"
-                aria-hidden="true"
-              />
+              <span className="flex h-11 w-11 items-center justify-center rounded-xl border-2 border-[#18181B] bg-[#FFB800] text-[#111116] shadow-[2px_2px_0_0_#111116]">
+                <UploadCloud className="h-5 w-5" aria-hidden="true" />
+              </span>
             )}
-            <span className="mt-2 text-sm font-medium text-zinc-900 dark:text-zinc-100">
+            <span className="mt-3 text-sm font-extrabold text-[#111116] dark:text-[#FAFAF5]">
               {isBusy
                 ? statusMessage || "Working..."
                 : "Choose a video file to upload"}
             </span>
-            <span className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
+            <span className="mt-1 text-xs text-[#52525B] dark:text-[#B4B4C6]">
               {fileName && isBusy
                 ? fileName
                 : "MP4, MOV, WebM, or MKV — uploaded directly to Mux"}
@@ -345,7 +344,7 @@ export function MuxUploader({
 
         {isBusy && (
           <div className="mt-3 space-y-2">
-            <div className="flex items-center justify-between text-xs text-zinc-600 dark:text-zinc-300">
+            <div className="flex items-center justify-between text-xs font-bold text-[#111116] dark:text-[#FAFAF5]">
               <span>
                 {phase === "uploading"
                   ? `Uploading (${progress}%)`
@@ -356,15 +355,15 @@ export function MuxUploader({
               <button
                 type="button"
                 onClick={handleCancel}
-                className="inline-flex cursor-pointer items-center gap-1 rounded-md px-2 py-0.5 text-xs font-medium text-zinc-600 hover:bg-zinc-200/70 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-100"
+                className="inline-flex cursor-pointer items-center gap-1 rounded-lg border border-[#18181B]/25 bg-white px-2 py-0.5 text-xs font-bold text-[#111116] hover:bg-[#FF5A36]/20 dark:border-[#3A3A52] dark:bg-[#16161F] dark:text-[#FAFAF5]"
               >
                 <X className="h-3 w-3" aria-hidden="true" />
                 Cancel
               </button>
             </div>
-            <div className="h-2 w-full overflow-hidden rounded-full bg-zinc-200 dark:bg-zinc-800">
+            <div className="h-2.5 w-full overflow-hidden rounded-full border border-[#18181B] bg-white dark:border-[#3A3A52] dark:bg-[#16161F]">
               <div
-                className={`h-full rounded-full bg-indigo-600 transition-all duration-300 ${
+                className={`h-full rounded-full bg-[#FF5A36] transition-all duration-300 ${
                   phase === "processing" || phase === "creating"
                     ? "w-full animate-pulse"
                     : ""
@@ -380,9 +379,9 @@ export function MuxUploader({
         {phase === "ready" && statusMessage && (
           <div
             role="status"
-            className="mt-3 flex items-center gap-2 rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-xs font-medium text-emerald-800 dark:border-emerald-900/70 dark:bg-emerald-950/40 dark:text-emerald-300"
+            className="mt-3 flex items-center gap-2 rounded-xl border-2 border-[#047857] bg-[#00B87C]/20 px-3 py-2 text-xs font-bold text-[#111116] dark:border-[#34D399] dark:text-[#FAFAF5]"
           >
-            <CheckCircle2 className="h-4 w-4 shrink-0" aria-hidden="true" />
+            <CheckCircle2 className="h-4 w-4 shrink-0 text-[#047857] dark:text-[#34D399]" aria-hidden="true" />
             <span>{statusMessage}</span>
           </div>
         )}
@@ -390,9 +389,9 @@ export function MuxUploader({
         {errorMessage && (
           <div
             role="alert"
-            className="mt-3 flex items-start gap-2 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-xs text-red-700 dark:border-red-900/70 dark:bg-red-950/40 dark:text-red-300"
+            className="mt-3 flex items-start gap-2 rounded-xl border-2 border-[#D93817] bg-[#FF5A36]/15 px-3 py-2 text-xs font-semibold text-[#111116] dark:text-[#FAFAF5]"
           >
-            <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
+            <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-[#D93817] dark:text-[#FF6B4A]" aria-hidden="true" />
             <span>{errorMessage}</span>
           </div>
         )}
@@ -402,7 +401,7 @@ export function MuxUploader({
         <div className="flex flex-wrap items-center justify-between gap-2">
           <label
             htmlFor={playbackInputId}
-            className="text-xs font-semibold uppercase tracking-wide text-zinc-600 dark:text-zinc-400"
+            className="text-xs font-extrabold uppercase tracking-wide text-[#52525B] dark:text-[#B4B4C6]"
           >
             Mux Playback ID (Direct Paste)
           </label>
@@ -413,7 +412,7 @@ export function MuxUploader({
                 setErrorMessage(null);
                 onPlaybackIdChange(DEMO_MUX_PLAYBACK_ID);
               }}
-              className="inline-flex cursor-pointer items-center gap-1 rounded-lg border border-indigo-200 bg-indigo-50 px-2.5 py-1 text-xs font-medium text-indigo-700 transition-colors hover:bg-indigo-100 dark:border-indigo-900 dark:bg-indigo-950/50 dark:text-indigo-300 dark:hover:bg-indigo-950"
+              className="tactile-btn-sm inline-flex cursor-pointer items-center gap-1 rounded-lg bg-[#FFB800] px-2.5 py-1 text-xs font-extrabold text-[#111116] hover:bg-[#FFC933]"
             >
               <Sparkles className="h-3 w-3" aria-hidden="true" />
               Use Demo ID
@@ -422,7 +421,7 @@ export function MuxUploader({
               <button
                 type="button"
                 onClick={onClear}
-                className="inline-flex cursor-pointer items-center gap-1 rounded-lg border border-zinc-200 px-2.5 py-1 text-xs font-medium text-zinc-600 transition-colors hover:bg-zinc-100 hover:text-zinc-900 dark:border-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-100"
+                className="inline-flex cursor-pointer items-center gap-1 rounded-lg border-2 border-[#18181B]/25 bg-white px-2.5 py-1 text-xs font-bold text-[#52525B] transition-colors hover:border-[#18181B] hover:text-[#111116] dark:border-[#3A3A52] dark:bg-[#16161F] dark:text-[#B4B4C6] dark:hover:text-[#FAFAF5]"
               >
                 <Trash2 className="h-3 w-3" aria-hidden="true" />
                 Clear
@@ -436,24 +435,24 @@ export function MuxUploader({
           value={playbackId}
           onChange={(e) => onPlaybackIdChange(e.target.value)}
           placeholder="e.g. BV3YZtogl89mg9VcNBhhnHm02Y34zI1nlMuMQfAbl3dM"
-          className="w-full rounded-xl border border-zinc-200 bg-white px-3.5 py-2.5 font-mono text-xs text-zinc-900 placeholder:text-zinc-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-100"
+          className="w-full rounded-xl border-2 border-[#18181B]/30 bg-white px-3.5 py-2.5 font-mono text-xs text-[#111116] placeholder:text-[#71717A] focus:border-[#2563EB] focus:outline-none dark:border-[#3A3A52] dark:bg-[#12121A] dark:text-[#FAFAF5]"
         />
         {assetId && (
-          <p className="font-mono text-[11px] text-zinc-500 dark:text-zinc-400">
+          <p className="font-mono text-[11px] text-[#52525B] dark:text-[#B4B4C6]">
             Asset ID: {assetId}
           </p>
         )}
       </div>
 
       {hasPlaybackId && (
-        <div className="overflow-hidden rounded-xl border border-zinc-200 bg-zinc-950 dark:border-zinc-800">
-          <div className="flex items-center justify-between border-b border-zinc-800 px-3 py-1.5 text-[11px] font-medium text-zinc-400">
+        <div className="overflow-hidden rounded-2xl border-2 border-[#18181B] bg-[#14141D] shadow-[4px_4px_0_0_#111116] dark:border-[#3A3A52] dark:shadow-[4px_4px_0_0_#000000]">
+          <div className="flex items-center justify-between border-b-2 border-[#2A2A3B] bg-[#1B1B27] px-3 py-1.5 text-[11px] font-bold text-[#B4B4C6]">
             <span>Mux Poster Preview</span>
-            <span className="font-mono text-zinc-500">
+            <span className="font-mono text-[#FFB800]">
               {playbackId.slice(0, 18)}…
             </span>
           </div>
-          <div className="relative aspect-video w-full bg-zinc-900">
+          <div className="relative aspect-video w-full bg-[#12121A]">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={`https://image.mux.com/${encodeURIComponent(playbackId.trim())}/thumbnail.jpg?width=640&fit_mode=smartcrop`}
