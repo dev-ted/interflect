@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { useParams } from "next/navigation";
 import { Show, SignInButton, useAuth, useUser } from "@clerk/nextjs";
 import { CheckoutButton } from "@clerk/nextjs/experimental";
 import {
@@ -32,17 +33,33 @@ import { MuxVideoPlayer } from "./MuxVideoPlayer";
 import { MarkdownContent } from "./MarkdownContent";
 import { LessonQuiz } from "./LessonQuiz";
 
-export function LessonViewerClient({
-  courseSlug,
-  lessonSlug,
-}: {
-  courseSlug: string;
-  lessonSlug: string;
-}) {
-  const data = useQuery(api.courses.getLessonBySlug, {
-    courseSlug,
-    lessonSlug,
-  });
+export function LessonViewerClient() {
+  const params = useParams<{ slug?: string; lessonSlug?: string }>();
+  const courseSlug = typeof params.slug === "string" ? params.slug : "";
+  const lessonSlug =
+    typeof params.lessonSlug === "string" ? params.lessonSlug : "";
+
+  const liveData = useQuery(
+    api.courses.getLessonBySlug,
+    courseSlug && lessonSlug ? { courseSlug, lessonSlug } : "skip",
+  );
+
+  // Retain the last loaded lesson within the same course while the next lesson
+  // streams from Convex so the column never collapses to a short skeleton and
+  // causes a vertical layout shift.
+  const [retainedData, setRetainedData] = useState<typeof liveData>(undefined);
+  if (liveData !== undefined && liveData !== retainedData) {
+    setRetainedData(liveData);
+  }
+
+  const sameCourseRetained =
+    retainedData && retainedData.course.slug === courseSlug
+      ? retainedData
+      : undefined;
+  const data = liveData !== undefined ? liveData : sameCourseRetained;
+  const isTransitioning =
+    liveData === undefined && sameCourseRetained !== undefined;
+
   const toggleComplete = useMutation(api.enrollments.toggleLessonComplete);
   const { isAuthenticated } = useConvexAuth();
   const { has } = useAuth();
@@ -63,7 +80,7 @@ export function LessonViewerClient({
   // CheckoutButton upgrade without a full page refresh) while Convex still
   // reports the lesson as locked, force a fresh Clerk JWT into Convex right away.
   useEffect(() => {
-    if (!data?.isLocked || !clientHasPro) {
+    if (!liveData?.isLocked || !clientHasPro) {
       syncedLockedLessonRef.current = null;
       return;
     }
@@ -71,31 +88,39 @@ export function LessonViewerClient({
     if (syncedLockedLessonRef.current === lessonKey) return;
     syncedLockedLessonRef.current = lessonKey;
     void refreshConvexAuth();
-  }, [data?.isLocked, clientHasPro, courseSlug, lessonSlug, refreshConvexAuth]);
+  }, [
+    liveData?.isLocked,
+    clientHasPro,
+    courseSlug,
+    lessonSlug,
+    refreshConvexAuth,
+  ]);
 
   useEffect(() => {
-    if (!data) return;
+    if (!liveData) return;
     setPageDetail({
       pageType: "lesson",
-      pageTitle: data.lesson.title,
-      courseSlug: data.course.slug,
-      courseTitle: data.course.title,
-      courseTier: data.course.tier,
-      moduleTitle: data.module?.title,
-      lessonSlug: data.lesson.slug,
-      lessonTitle: data.lesson.title,
-      lessonSummary: data.lesson.summary,
+      pageTitle: liveData.lesson.title,
+      courseSlug: liveData.course.slug,
+      courseTitle: liveData.course.title,
+      courseTier: liveData.course.tier,
+      moduleTitle: liveData.module?.title,
+      lessonSlug: liveData.lesson.slug,
+      lessonTitle: liveData.lesson.title,
+      lessonSummary: liveData.lesson.summary,
     });
-  }, [data, setPageDetail]);
+  }, [liveData, setPageDetail]);
 
-  // Only the left lesson pane shows a lightweight skeleton while loading;
-  // the Course Outline sidebar in `lessons/layout.tsx` stays mounted & untouched.
+  // Initial load skeleton (geometry-matched to real lesson layout to prevent CLS)
   if (data === undefined) {
     return (
-      <div className="space-y-6">
+      <div className="min-w-0 space-y-6">
         <div className="aspect-video w-full animate-pulse rounded-2xl bg-zinc-100 dark:bg-zinc-900" />
-        <div className="h-16 animate-pulse rounded-2xl bg-zinc-100 dark:bg-zinc-900" />
-        <div className="h-56 animate-pulse rounded-2xl bg-zinc-100 dark:bg-zinc-900" />
+        <div className="space-y-2 border-b border-zinc-200/80 pb-6 dark:border-zinc-800">
+          <div className="h-8 w-2/3 animate-pulse rounded-lg bg-zinc-100 dark:bg-zinc-900" />
+          <div className="h-4 w-5/6 animate-pulse rounded-md bg-zinc-100 dark:bg-zinc-900" />
+        </div>
+        <div className="h-80 animate-pulse rounded-2xl bg-zinc-100 dark:bg-zinc-900" />
       </div>
     );
   }
@@ -216,14 +241,22 @@ export function LessonViewerClient({
     </div>
   ) : (
     <>
-      <MuxVideoPlayer
-        playbackId={data.lesson.muxPlaybackId}
-        title={data.lesson.title}
-      />
+      <div className="relative">
+        <MuxVideoPlayer
+          playbackId={data.lesson.muxPlaybackId}
+          title={data.lesson.title}
+        />
+        {isTransitioning && (
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-x-0 top-0 h-1 animate-pulse rounded-t-2xl bg-indigo-500"
+          />
+        )}
+      </div>
 
       {/* Lesson Title & Complete Action */}
       <div className="mt-6 flex flex-col justify-between gap-4 border-b border-zinc-200/80 pb-6 sm:flex-row sm:items-start dark:border-zinc-800">
-        <div>
+        <div className="min-w-0">
           <h1 className="text-2xl font-bold tracking-tight text-zinc-950 dark:text-white">
             {data.lesson.title}
           </h1>
@@ -235,7 +268,7 @@ export function LessonViewerClient({
         <Authenticated>
           <button
             type="button"
-            disabled={updatingComplete}
+            disabled={updatingComplete || isTransitioning}
             onClick={handleToggleComplete}
             className={`inline-flex shrink-0 cursor-pointer items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition-colors disabled:opacity-50 ${
               data.isCompleted
@@ -273,20 +306,20 @@ export function LessonViewerClient({
       <Tabs key={data.lesson._id} defaultValue="notes" className="mt-6">
         <TabsList
           aria-label="Lesson content tabs"
-          className="flex gap-1 border-b border-zinc-200 dark:border-zinc-800"
+          className="flex w-full gap-1 overflow-x-auto border-b border-zinc-200 dark:border-zinc-800"
         >
           <TabsTab
             value="notes"
-            className="inline-flex cursor-pointer items-center gap-2 border-b-2 border-transparent px-4 py-2.5 text-sm font-semibold text-zinc-500 transition-colors hover:text-zinc-900 data-selected:border-indigo-600 data-selected:text-indigo-600 dark:text-zinc-400 dark:hover:text-white dark:data-selected:border-indigo-400 dark:data-selected:text-indigo-400"
+            className="inline-flex min-h-11 shrink-0 cursor-pointer items-center gap-2 border-b-2 border-transparent px-4 py-2.5 text-sm font-semibold whitespace-nowrap text-zinc-500 transition-colors hover:text-zinc-900 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-indigo-600 data-selected:border-indigo-600 data-selected:text-indigo-600 dark:text-zinc-400 dark:hover:text-white dark:data-selected:border-indigo-400 dark:data-selected:text-indigo-400"
           >
-            <BookOpen className="h-4 w-4" aria-hidden="true" />
+            <BookOpen className="h-4 w-4 shrink-0" aria-hidden="true" />
             Lesson Guide
           </TabsTab>
           <TabsTab
             value="quiz"
-            className="inline-flex cursor-pointer items-center gap-2 border-b-2 border-transparent px-4 py-2.5 text-sm font-semibold text-zinc-500 transition-colors hover:text-zinc-900 data-selected:border-indigo-600 data-selected:text-indigo-600 dark:text-zinc-400 dark:hover:text-white dark:data-selected:border-indigo-400 dark:data-selected:text-indigo-400"
+            className="inline-flex min-h-11 shrink-0 cursor-pointer items-center gap-2 border-b-2 border-transparent px-4 py-2.5 text-sm font-semibold whitespace-nowrap text-zinc-500 transition-colors hover:text-zinc-900 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-indigo-600 data-selected:border-indigo-600 data-selected:text-indigo-600 dark:text-zinc-400 dark:hover:text-white dark:data-selected:border-indigo-400 dark:data-selected:text-indigo-400"
           >
-            <HelpCircle className="h-4 w-4" aria-hidden="true" />
+            <HelpCircle className="h-4 w-4 shrink-0" aria-hidden="true" />
             Interactive Quiz
             {data.lesson.quiz.length > 0 && (
               <span className="rounded-full bg-indigo-100 px-2 py-0.5 text-xs font-semibold text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300">
@@ -297,7 +330,7 @@ export function LessonViewerClient({
         </TabsList>
 
         <TabsPanel value="notes" className="pt-6">
-          <div className="rounded-2xl border border-zinc-200/80 bg-white p-6 sm:p-8 dark:border-zinc-800 dark:bg-zinc-900/50">
+          <div className="min-w-0 rounded-2xl border border-zinc-200/80 bg-white p-6 sm:p-8 dark:border-zinc-800 dark:bg-zinc-900/50">
             <MarkdownContent content={data.lesson.markdownContent} />
           </div>
         </TabsPanel>
@@ -315,7 +348,12 @@ export function LessonViewerClient({
   );
 
   return (
-    <div>
+    <div
+      aria-busy={isTransitioning}
+      className={`min-w-0 transition-opacity duration-150 ${
+        isTransitioning ? "opacity-80" : "opacity-100"
+      }`}
+    >
       {!requiresPro ? (
         unlockedContent
       ) : (
