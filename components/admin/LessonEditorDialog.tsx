@@ -78,6 +78,9 @@ interface LessonEditorDialogProps {
   lesson: Doc<"lessons"> | null;
 }
 
+const INPUT_CLASS =
+  "mt-1.5 w-full rounded-xl border-2 border-[#18181B]/30 bg-white px-3.5 py-2.5 text-sm text-[#111116] placeholder:text-[#71717A] focus:border-[#2563EB] focus:outline-none dark:border-[#3A3A52] dark:bg-[#12121A] dark:text-[#FAFAF5]";
+
 function LessonEditorForm({
   courseId,
   moduleId,
@@ -269,42 +272,33 @@ function LessonEditorForm({
     }
   }
 
+  const tabClass =
+    "inline-flex cursor-pointer items-center gap-1.5 rounded-xl border-2 border-transparent px-3 py-1.5 text-xs font-extrabold text-[#52525B] transition-all hover:bg-white hover:text-[#111116] data-selected:border-[#18181B] data-selected:bg-[#FFB800] data-selected:text-[#111116] data-selected:shadow-[2px_2px_0_0_#111116] dark:text-[#B4B4C6] dark:hover:bg-[#1F1F2D] dark:hover:text-[#FAFAF5] dark:data-selected:border-[#18181B] dark:data-selected:bg-[#FFB800] dark:data-selected:text-[#111116]";
+
   return (
     <form onSubmit={handleSave} className="flex min-h-0 flex-1 flex-col">
       <Tabs defaultValue="details" className="flex min-h-0 flex-1 flex-col">
-        <div className="border-b border-zinc-200 bg-zinc-50/70 px-6 dark:border-zinc-800 dark:bg-zinc-900/50">
+        <div className="border-b-2 border-[#18181B]/15 bg-[#F6EFE0] px-6 dark:border-[#2A2A3B] dark:bg-[#12121A]">
           <TabsList
             aria-label="Lesson editor sections"
-            className="flex flex-wrap gap-1 py-2"
+            className="flex flex-wrap gap-1.5 py-2.5"
           >
-            <TabsTab
-              value="details"
-              className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium text-zinc-600 transition-colors hover:bg-zinc-200/60 hover:text-zinc-950 data-selected:bg-zinc-950 data-selected:text-white dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-100 dark:data-selected:bg-white dark:data-selected:text-zinc-950"
-            >
+            <TabsTab value="details" className={tabClass}>
               <Settings2 className="h-3.5 w-3.5" aria-hidden="true" />
               Details
             </TabsTab>
-            <TabsTab
-              value="video"
-              className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium text-zinc-600 transition-colors hover:bg-zinc-200/60 hover:text-zinc-950 data-selected:bg-zinc-950 data-selected:text-white dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-100 dark:data-selected:bg-white dark:data-selected:text-zinc-950"
-            >
+            <TabsTab value="video" className={tabClass}>
               <Film className="h-3.5 w-3.5" aria-hidden="true" />
               Mux Video
               {muxPlaybackId.trim() && (
-                <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+                <span className="h-2 w-2 rounded-full bg-[#00B87C]" />
               )}
             </TabsTab>
-            <TabsTab
-              value="markdown"
-              className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium text-zinc-600 transition-colors hover:bg-zinc-200/60 hover:text-zinc-950 data-selected:bg-zinc-950 data-selected:text-white dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-100 dark:data-selected:bg-white dark:data-selected:text-zinc-950"
-            >
+            <TabsTab value="markdown" className={tabClass}>
               <FileText className="h-3.5 w-3.5" aria-hidden="true" />
               Markdown Notes
             </TabsTab>
-            <TabsTab
-              value="quiz"
-              className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium text-zinc-600 transition-colors hover:bg-zinc-200/60 hover:text-zinc-950 data-selected:bg-zinc-950 data-selected:text-white dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-100 dark:data-selected:bg-white dark:data-selected:text-zinc-950"
-            >
+            <TabsTab value="quiz" className={tabClass}>
               <HelpCircle className="h-3.5 w-3.5" aria-hidden="true" />
               Quiz ({quiz.length})
             </TabsTab>
@@ -317,7 +311,7 @@ function LessonEditorForm({
               <div>
                 <label
                   htmlFor={titleId}
-                  className="block text-xs font-semibold uppercase tracking-wide text-zinc-600 dark:text-zinc-400"
+                  className="block text-xs font-extrabold uppercase tracking-wide text-[#52525B] dark:text-[#B4B4C6]"
                 >
                   Lesson Title
                 </label>
@@ -328,13 +322,13 @@ function LessonEditorForm({
                   value={title}
                   onChange={(e) => handleTitleChange(e.target.value)}
                   placeholder="e.g. Cache Components & Suspense"
-                  className="mt-1.5 w-full rounded-xl border border-zinc-200 bg-white px-3.5 py-2.5 text-sm text-zinc-950 placeholder:text-zinc-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-50"
+                  className={INPUT_CLASS}
                 />
               </div>
               <div>
                 <label
                   htmlFor={slugId}
-                  className="block text-xs font-semibold uppercase tracking-wide text-zinc-600 dark:text-zinc-400"
+                  className="block text-xs font-extrabold uppercase tracking-wide text-[#52525B] dark:text-[#B4B4C6]"
                 >
                   Slug
                 </label>
@@ -348,7 +342,7 @@ function LessonEditorForm({
                     setSlug(e.target.value);
                   }}
                   placeholder="cache-components-and-suspense"
-                  className="mt-1.5 w-full rounded-xl border border-zinc-200 bg-white px-3.5 py-2.5 font-mono text-xs text-zinc-950 placeholder:text-zinc-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-50"
+                  className={`${INPUT_CLASS} font-mono text-xs`}
                 />
               </div>
             </div>
@@ -356,7 +350,7 @@ function LessonEditorForm({
             <div>
               <label
                 htmlFor={summaryId}
-                className="block text-xs font-semibold uppercase tracking-wide text-zinc-600 dark:text-zinc-400"
+                className="block text-xs font-extrabold uppercase tracking-wide text-[#52525B] dark:text-[#B4B4C6]"
               >
                 Lesson Summary
               </label>
@@ -366,7 +360,7 @@ function LessonEditorForm({
                 value={summary}
                 onChange={(e) => setSummary(e.target.value)}
                 placeholder="Short overview shown in curriculum lists and shared with the Learnly AI Tutor..."
-                className="mt-1.5 w-full rounded-xl border border-zinc-200 bg-white px-3.5 py-2.5 text-sm text-zinc-950 placeholder:text-zinc-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-50"
+                className={INPUT_CLASS}
               />
             </div>
 
@@ -374,7 +368,7 @@ function LessonEditorForm({
               <div>
                 <label
                   htmlFor={minutesId}
-                  className="block text-xs font-semibold uppercase tracking-wide text-zinc-600 dark:text-zinc-400"
+                  className="block text-xs font-extrabold uppercase tracking-wide text-[#52525B] dark:text-[#B4B4C6]"
                 >
                   Minutes
                 </label>
@@ -385,13 +379,13 @@ function LessonEditorForm({
                   max={600}
                   value={durationMinutes}
                   onChange={(e) => setDurationMinutes(e.target.value)}
-                  className="mt-1.5 w-full rounded-xl border border-zinc-200 bg-white px-3.5 py-2 text-sm text-zinc-950 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-50"
+                  className={INPUT_CLASS}
                 />
               </div>
               <div>
                 <label
                   htmlFor={secondsId}
-                  className="block text-xs font-semibold uppercase tracking-wide text-zinc-600 dark:text-zinc-400"
+                  className="block text-xs font-extrabold uppercase tracking-wide text-[#52525B] dark:text-[#B4B4C6]"
                 >
                   Seconds
                 </label>
@@ -402,26 +396,26 @@ function LessonEditorForm({
                   max={59}
                   value={durationRemainderSeconds}
                   onChange={(e) => setDurationRemainderSeconds(e.target.value)}
-                  className="mt-1.5 w-full rounded-xl border border-zinc-200 bg-white px-3.5 py-2 text-sm text-zinc-950 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-50"
+                  className={INPUT_CLASS}
                 />
               </div>
             </div>
 
-            <label className="flex cursor-pointer items-center justify-between gap-4 rounded-xl border border-zinc-200 bg-zinc-50/70 p-4 dark:border-zinc-800 dark:bg-zinc-900/60">
+            <label className="flex cursor-pointer items-center justify-between gap-4 rounded-2xl border-2 border-[#18181B]/25 bg-[#F6EFE0]/80 p-4 dark:border-[#3A3A52] dark:bg-[#12121A]">
               <div>
-                <div className="text-sm font-medium text-zinc-950 dark:text-zinc-50">
+                <div className="text-sm font-extrabold text-[#111116] dark:text-[#FAFAF5]">
                   Free Preview
                 </div>
-                <p className="mt-0.5 text-xs text-zinc-500 dark:text-zinc-400">
+                <p className="mt-0.5 text-xs text-[#52525B] dark:text-[#B4B4C6]">
                   Free Preview — allow non-Pro users to watch this lesson
                 </p>
               </div>
               <Switch
                 checked={isFreePreview}
                 onCheckedChange={(checked) => setIsFreePreview(checked)}
-                className="relative inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500 data-checked:bg-indigo-600 data-unchecked:bg-zinc-300 dark:data-unchecked:bg-zinc-700"
+                className="relative inline-flex h-6.5 w-12 shrink-0 cursor-pointer items-center rounded-full border-2 border-[#18181B] transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2563EB] data-checked:bg-[#00B87C] data-unchecked:bg-[#E6DCC6] dark:border-[#3A3A52] dark:data-unchecked:bg-[#2A2A3B]"
               >
-                <SwitchThumb className="block h-5 w-5 rounded-full bg-white shadow-xs transition-transform data-checked:translate-x-5.5 data-unchecked:translate-x-0.5" />
+                <SwitchThumb className="block h-4.5 w-4.5 rounded-full border border-[#18181B] bg-white shadow-xs transition-transform data-checked:translate-x-5.5 data-unchecked:translate-x-0.5" />
               </Switch>
             </label>
           </TabsPanel>
@@ -442,24 +436,24 @@ function LessonEditorForm({
               <div className="flex items-center justify-between gap-3">
                 <label
                   htmlFor={markdownId}
-                  className="text-xs font-semibold uppercase tracking-wide text-zinc-600 dark:text-zinc-400"
+                  className="text-xs font-extrabold uppercase tracking-wide text-[#52525B] dark:text-[#B4B4C6]"
                 >
                   GitHub-Flavored Markdown
                 </label>
                 <TabsList
                   aria-label="Markdown mode"
-                  className="inline-flex rounded-lg border border-zinc-200 bg-zinc-100 p-0.5 dark:border-zinc-800 dark:bg-zinc-900"
+                  className="inline-flex rounded-xl border-2 border-[#18181B] bg-[#F6EFE0] p-0.5 dark:border-[#3A3A52] dark:bg-[#12121A]"
                 >
                   <TabsTab
                     value="write"
-                    className="inline-flex cursor-pointer items-center gap-1.5 rounded-md px-2.5 py-1 text-xs font-medium text-zinc-600 transition-colors data-selected:bg-white data-selected:text-zinc-950 data-selected:shadow-xs dark:text-zinc-400 dark:data-selected:bg-zinc-800 dark:data-selected:text-zinc-50"
+                    className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg px-2.5 py-1 text-xs font-extrabold text-[#52525B] transition-colors data-selected:bg-[#FFB800] data-selected:text-[#111116] dark:text-[#B4B4C6] dark:data-selected:bg-[#FFB800] dark:data-selected:text-[#111116]"
                   >
                     <FileText className="h-3 w-3" aria-hidden="true" />
                     Write
                   </TabsTab>
                   <TabsTab
                     value="preview"
-                    className="inline-flex cursor-pointer items-center gap-1.5 rounded-md px-2.5 py-1 text-xs font-medium text-zinc-600 transition-colors data-selected:bg-white data-selected:text-zinc-950 data-selected:shadow-xs dark:text-zinc-400 dark:data-selected:bg-zinc-800 dark:data-selected:text-zinc-50"
+                    className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg px-2.5 py-1 text-xs font-extrabold text-[#52525B] transition-colors data-selected:bg-[#FFB800] data-selected:text-[#111116] dark:text-[#B4B4C6] dark:data-selected:bg-[#FFB800] dark:data-selected:text-[#111116]"
                   >
                     <Eye className="h-3 w-3" aria-hidden="true" />
                     Live Preview
@@ -474,16 +468,16 @@ function LessonEditorForm({
                   value={markdownContent}
                   onChange={(e) => setMarkdownContent(e.target.value)}
                   placeholder="# Lesson Title&#10;&#10;Write rich Markdown notes with fenced code blocks..."
-                  className="w-full rounded-xl border border-zinc-200 bg-white p-4 font-mono text-xs leading-relaxed text-zinc-900 placeholder:text-zinc-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-100"
+                  className="w-full rounded-2xl border-2 border-[#18181B]/30 bg-white p-4 font-mono text-xs leading-relaxed text-[#111116] placeholder:text-[#71717A] focus:border-[#2563EB] focus:outline-none dark:border-[#3A3A52] dark:bg-[#12121A] dark:text-[#FAFAF5]"
                 />
               </TabsPanel>
 
               <TabsPanel value="preview">
-                <div className="min-h-[320px] rounded-xl border border-zinc-200 bg-white p-6 dark:border-zinc-800 dark:bg-zinc-900/50">
+                <div className="min-h-[320px] rounded-2xl border-2 border-[#18181B]/25 bg-white p-6 dark:border-[#3A3A52] dark:bg-[#16161F]">
                   {markdownContent.trim() ? (
                     <MarkdownContent content={markdownContent} />
                   ) : (
-                    <p className="text-sm text-zinc-500 dark:text-zinc-400">
+                    <p className="text-sm text-[#52525B] dark:text-[#B4B4C6]">
                       Nothing to preview yet. Switch to Write to compose lesson
                       notes.
                     </p>
@@ -496,10 +490,10 @@ function LessonEditorForm({
           <TabsPanel value="quiz" keepMounted className="space-y-4">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
-                <h3 className="text-sm font-semibold text-zinc-950 dark:text-zinc-50">
+                <h3 className="font-display text-sm font-extrabold text-[#111116] dark:text-[#FAFAF5]">
                   Interactive Lesson Quiz
                 </h3>
-                <p className="text-xs text-zinc-500 dark:text-zinc-400">
+                <p className="text-xs text-[#52525B] dark:text-[#B4B4C6]">
                   Add multiple-choice knowledge checks with explanations.
                 </p>
               </div>
@@ -508,7 +502,7 @@ function LessonEditorForm({
                 onClick={() =>
                   setQuiz((prev) => [...prev, createEmptyQuestion()])
                 }
-                className="inline-flex cursor-pointer items-center gap-1.5 rounded-xl bg-indigo-600 px-3 py-2 text-xs font-semibold text-white transition-colors hover:bg-indigo-500"
+                className="tactile-btn-sm inline-flex cursor-pointer items-center gap-1.5 rounded-xl bg-[#FF5A36] px-3.5 py-2 text-xs font-extrabold text-[#111116] hover:bg-[#FF6E4E]"
               >
                 <Plus className="h-3.5 w-3.5" aria-hidden="true" />
                 Add Question
@@ -516,15 +510,15 @@ function LessonEditorForm({
             </div>
 
             {quiz.length === 0 ? (
-              <div className="rounded-xl border border-dashed border-zinc-300 px-6 py-10 text-center dark:border-zinc-800">
+              <div className="rounded-2xl border-2 border-dashed border-[#18181B]/30 px-6 py-10 text-center dark:border-[#3A3A52]">
                 <HelpCircle
-                  className="mx-auto h-7 w-7 text-zinc-400"
+                  className="mx-auto h-7 w-7 text-[#52525B] dark:text-[#B4B4C6]"
                   aria-hidden="true"
                 />
-                <p className="mt-2 text-sm font-medium text-zinc-700 dark:text-zinc-300">
+                <p className="mt-2 text-sm font-bold text-[#111116] dark:text-[#FAFAF5]">
                   No quiz questions yet
                 </p>
-                <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
+                <p className="mt-1 text-xs text-[#52525B] dark:text-[#B4B4C6]">
                   Click &ldquo;Add Question&rdquo; to attach an interactive quiz
                   to this lesson.
                 </p>
@@ -534,17 +528,17 @@ function LessonEditorForm({
                 {quiz.map((q, qIdx) => (
                   <div
                     key={q.id}
-                    className="rounded-xl border border-zinc-200 bg-zinc-50/60 p-4 dark:border-zinc-800 dark:bg-zinc-900/50"
+                    className="rounded-2xl border-2 border-[#18181B]/25 bg-[#F6EFE0]/60 p-4 dark:border-[#3A3A52] dark:bg-[#12121A]"
                   >
                     <div className="flex items-center justify-between gap-2">
-                      <span className="text-xs font-semibold uppercase tracking-wide text-indigo-600 dark:text-indigo-400">
+                      <span className="rounded-md border border-[#18181B] bg-[#FFB800] px-2 py-0.5 text-xs font-extrabold uppercase tracking-wide text-[#111116]">
                         Question {qIdx + 1}
                       </span>
                       <button
                         type="button"
                         onClick={() => removeQuizQuestion(q.id)}
                         aria-label={`Delete question ${qIdx + 1}`}
-                        className="inline-flex cursor-pointer items-center gap-1 rounded-lg px-2 py-1 text-xs font-medium text-red-600 transition-colors hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-950/50"
+                        className="inline-flex cursor-pointer items-center gap-1 rounded-lg px-2 py-1 text-xs font-bold text-[#D93817] transition-colors hover:bg-[#FF5A36]/15 dark:text-[#FF6B4A]"
                       >
                         <Trash2 className="h-3.5 w-3.5" aria-hidden="true" />
                         Remove
@@ -555,7 +549,7 @@ function LessonEditorForm({
                       <div>
                         <label
                           htmlFor={`${q.id}-prompt`}
-                          className="block text-xs font-medium text-zinc-700 dark:text-zinc-300"
+                          className="block text-xs font-bold text-[#111116] dark:text-[#FAFAF5]"
                         >
                           Question Prompt
                         </label>
@@ -570,12 +564,12 @@ function LessonEditorForm({
                             }))
                           }
                           placeholder="What happens when...?"
-                          className="mt-1 w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-950 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-50"
+                          className="mt-1 w-full rounded-xl border-2 border-[#18181B]/25 bg-white px-3 py-2 text-sm text-[#111116] focus:border-[#2563EB] focus:outline-none dark:border-[#3A3A52] dark:bg-[#16161F] dark:text-[#FAFAF5]"
                         />
                       </div>
 
                       <fieldset className="space-y-2">
-                        <legend className="text-xs font-medium text-zinc-700 dark:text-zinc-300">
+                        <legend className="text-xs font-bold text-[#111116] dark:text-[#FAFAF5]">
                           Answer Options (select the correct one)
                         </legend>
                         <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
@@ -585,10 +579,10 @@ function LessonEditorForm({
                               return (
                                 <div
                                   key={`${q.id}-${letter}`}
-                                  className={`flex items-center gap-2 rounded-lg border p-2 transition-colors ${
+                                  className={`flex items-center gap-2 rounded-xl border-2 p-2 transition-colors ${
                                     isCorrect
-                                      ? "border-emerald-500 bg-emerald-50/70 dark:border-emerald-600 dark:bg-emerald-950/30"
-                                      : "border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-950"
+                                      ? "border-[#047857] bg-[#00B87C]/20 dark:border-[#34D399] dark:bg-[#00B87C]/15"
+                                      : "border-[#18181B]/20 bg-white dark:border-[#3A3A52] dark:bg-[#16161F]"
                                   }`}
                                 >
                                   <input
@@ -603,7 +597,7 @@ function LessonEditorForm({
                                       }))
                                     }
                                     aria-label={`Mark option ${letter} as correct for question ${qIdx + 1}`}
-                                    className="h-4 w-4 cursor-pointer accent-emerald-600"
+                                    className="h-4 w-4 cursor-pointer accent-[#047857]"
                                   />
                                   <input
                                     type="text"
@@ -620,11 +614,11 @@ function LessonEditorForm({
                                       })
                                     }
                                     placeholder={`Option ${letter}`}
-                                    className="w-full bg-transparent text-xs text-zinc-900 placeholder:text-zinc-400 focus:outline-none dark:text-zinc-100"
+                                    className="w-full bg-transparent text-xs font-medium text-[#111116] placeholder:text-[#71717A] focus:outline-none dark:text-[#FAFAF5]"
                                   />
                                   {isCorrect && (
                                     <CheckCircle2
-                                      className="h-4 w-4 shrink-0 text-emerald-600 dark:text-emerald-400"
+                                      className="h-4 w-4 shrink-0 text-[#047857] dark:text-[#34D399]"
                                       aria-hidden="true"
                                     />
                                   )}
@@ -638,7 +632,7 @@ function LessonEditorForm({
                       <div>
                         <label
                           htmlFor={`${q.id}-explanation`}
-                          className="block text-xs font-medium text-zinc-700 dark:text-zinc-300"
+                          className="block text-xs font-bold text-[#111116] dark:text-[#FAFAF5]"
                         >
                           Explanation
                         </label>
@@ -653,7 +647,7 @@ function LessonEditorForm({
                             }))
                           }
                           placeholder="Explain why the correct answer is right..."
-                          className="mt-1 w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 text-xs text-zinc-900 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-100"
+                          className="mt-1 w-full rounded-xl border-2 border-[#18181B]/25 bg-white px-3 py-2 text-xs text-[#111116] focus:border-[#2563EB] focus:outline-none dark:border-[#3A3A52] dark:bg-[#16161F] dark:text-[#FAFAF5]"
                         />
                       </div>
                     </div>
@@ -665,14 +659,14 @@ function LessonEditorForm({
         </div>
       </Tabs>
 
-      <div className="flex items-center justify-end gap-2.5 border-t border-zinc-200 bg-zinc-50/70 px-6 py-4 dark:border-zinc-800 dark:bg-zinc-900/50">
-        <DialogClose className="cursor-pointer rounded-xl border border-zinc-200 bg-white px-4 py-2 text-xs font-semibold text-zinc-700 transition-colors hover:bg-zinc-100 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800">
+      <div className="flex items-center justify-end gap-2.5 border-t-2 border-[#18181B]/15 bg-[#F6EFE0] px-6 py-4 dark:border-[#2A2A3B] dark:bg-[#12121A]">
+        <DialogClose className="tactile-btn-sm cursor-pointer rounded-xl bg-white px-4 py-2 text-xs font-bold text-[#111116] hover:bg-[#FFFBF2] dark:bg-[#16161F] dark:text-[#FAFAF5]">
           Cancel
         </DialogClose>
         <button
           type="submit"
           disabled={saving}
-          className="inline-flex cursor-pointer items-center gap-2 rounded-xl bg-zinc-950 px-4 py-2 text-xs font-semibold text-white transition-colors hover:bg-zinc-800 disabled:cursor-not-allowed disabled:opacity-60 dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-200"
+          className="tactile-btn-sm inline-flex cursor-pointer items-center gap-2 rounded-xl bg-[#FF5A36] px-5 py-2 text-xs font-extrabold text-[#111116] hover:bg-[#FF6E4E] disabled:cursor-not-allowed disabled:opacity-60"
         >
           {saving && (
             <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden="true" />
@@ -694,14 +688,14 @@ export function LessonEditorDialog({
 }: LessonEditorDialogProps) {
   return (
     <Dialog open={open} onOpenChange={(next) => onOpenChange(next)}>
-      <DialogBackdrop className="fixed inset-0 z-50 bg-zinc-950/60 backdrop-blur-xs transition-opacity duration-200 data-starting-style:opacity-0 data-ending-style:opacity-0" />
-      <DialogContent className="fixed top-1/2 left-1/2 z-50 flex max-h-[90vh] w-[calc(100vw-2rem)] max-w-4xl -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-2xl transition-[opacity,scale] duration-200 data-starting-style:scale-96 data-starting-style:opacity-0 data-ending-style:scale-96 data-ending-style:opacity-0 dark:border-zinc-800 dark:bg-zinc-950">
-        <div className="flex items-start justify-between gap-4 border-b border-zinc-200 px-6 py-4 dark:border-zinc-800">
+      <DialogBackdrop className="fixed inset-0 z-50 bg-[#111116]/65 backdrop-blur-xs transition-opacity duration-200 data-starting-style:opacity-0 data-ending-style:opacity-0" />
+      <DialogContent className="fixed top-1/2 left-1/2 z-50 flex max-h-[90vh] w-[calc(100vw-2rem)] max-w-4xl -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-3xl border-2 border-[#18181B] bg-[#FFFBF2] shadow-[8px_8px_0_0_#111116] transition-[opacity,scale] duration-200 data-starting-style:scale-96 data-starting-style:opacity-0 data-ending-style:scale-96 data-ending-style:opacity-0 dark:border-[#3A3A52] dark:bg-[#0D0D12] dark:shadow-[8px_8px_0_0_#000000]">
+        <div className="flex items-start justify-between gap-4 border-b-2 border-[#18181B] bg-white px-6 py-4 dark:border-[#323244] dark:bg-[#16161F]">
           <div>
-            <DialogTitle className="text-lg font-semibold tracking-tight text-zinc-950 dark:text-zinc-50">
+            <DialogTitle className="font-display text-lg font-extrabold tracking-tight text-[#111116] dark:text-[#FAFAF5]">
               {lesson ? "Edit Lesson" : "New Lesson"}
             </DialogTitle>
-            <DialogDescription className="mt-0.5 text-xs text-zinc-500 dark:text-zinc-400">
+            <DialogDescription className="mt-0.5 text-xs text-[#52525B] dark:text-[#B4B4C6]">
               {moduleTitle
                 ? `Module: ${moduleTitle}`
                 : "Configure lesson metadata, Mux video, Markdown notes, and quiz questions."}
@@ -709,7 +703,7 @@ export function LessonEditorDialog({
           </div>
           <DialogClose
             aria-label="Close lesson editor"
-            className="inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg text-zinc-500 transition-colors hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-100"
+            className="inline-flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl border-2 border-transparent text-[#52525B] transition-colors hover:border-[#18181B] hover:bg-[#F6EFE0] hover:text-[#111116] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2563EB] dark:text-[#B4B4C6] dark:hover:border-[#3A3A52] dark:hover:bg-[#1F1F2D] dark:hover:text-[#FAFAF5]"
           >
             <X className="h-4 w-4" aria-hidden="true" />
           </DialogClose>

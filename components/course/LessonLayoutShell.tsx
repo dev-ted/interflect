@@ -48,13 +48,16 @@ function CourseOutlineList({
   const { setOpenMobile } = useSidebar();
 
   return (
-    <div className="divide-y divide-zinc-100 dark:divide-zinc-800">
-      {course.modules.map((mod) => (
+    <div className="divide-y divide-[#E6DCC6] dark:divide-[#2A2A3B]">
+      {course.modules.map((mod, modIdx) => (
         <div key={mod._id} className="p-4">
-          <p className="text-xs font-semibold tracking-wide text-zinc-500 uppercase dark:text-zinc-400">
-            {mod.title}
+          <p className="flex items-center gap-2 text-xs font-extrabold tracking-wide text-[#52525B] uppercase dark:text-[#B4B4C6]">
+            <span className="inline-flex h-5 w-5 items-center justify-center rounded-md border border-[#18181B] bg-[#FFB800] font-mono text-[10px] font-extrabold text-[#111116]">
+              {modIdx + 1}
+            </span>
+            <span className="truncate">{mod.title}</span>
           </p>
-          <ul className="mt-2 space-y-1">
+          <ul className="mt-2.5 space-y-1">
             {mod.lessons.map((item) => {
               const isActive = item.slug === activeLessonSlug;
               const isLocked =
@@ -68,28 +71,32 @@ function CourseOutlineList({
                       if (closeMobileOnSelect) setOpenMobile(false);
                     }}
                     aria-current={isActive ? "page" : undefined}
-                    className={`flex min-h-10 items-center gap-2.5 rounded-xl px-3 py-2 text-sm transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 ${
+                    className={`flex min-h-11 items-center gap-2.5 rounded-xl px-3 py-2 text-sm transition-all focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2563EB] ${
                       isActive
-                        ? "bg-indigo-50 font-semibold text-indigo-700 dark:bg-indigo-950/70 dark:text-indigo-300"
-                        : "text-zinc-700 hover:bg-zinc-50 dark:text-zinc-300 dark:hover:bg-zinc-800/60"
+                        ? "border-2 border-[#18181B] bg-[#FFB800] font-extrabold text-[#111116] shadow-[2px_2px_0_0_#111116]"
+                        : "border-2 border-transparent font-medium text-[#111116] hover:bg-[#F6EFE0] dark:text-[#E4E4EE] dark:hover:bg-[#1F1F2D]"
                     }`}
                   >
                     {item.completed ? (
                       <CheckCircle2
-                        className="h-4 w-4 shrink-0 text-emerald-500"
+                        className={`h-4 w-4 shrink-0 ${
+                          isActive ? "text-[#111116]" : "text-[#00B87C]"
+                        }`}
                         aria-hidden="true"
                       />
                     ) : isLocked ? (
                       <Lock
-                        className="h-3.5 w-3.5 shrink-0 text-zinc-400"
+                        className={`h-3.5 w-3.5 shrink-0 ${
+                          isActive ? "text-[#111116]" : "text-[#71717A]"
+                        }`}
                         aria-hidden="true"
                       />
                     ) : (
                       <PlayCircle
                         className={`h-4 w-4 shrink-0 ${
                           isActive
-                            ? "text-indigo-600 dark:text-indigo-400"
-                            : "text-zinc-400"
+                            ? "text-[#111116]"
+                            : "text-[#D93817] dark:text-[#FF6B4A]"
                         }`}
                         aria-hidden="true"
                       />
@@ -98,7 +105,13 @@ function CourseOutlineList({
                       {item.title}
                     </span>
                     {course.tier === "pro" && item.isFreePreview && (
-                      <span className="shrink-0 rounded bg-emerald-100 px-1.5 py-0.5 text-[10px] font-semibold text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300">
+                      <span
+                        className={`shrink-0 rounded-full border px-1.5 py-0.5 text-[10px] font-extrabold ${
+                          isActive
+                            ? "border-[#18181B] bg-white text-[#111116]"
+                            : "border-[#18181B]/30 bg-[#00B87C] text-[#111116]"
+                        }`}
+                      >
                         Free
                       </span>
                     )}
@@ -156,8 +169,8 @@ function LessonLayoutInner({ children }: { children: ReactNode }) {
     <main className="flex-1">
       <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
         {/* Persistent single-line Breadcrumb & Mobile Outline Drawer Trigger */}
-        <div className="mb-5 flex min-h-10 flex-nowrap items-center justify-between gap-3">
-          <div className="flex min-w-0 flex-1 items-center gap-2 text-sm text-zinc-500 dark:text-zinc-400">
+        <div className="mb-5 flex min-h-11 flex-nowrap items-center justify-between gap-3">
+          <div className="flex min-w-0 flex-1 items-center gap-2 text-sm text-[#52525B] dark:text-[#B4B4C6]">
             <div className="lg:hidden">
               <SidebarMobileDrawer
                 title="Course Outline"
@@ -170,25 +183,25 @@ function LessonLayoutInner({ children }: { children: ReactNode }) {
                 triggerContent={
                   <>
                     <ListTree className="h-4 w-4" aria-hidden="true" />
-                    <span className="text-xs font-semibold">Lessons</span>
+                    <span className="text-xs font-extrabold">Lessons</span>
                   </>
                 }
               >
                 {course === undefined ? (
                   <div className="space-y-3 p-4">
-                    <div className="h-10 animate-pulse rounded-xl bg-zinc-100 dark:bg-zinc-800" />
-                    <div className="h-10 animate-pulse rounded-xl bg-zinc-100 dark:bg-zinc-800" />
+                    <div className="h-10 animate-pulse rounded-xl bg-[#F6EFE0] dark:bg-[#1F1F2D]" />
+                    <div className="h-10 animate-pulse rounded-xl bg-[#F6EFE0] dark:bg-[#1F1F2D]" />
                   </div>
                 ) : course === null ? (
-                  <div className="p-5 text-sm text-zinc-500 dark:text-zinc-400">
+                  <div className="p-5 text-sm text-[#52525B] dark:text-[#B4B4C6]">
                     Course curriculum unavailable.
                   </div>
                 ) : (
                   <nav aria-label="Course lessons drawer">
-                    <div className="border-b border-zinc-200/80 px-4 py-3 dark:border-zinc-800">
-                      <div className="h-1.5 w-full overflow-clip rounded-full bg-zinc-100 dark:bg-zinc-800">
+                    <div className="border-b-2 border-[#18181B]/15 px-4 py-3 dark:border-[#2A2A3B]">
+                      <div className="h-2.5 w-full overflow-clip rounded-full border border-[#18181B] bg-[#F6EFE0] dark:border-[#3A3A52] dark:bg-[#1F1F2D]">
                         <div
-                          className="h-full rounded-full bg-emerald-500 transition-[width] duration-300"
+                          className="h-full rounded-full bg-[#00B87C] transition-[width] duration-300"
                           style={{ width: `${progressPct}%` }}
                         />
                       </div>
@@ -206,7 +219,7 @@ function LessonLayoutInner({ children }: { children: ReactNode }) {
 
             <Link
               href={courseSlug ? `/courses/${courseSlug}` : "/courses"}
-              className="inline-flex min-w-0 shrink items-center gap-1.5 font-medium text-zinc-700 transition-colors hover:text-indigo-600 dark:text-zinc-300 dark:hover:text-indigo-400"
+              className="inline-flex min-w-0 shrink items-center gap-1.5 rounded-lg font-bold text-[#111116] transition-colors hover:text-[#D93817] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2563EB] dark:text-[#FAFAF5] dark:hover:text-[#FF6B4A]"
             >
               <ArrowLeft className="h-4 w-4 shrink-0" aria-hidden="true" />
               <span className="truncate">
@@ -218,7 +231,7 @@ function LessonLayoutInner({ children }: { children: ReactNode }) {
                 <span className="hidden shrink-0 sm:inline" aria-hidden="true">
                   /
                 </span>
-                <span className="hidden truncate sm:inline">
+                <span className="hidden truncate font-medium sm:inline">
                   {activeModule.title}
                 </span>
               </>
@@ -227,12 +240,12 @@ function LessonLayoutInner({ children }: { children: ReactNode }) {
 
           <div className="flex shrink-0 items-center gap-2">
             {course?.tier === "pro" && activeLesson?.isFreePreview && (
-              <span className="hidden rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-0.5 text-xs font-semibold text-emerald-700 sm:inline-flex dark:border-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300">
+              <span className="hidden rounded-full border-2 border-[#18181B] bg-[#00B87C] px-2.5 py-0.5 text-xs font-extrabold text-[#111116] sm:inline-flex">
                 Free Preview
               </span>
             )}
             {course && (
-              <span className="font-mono text-xs whitespace-nowrap text-zinc-500 tabular-nums dark:text-zinc-400">
+              <span className="rounded-lg border-2 border-[#18181B] bg-white px-2.5 py-1 font-mono text-xs font-bold whitespace-nowrap text-[#111116] tabular-nums shadow-[2px_2px_0_0_#111116] dark:border-[#3A3A52] dark:bg-[#16161F] dark:text-[#FAFAF5] dark:shadow-[2px_2px_0_0_#000000]">
                 {completedCount}/{totalLessons} ({progressPct}%)
               </span>
             )}
@@ -244,14 +257,19 @@ function LessonLayoutInner({ children }: { children: ReactNode }) {
           <div className="min-w-0 lg:col-span-8">{children}</div>
 
           {/* Persistent Desktop Course Outline Sidebar */}
-          <aside className="sticky top-22 hidden min-w-0 overflow-clip rounded-2xl border border-zinc-200/90 bg-white lg:col-span-4 lg:block dark:border-zinc-800 dark:bg-zinc-900/70">
-            <div className="border-b border-zinc-200/80 px-5 py-4 dark:border-zinc-800">
-              <h2 className="text-sm font-semibold text-zinc-950 dark:text-white">
-                Course Outline
-              </h2>
-              <div className="mt-2 h-1.5 w-full overflow-clip rounded-full bg-zinc-100 dark:bg-zinc-800">
+          <aside className="tactile-card sticky top-22 hidden min-w-0 overflow-clip rounded-2xl lg:col-span-4 lg:block">
+            <div className="border-b-2 border-[#18181B] bg-[#F6EFE0]/80 px-5 py-4 dark:border-[#323244] dark:bg-[#12121A]">
+              <div className="flex items-center justify-between gap-2">
+                <h2 className="font-display text-sm font-extrabold text-[#111116] dark:text-[#FAFAF5]">
+                  Course Outline
+                </h2>
+                <span className="font-mono text-xs font-bold text-[#047857] dark:text-[#34D399]">
+                  {progressPct}%
+                </span>
+              </div>
+              <div className="mt-2.5 h-2.5 w-full overflow-clip rounded-full border border-[#18181B] bg-white dark:border-[#3A3A52] dark:bg-[#1F1F2D]">
                 <div
-                  className="h-full rounded-full bg-emerald-500 transition-[width] duration-300"
+                  className="h-full rounded-full bg-[#00B87C] transition-[width] duration-300"
                   style={{ width: `${progressPct}%` }}
                 />
               </div>
@@ -259,12 +277,12 @@ function LessonLayoutInner({ children }: { children: ReactNode }) {
 
             {course === undefined ? (
               <div className="space-y-3 p-4">
-                <div className="h-10 animate-pulse rounded-xl bg-zinc-100 dark:bg-zinc-800" />
-                <div className="h-10 animate-pulse rounded-xl bg-zinc-100 dark:bg-zinc-800" />
-                <div className="h-10 animate-pulse rounded-xl bg-zinc-100 dark:bg-zinc-800" />
+                <div className="h-10 animate-pulse rounded-xl bg-[#F6EFE0] dark:bg-[#1F1F2D]" />
+                <div className="h-10 animate-pulse rounded-xl bg-[#F6EFE0] dark:bg-[#1F1F2D]" />
+                <div className="h-10 animate-pulse rounded-xl bg-[#F6EFE0] dark:bg-[#1F1F2D]" />
               </div>
             ) : course === null ? (
-              <div className="p-5 text-sm text-zinc-500 dark:text-zinc-400">
+              <div className="p-5 text-sm text-[#52525B] dark:text-[#B4B4C6]">
                 Course curriculum unavailable.
               </div>
             ) : (
