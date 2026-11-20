@@ -27,11 +27,20 @@ export function MuxVideoPlayer({ playbackId, title }: MuxVideoPlayerProps) {
     );
   }
 
+  const posterUrl = `https://image.mux.com/${playbackId}/thumbnail.webp?width=1280&height=720&fit_mode=smartcrop`;
+
   return (
-    <div className="overflow-hidden rounded-2xl border border-zinc-200/80 bg-black shadow-lg dark:border-zinc-800">
-      <VideoPlayer>
-        <VideoSkin style={{ width: "100%", aspectRatio: "16 / 9" }}>
-          <MuxVideo source={{ playbackId }} playsInline />
+    <div className="relative aspect-video w-full overflow-clip rounded-2xl border border-zinc-200/80 bg-black shadow-lg dark:border-zinc-800">
+      <VideoPlayer key={playbackId}>
+        <VideoSkin className="block h-full w-full" style={{ aspectRatio: "16 / 9" }}>
+          <MuxVideo
+            className="block h-full w-full"
+            width={1280}
+            height={720}
+            poster={posterUrl}
+            source={{ playbackId }}
+            playsInline
+          />
           <MuxData />
         </VideoSkin>
       </VideoPlayer>
