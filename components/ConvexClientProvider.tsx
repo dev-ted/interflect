@@ -11,7 +11,22 @@ import {
 } from "react";
 import { ConvexProviderWithAuth, ConvexReactClient } from "convex/react";
 import { useAuth, useClerk, useUser } from "@clerk/nextjs";
-import { OverlayHost } from "@ui-sdk/react/overlays";
+import {
+  Toast,
+  ToastAction,
+  ToastClose,
+  ToastDescription,
+  ToastRegion,
+  ToastTitle,
+} from "@ui-sdk/react/toast";
+import {
+  CheckCircle2,
+  Info,
+  Loader2,
+  TriangleAlert,
+  X,
+  XCircle,
+} from "lucide-react";
 import { isAdminRole, PRO_PLAN_SLUG } from "@/lib/auth";
 
 if (!process.env.NEXT_PUBLIC_CONVEX_URL) {
@@ -99,6 +114,78 @@ function useClerkAuthForConvex() {
   );
 }
 
+function AppToaster() {
+  return (
+    <ToastRegion
+      side="top"
+      align="center"
+      aria-label="Notifications"
+      className="pointer-events-none fixed inset-x-0 top-4 z-[100] flex flex-col items-center gap-2 px-4"
+    >
+      {(item) => {
+        const type = item.type;
+        const borderAccent =
+          type === "success"
+            ? "border-emerald-300/90 dark:border-emerald-800/80"
+            : type === "error"
+              ? "border-rose-300/90 dark:border-rose-800/80"
+              : type === "warning"
+                ? "border-amber-300/90 dark:border-amber-800/80"
+                : "border-zinc-200/90 dark:border-zinc-700/80";
+
+        return (
+          <Toast
+            className={`pointer-events-auto flex w-full max-w-md items-center gap-3 rounded-2xl border bg-white/95 px-4 py-3 text-sm text-zinc-950 shadow-xl shadow-zinc-950/12 backdrop-blur-md transition-[opacity,transform] duration-200 data-starting-style:-translate-y-2 data-starting-style:opacity-0 data-ending-style:-translate-y-2 data-ending-style:opacity-0 dark:bg-zinc-900/95 dark:text-zinc-50 dark:shadow-black/50 ${borderAccent}`}
+          >
+            {type === "success" ? (
+              <CheckCircle2
+                className="h-4.5 w-4.5 shrink-0 text-emerald-600 dark:text-emerald-400"
+                aria-hidden="true"
+              />
+            ) : type === "error" ? (
+              <XCircle
+                className="h-4.5 w-4.5 shrink-0 text-rose-600 dark:text-rose-400"
+                aria-hidden="true"
+              />
+            ) : type === "warning" ? (
+              <TriangleAlert
+                className="h-4.5 w-4.5 shrink-0 text-amber-600 dark:text-amber-400"
+                aria-hidden="true"
+              />
+            ) : type === "loading" ? (
+              <Loader2
+                className="h-4.5 w-4.5 shrink-0 animate-spin text-indigo-600 dark:text-indigo-400"
+                aria-hidden="true"
+              />
+            ) : (
+              <Info
+                className="h-4.5 w-4.5 shrink-0 text-indigo-600 dark:text-indigo-400"
+                aria-hidden="true"
+              />
+            )}
+
+            <div className="min-w-0 flex-1">
+              <ToastTitle className="font-semibold leading-snug text-zinc-950 dark:text-zinc-50" />
+              <ToastDescription className="mt-0.5 text-xs text-zinc-600 dark:text-zinc-400" />
+            </div>
+
+            {item.action && (
+              <ToastAction className="shrink-0 cursor-pointer rounded-lg bg-zinc-950 px-2.5 py-1 text-xs font-semibold text-white transition-colors hover:bg-zinc-800 dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-200" />
+            )}
+
+            <ToastClose
+              aria-label="Dismiss notification"
+              className="inline-flex h-7 w-7 shrink-0 cursor-pointer items-center justify-center rounded-lg text-zinc-400 transition-colors hover:bg-zinc-100 hover:text-zinc-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:hover:bg-zinc-800 dark:hover:text-zinc-200"
+            >
+              <X className="h-3.5 w-3.5" aria-hidden="true" />
+            </ToastClose>
+          </Toast>
+        );
+      }}
+    </ToastRegion>
+  );
+}
+
 export default function ConvexClientProvider({
   children,
 }: {
@@ -121,7 +208,7 @@ export default function ConvexClientProvider({
       <ConvexAuthNonceContext.Provider value={refreshNonce}>
         <ConvexProviderWithAuth client={convex} useAuth={useClerkAuthForConvex}>
           {children}
-          <OverlayHost />
+          <AppToaster />
         </ConvexProviderWithAuth>
       </ConvexAuthNonceContext.Provider>
     </ConvexAuthRefreshContext.Provider>
