@@ -649,7 +649,7 @@ export async function POST(request: Request) {
         .join("\n");
 
       const modelId =
-        process.env.LEARNLY_MODEL ?? "anthropic/claude-sonnet-4.6";
+        process.env.LEARNLY_MODEL ?? "anthropic/claude-sonnet-5";
 
       const result = await generateText({
         model: modelId,
