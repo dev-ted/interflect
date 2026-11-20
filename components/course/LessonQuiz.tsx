@@ -176,7 +176,7 @@ export function LessonQuiz({
                       "border-2 border-[#D93817] bg-[#FF5A36]/20 text-[#111116] dark:border-[#FF6B4A] dark:bg-[#FF5A36]/20 dark:text-[#FAFAF5]";
                   } else {
                     style =
-                      "border-2 border-[#18181B]/10 opacity-60 dark:border-[#2A2A3B]";
+                      "border-2 border-[#18181B]/15 bg-[#F6EFE0]/60 text-[#52525B] dark:border-[#2A2A3B] dark:bg-[#12121A]/70 dark:text-[#B4B4C6]";
                   }
                 } else if (isSelected) {
                   style =
@@ -188,10 +188,11 @@ export function LessonQuiz({
                     key={`${q.id}-opt-${optIdx}`}
                     type="button"
                     disabled={submitted}
+                    aria-pressed={isSelected}
                     onClick={() =>
                       setSelections((prev) => ({ ...prev, [q.id]: optIdx }))
                     }
-                    className={`flex min-h-12 w-full cursor-pointer items-center justify-between gap-3 rounded-xl px-4 py-3 text-left text-sm font-semibold transition-all disabled:cursor-default ${style}`}
+                    className={`flex min-h-12 w-full cursor-pointer items-center justify-between gap-3 rounded-xl px-4 py-3 text-left text-sm font-semibold transition-all focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2563EB] disabled:cursor-default ${style}`}
                   >
                     <span className="flex items-center gap-3">
                       <span className="flex h-6.5 w-6.5 shrink-0 items-center justify-center rounded-lg border-2 border-current/30 bg-white/80 font-mono text-xs font-extrabold text-[#111116] dark:bg-[#16161F]/80 dark:text-[#FAFAF5]">

@@ -222,7 +222,7 @@ export function LearnlyWidget() {
                 <Button
                   aria-label="Clear Learnly conversation"
                   onClick={handleReset}
-                  className="inline-flex h-9 w-9 cursor-pointer items-center justify-center rounded-xl text-[#B4B4C6] transition-colors hover:bg-[#1F1F2D] hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFB800]"
+                  className="inline-flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl text-[#B4B4C6] transition-colors hover:bg-[#1F1F2D] hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFB800]"
                 >
                   <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
                 </Button>
@@ -230,7 +230,7 @@ export function LearnlyWidget() {
               <Button
                 aria-label="Close Learnly AI Tutor"
                 onClick={() => setOpen(false)}
-                className="inline-flex h-9 w-9 cursor-pointer items-center justify-center rounded-xl text-[#B4B4C6] transition-colors hover:bg-[#1F1F2D] hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFB800]"
+                className="inline-flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl text-[#B4B4C6] transition-colors hover:bg-[#1F1F2D] hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFB800]"
               >
                 <X className="h-4 w-4" aria-hidden="true" />
               </Button>
@@ -326,7 +326,7 @@ export function LearnlyWidget() {
 
               <div
                 aria-live="polite"
-                className="flex-1 space-y-4 overflow-y-auto px-4 py-4"
+                className="flex-1 space-y-4 overflow-y-auto overscroll-contain px-4 py-4"
               >
                 {messages.length === 0 ? (
                   <div className="space-y-4 pt-2">
@@ -471,7 +471,7 @@ export function LearnlyWidget() {
                     type="submit"
                     disabled={loading || input.trim().length === 0}
                     aria-label="Send message"
-                    className="inline-flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-xl border-2 border-[#18181B] bg-[#FF5A36] text-[#111116] transition-colors hover:bg-[#FF6E4E] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2563EB] data-disabled:cursor-not-allowed data-disabled:opacity-45"
+                    className="inline-flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-xl border-2 border-[#18181B] bg-[#FF5A36] text-[#111116] transition-colors hover:bg-[#FF6E4E] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2563EB] data-disabled:cursor-not-allowed data-disabled:opacity-45"
                   >
                     <ArrowUp className="h-4 w-4 stroke-[2.5]" aria-hidden="true" />
                   </Button>
@@ -486,7 +486,7 @@ export function LearnlyWidget() {
         aria-label="Open Learnly AI Tutor"
         aria-expanded={open}
         onClick={() => setOpen((prev) => !prev)}
-        className="tactile-btn group inline-flex h-13 cursor-pointer items-center gap-2 rounded-full bg-[#2563EB] px-5 text-sm font-extrabold text-white hover:bg-[#1D4ED8] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFB800]"
+        className="tactile-btn group inline-flex h-13 cursor-pointer items-center gap-2 rounded-full bg-[#2563EB] px-5 text-sm font-extrabold text-white hover:bg-[#1D4ED8] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#111116] dark:focus-visible:outline-[#FFB800]"
       >
         {open ? (
           <X className="h-5 w-5" aria-hidden="true" />

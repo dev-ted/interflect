@@ -156,7 +156,7 @@ export function HeroShowcase() {
           <dl className="mt-10 grid max-w-lg grid-cols-3 gap-3 sm:gap-4">
             <div className="rounded-2xl border-2 border-[#18181B] bg-white p-3.5 shadow-[3px_3px_0_0_#111116] dark:border-[#3A3A52] dark:bg-[#16161F] dark:shadow-[3px_3px_0_0_#000000]">
               <dt className="flex items-center gap-1.5 text-[11px] font-bold tracking-wide text-[#52525B] uppercase dark:text-[#B4B4C6]">
-                <span className="h-2 w-2 rounded-full bg-[#00B87C]" />
+                <span aria-hidden="true" className="h-2 w-2 rounded-full bg-[#00B87C]" />
                 Free Previews
               </dt>
               <dd className="font-display mt-1 text-lg font-extrabold text-[#111116] sm:text-xl dark:text-[#FAFAF5]">
@@ -165,7 +165,7 @@ export function HeroShowcase() {
             </div>
             <div className="rounded-2xl border-2 border-[#18181B] bg-white p-3.5 shadow-[3px_3px_0_0_#111116] dark:border-[#3A3A52] dark:bg-[#16161F] dark:shadow-[3px_3px_0_0_#000000]">
               <dt className="flex items-center gap-1.5 text-[11px] font-bold tracking-wide text-[#52525B] uppercase dark:text-[#B4B4C6]">
-                <span className="h-2 w-2 rounded-full bg-[#FF5A36]" />
+                <span aria-hidden="true" className="h-2 w-2 rounded-full bg-[#FF5A36]" />
                 Video Engine
               </dt>
               <dd className="font-display mt-1 text-lg font-extrabold text-[#111116] sm:text-xl dark:text-[#FAFAF5]">
@@ -174,7 +174,7 @@ export function HeroShowcase() {
             </div>
             <div className="rounded-2xl border-2 border-[#18181B] bg-white p-3.5 shadow-[3px_3px_0_0_#111116] dark:border-[#3A3A52] dark:bg-[#16161F] dark:shadow-[3px_3px_0_0_#000000]">
               <dt className="flex items-center gap-1.5 text-[11px] font-bold tracking-wide text-[#52525B] uppercase dark:text-[#B4B4C6]">
-                <span className="h-2 w-2 rounded-full bg-[#2563EB]" />
+                <span aria-hidden="true" className="h-2 w-2 rounded-full bg-[#2563EB]" />
                 AI Companion
               </dt>
               <dd className="font-display mt-1 text-lg font-extrabold text-[#111116] sm:text-xl dark:text-[#FAFAF5]">
@@ -197,9 +197,9 @@ export function HeroShowcase() {
             <div className="overflow-hidden rounded-3xl border-2 border-[#18181B] bg-[#14141D] text-[#FAFAF5] shadow-[8px_8px_0_0_#111116] dark:border-[#3A3A52] dark:shadow-[8px_8px_0_0_#000000]">
               <div className="flex items-center justify-between border-b-2 border-[#2A2A3B] bg-[#1B1B27] px-4 py-3">
                 <div className="flex items-center gap-2">
-                  <span className="h-3 w-3 rounded-full border border-black/40 bg-[#FF5A36]" />
-                  <span className="h-3 w-3 rounded-full border border-black/40 bg-[#FFB800]" />
-                  <span className="h-3 w-3 rounded-full border border-black/40 bg-[#00B87C]" />
+                  <span aria-hidden="true" className="h-3 w-3 rounded-full border border-black/40 bg-[#FF5A36]" />
+                  <span aria-hidden="true" className="h-3 w-3 rounded-full border border-black/40 bg-[#FFB800]" />
+                  <span aria-hidden="true" className="h-3 w-3 rounded-full border border-black/40 bg-[#00B87C]" />
                   <span className="ml-2 rounded-md bg-[#111119] px-2 py-0.5 font-mono text-xs text-[#B4B4C6]">
                     learnly.studio/{activeSlide.id}
                   </span>
@@ -208,7 +208,7 @@ export function HeroShowcase() {
                 <button
                   type="button"
                   onClick={() => setPaused((p) => !p)}
-                  className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg border-2 border-[#3A3A52] bg-[#14141D] px-2.5 py-1 text-xs font-bold text-[#FAFAF5] transition-colors hover:border-[#FFB800] hover:text-[#FFB800] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFB800]"
+                  className="inline-flex min-h-9 cursor-pointer items-center gap-1.5 rounded-lg border-2 border-[#3A3A52] bg-[#14141D] px-2.5 py-1 text-xs font-bold text-[#FAFAF5] transition-colors hover:border-[#FFB800] hover:text-[#FFB800] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFB800]"
                 >
                   {paused ? (
                     <>
@@ -232,8 +232,10 @@ export function HeroShowcase() {
                     <button
                       key={slide.id}
                       type="button"
+                      aria-label={slide.label}
+                      aria-current={isActive ? "true" : undefined}
                       onClick={() => setActiveIndex(idx)}
-                      className={`flex cursor-pointer items-center justify-center gap-1.5 rounded-xl px-2 py-2 font-bold transition-all focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFB800] ${
+                      className={`flex min-h-11 cursor-pointer items-center justify-center gap-1.5 rounded-xl px-2 py-2 font-bold transition-all focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFB800] sm:min-h-9 ${
                         isActive
                           ? `${slide.tabBg} border-2 border-[#111116] shadow-[2px_2px_0_0_#000000]`
                           : "border-2 border-transparent text-[#B4B4C6] hover:bg-[#1B1B27] hover:text-white"

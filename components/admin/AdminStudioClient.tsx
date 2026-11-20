@@ -340,7 +340,7 @@ function CourseSettingsForm({
                   {opt.label}
                   <SelectItemIndicator>
                     <Check
-                      className="h-3.5 w-3.5 text-[#111116] dark:text-[#FFB800]"
+                      className="h-3.5 w-3.5 text-current"
                       aria-hidden="true"
                     />
                   </SelectItemIndicator>
@@ -379,7 +379,7 @@ function CourseSettingsForm({
                   {opt.label}
                   <SelectItemIndicator>
                     <Check
-                      className="h-3.5 w-3.5 text-[#111116] dark:text-[#FFB800]"
+                      className="h-3.5 w-3.5 text-current"
                       aria-hidden="true"
                     />
                   </SelectItemIndicator>
@@ -805,7 +805,7 @@ function AdminStudioAuthenticated() {
                     </div>
                     <DialogClose
                       aria-label="Close new course dialog"
-                      className="inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-xl text-[#52525B] hover:bg-[#F6EFE0] dark:text-[#B4B4C6] dark:hover:bg-[#1F1F2D]"
+                      className="inline-flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl text-[#52525B] hover:bg-[#F6EFE0] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2563EB] dark:text-[#B4B4C6] dark:hover:bg-[#1F1F2D]"
                     >
                       <X className="h-4 w-4" aria-hidden="true" />
                     </DialogClose>
@@ -941,7 +941,7 @@ function AdminStudioAuthenticated() {
                                   {opt.label}
                                   <SelectItemIndicator>
                                     <Check
-                                      className="h-3.5 w-3.5 text-[#111116] dark:text-[#FFB800]"
+                                      className="h-3.5 w-3.5 text-current"
                                       aria-hidden="true"
                                     />
                                   </SelectItemIndicator>
@@ -980,7 +980,7 @@ function AdminStudioAuthenticated() {
                                   {opt.label}
                                   <SelectItemIndicator>
                                     <Check
-                                      className="h-3.5 w-3.5 text-[#111116] dark:text-[#FFB800]"
+                                      className="h-3.5 w-3.5 text-current"
                                       aria-hidden="true"
                                     />
                                   </SelectItemIndicator>
@@ -1544,7 +1544,7 @@ function AdminStudioAuthenticated() {
             </div>
             <DialogClose
               aria-label="Close module dialog"
-              className="inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-xl text-[#52525B] hover:bg-[#F6EFE0] dark:text-[#B4B4C6] dark:hover:bg-[#1F1F2D]"
+              className="inline-flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl text-[#52525B] hover:bg-[#F6EFE0] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2563EB] dark:text-[#B4B4C6] dark:hover:bg-[#1F1F2D]"
             >
               <X className="h-4 w-4" aria-hidden="true" />
             </DialogClose>

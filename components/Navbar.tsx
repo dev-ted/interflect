@@ -95,7 +95,7 @@ export function Navbar() {
                   </div>
                   <DrawerClose
                     aria-label="Close navigation menu"
-                    className="inline-flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl border-2 border-transparent text-[#52525B] transition-colors hover:border-[#18181B] hover:bg-[#F6EFE0] hover:text-[#111116] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2563EB] dark:text-[#B4B4C6] dark:hover:border-[#3A3A52] dark:hover:bg-[#1F1F2D] dark:hover:text-[#FAFAF5]"
+                    className="inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-xl border-2 border-transparent text-[#52525B] transition-colors hover:border-[#18181B] hover:bg-[#F6EFE0] hover:text-[#111116] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2563EB] dark:text-[#B4B4C6] dark:hover:border-[#3A3A52] dark:hover:bg-[#1F1F2D] dark:hover:text-[#FAFAF5]"
                   >
                     <X className="h-4 w-4" aria-hidden="true" />
                   </DrawerClose>
@@ -227,7 +227,7 @@ export function Navbar() {
                   key={item.href}
                   href={item.href}
                   aria-current={active ? "page" : undefined}
-                  className={`inline-flex items-center gap-1.5 rounded-xl px-3.5 py-1.5 text-sm font-bold transition-all ${
+                  className={`inline-flex items-center gap-1.5 rounded-xl px-3.5 py-1.5 text-sm font-bold transition-all focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2563EB] ${
                     active
                       ? "border-2 border-[#18181B] bg-[#FFB800] text-[#111116] shadow-[2px_2px_0_0_#111116] dark:border-[#18181B]"
                       : "border-2 border-transparent text-[#52525B] hover:border-[#18181B]/20 hover:bg-[#F6EFE0] hover:text-[#111116] dark:text-[#B4B4C6] dark:hover:border-[#3A3A52] dark:hover:bg-[#16161F] dark:hover:text-[#FAFAF5]"
@@ -242,7 +242,7 @@ export function Navbar() {
               <Link
                 href="/admin"
                 aria-current={pathname?.startsWith("/admin") ? "page" : undefined}
-                className={`inline-flex items-center gap-1.5 rounded-xl px-3.5 py-1.5 text-sm font-bold transition-all ${
+                className={`inline-flex items-center gap-1.5 rounded-xl px-3.5 py-1.5 text-sm font-bold transition-all focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2563EB] ${
                   pathname?.startsWith("/admin")
                     ? "border-2 border-[#18181B] bg-[#2563EB] text-white shadow-[2px_2px_0_0_#111116]"
                     : "border-2 border-transparent text-[#1D4ED8] hover:border-[#2563EB]/30 hover:bg-[#EFF6FF] dark:text-[#60A5FA] dark:hover:bg-[#16161F]"
