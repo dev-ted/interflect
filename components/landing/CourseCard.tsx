@@ -46,32 +46,32 @@ export function CourseCard({ course }: { course: CourseCardItem }) {
   return (
     <Link
       href={`/courses/${course.slug}`}
-      className="group flex flex-col overflow-hidden rounded-2xl border border-zinc-200/90 bg-white transition-all duration-200 hover:-translate-y-0.5 hover:border-indigo-300/90 hover:shadow-lg hover:shadow-indigo-950/5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:border-zinc-800 dark:bg-zinc-900/70 dark:hover:border-indigo-500/60"
+      className="tactile-card tactile-card-interactive group flex flex-col overflow-hidden rounded-2xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2563EB]"
     >
-      <div className="relative aspect-[16/9] w-full overflow-hidden bg-zinc-100 dark:bg-zinc-800">
+      <div className="relative aspect-[16/9] w-full overflow-hidden border-b-2 border-[#18181B] bg-[#F6EFE0] dark:border-[#3A3A52] dark:bg-[#1F1F2D]">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={course.thumbnailUrl}
           alt={course.title}
-          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-103 motion-reduce:transition-none"
+          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-104 motion-reduce:transition-none"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/65 via-zinc-950/10 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#111116]/75 via-[#111116]/15 to-transparent" />
 
         <div className="absolute top-3 left-3 flex flex-wrap items-center gap-2">
           {course.tier === "pro" ? (
-            <span className="inline-flex items-center gap-1 rounded-full bg-indigo-600/95 px-2.5 py-1 text-xs font-semibold text-white shadow-sm backdrop-blur-sm">
-              <Crown className="h-3 w-3" aria-hidden="true" />
-              Pro
+            <span className="inline-flex items-center gap-1 rounded-full border-2 border-[#18181B] bg-[#2563EB] px-2.5 py-0.5 text-xs font-extrabold text-white shadow-[2px_2px_0_0_#111116]">
+              <Crown className="h-3 w-3 text-[#FFB800]" aria-hidden="true" />
+              PRO
             </span>
           ) : (
-            <span className="inline-flex items-center gap-1 rounded-full bg-emerald-600/95 px-2.5 py-1 text-xs font-semibold text-white shadow-sm backdrop-blur-sm">
+            <span className="inline-flex items-center gap-1 rounded-full border-2 border-[#18181B] bg-[#00B87C] px-2.5 py-0.5 text-xs font-extrabold text-[#111116] shadow-[2px_2px_0_0_#111116]">
               <Sparkles className="h-3 w-3" aria-hidden="true" />
-              Free
+              FREE
             </span>
           )}
 
           {course.tier === "pro" && course.freePreviewCount > 0 && (
-            <span className="inline-flex items-center gap-1 rounded-full bg-zinc-950/75 px-2.5 py-1 text-xs font-medium text-emerald-300 backdrop-blur-sm">
+            <span className="inline-flex items-center gap-1 rounded-full border-2 border-[#18181B] bg-[#FFB800] px-2.5 py-0.5 text-xs font-extrabold text-[#111116] shadow-[2px_2px_0_0_#111116]">
               <PlayCircle className="h-3 w-3" aria-hidden="true" />
               {course.freePreviewCount} free{" "}
               {course.freePreviewCount === 1 ? "preview" : "previews"}
@@ -79,21 +79,21 @@ export function CourseCard({ course }: { course: CourseCardItem }) {
           )}
         </div>
 
-        <div className="absolute right-3 bottom-3 left-3 flex items-center justify-between text-xs font-medium text-white/90">
-          <span className="rounded-md bg-zinc-950/60 px-2 py-0.5 backdrop-blur-sm">
+        <div className="absolute right-3 bottom-3 left-3 flex items-center justify-between text-xs font-bold text-[#FAFAF5]">
+          <span className="rounded-lg border border-white/25 bg-[#111116]/80 px-2.5 py-0.5 backdrop-blur-xs">
             {course.category}
           </span>
-          <span className="rounded-md bg-zinc-950/60 px-2 py-0.5 backdrop-blur-sm">
+          <span className="rounded-lg border border-white/25 bg-[#111116]/80 px-2.5 py-0.5 backdrop-blur-xs">
             {LEVEL_LABEL[course.level]}
           </span>
         </div>
       </div>
 
       <div className="flex flex-1 flex-col p-5">
-        <h3 className="text-lg font-semibold tracking-tight text-zinc-950 transition-colors group-hover:text-indigo-600 dark:text-zinc-50 dark:group-hover:text-indigo-400">
+        <h3 className="font-display text-lg font-extrabold tracking-tight text-[#111116] transition-colors group-hover:text-[#D93817] dark:text-[#FAFAF5] dark:group-hover:text-[#FF6B4A]">
           {course.title}
         </h3>
-        <p className="mt-1.5 line-clamp-2 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
+        <p className="mt-1.5 line-clamp-2 text-sm leading-relaxed text-[#52525B] dark:text-[#B4B4C6]">
           {course.subtitle}
         </p>
 
@@ -101,7 +101,7 @@ export function CourseCard({ course }: { course: CourseCardItem }) {
           {course.tags.slice(0, 3).map((tag) => (
             <span
               key={tag}
-              className="rounded-md bg-zinc-100 px-2 py-0.5 text-xs font-medium text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300"
+              className="rounded-lg border border-[#18181B]/20 bg-[#F6EFE0] px-2.5 py-0.5 text-xs font-bold text-[#111116] dark:border-[#3A3A52] dark:bg-[#1F1F2D] dark:text-[#E4E4EE]"
             >
               {tag}
             </span>
@@ -110,35 +110,35 @@ export function CourseCard({ course }: { course: CourseCardItem }) {
 
         <div className="mt-auto pt-5">
           {course.isEnrolled && (
-            <div className="mb-3">
-              <div className="mb-1 flex items-center justify-between text-xs">
-                <span className="inline-flex items-center gap-1 font-medium text-emerald-700 dark:text-emerald-400">
+            <div className="mb-3.5">
+              <div className="mb-1.5 flex items-center justify-between text-xs">
+                <span className="inline-flex items-center gap-1 font-bold text-[#047857] dark:text-[#34D399]">
                   <CheckCircle2 className="h-3.5 w-3.5" aria-hidden="true" />
                   Enrolled
                 </span>
-                <span className="font-mono text-zinc-500 dark:text-zinc-400">
+                <span className="font-mono font-bold text-[#111116] dark:text-[#FAFAF5]">
                   {progressPct}%
                 </span>
               </div>
-              <div className="h-1.5 w-full overflow-hidden rounded-full bg-zinc-100 dark:bg-zinc-800">
+              <div className="h-2.5 w-full overflow-hidden rounded-full border border-[#18181B] bg-[#F6EFE0] dark:border-[#3A3A52] dark:bg-[#1F1F2D]">
                 <div
-                  className="h-full rounded-full bg-emerald-500 transition-all"
+                  className="h-full rounded-full bg-[#00B87C] transition-all"
                   style={{ width: `${progressPct}%` }}
                 />
               </div>
             </div>
           )}
 
-          <div className="flex items-center justify-between border-t border-zinc-100 pt-3.5 text-xs text-zinc-500 dark:border-zinc-800 dark:text-zinc-400">
+          <div className="flex items-center justify-between border-t-2 border-dashed border-[#E6DCC6] pt-3.5 text-xs font-semibold text-[#52525B] dark:border-[#2A2A3B] dark:text-[#B4B4C6]">
             <span className="inline-flex items-center gap-1.5">
-              <BookOpen className="h-3.5 w-3.5" aria-hidden="true" />
+              <BookOpen className="h-3.5 w-3.5 text-[#D93817] dark:text-[#FF6B4A]" aria-hidden="true" />
               {course.moduleCount}{" "}
               {course.moduleCount === 1 ? "module" : "modules"} ·{" "}
               {course.lessonCount}{" "}
               {course.lessonCount === 1 ? "lesson" : "lessons"}
             </span>
-            <span className="inline-flex items-center gap-1">
-              <Clock className="h-3.5 w-3.5" aria-hidden="true" />
+            <span className="inline-flex items-center gap-1 font-mono">
+              <Clock className="h-3.5 w-3.5 text-[#1D4ED8] dark:text-[#60A5FA]" aria-hidden="true" />
               {course.estimatedHours}h
             </span>
           </div>

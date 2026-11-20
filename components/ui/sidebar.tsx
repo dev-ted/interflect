@@ -92,7 +92,7 @@ export function SidebarMobileDrawer({
         aria-label={triggerLabel}
         className={
           triggerClassName ||
-          "inline-flex min-h-10 cursor-pointer items-center gap-2 rounded-xl border border-zinc-200 bg-white px-3 py-2 text-sm font-medium text-zinc-800 transition-colors hover:bg-zinc-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-100 dark:hover:bg-zinc-800"
+          "tactile-btn-sm inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-xl bg-white px-3.5 py-2 text-sm font-bold text-[#111116] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2563EB] dark:bg-[#16161F] dark:text-[#FAFAF5]"
         }
       >
         {triggerContent ?? (
@@ -103,26 +103,26 @@ export function SidebarMobileDrawer({
         )}
       </DrawerTrigger>
 
-      <DrawerBackdrop className="bg-zinc-950/50 backdrop-blur-[2px]" />
+      <DrawerBackdrop className="bg-[#111116]/60 backdrop-blur-[2px]" />
 
       <DrawerContent
         initialFocus="content"
-        className="flex h-dvh w-[min(22rem,88vw)] flex-col bg-white shadow-2xl outline-none dark:bg-zinc-950"
+        className="flex h-dvh w-[min(22rem,88vw)] flex-col border-r-2 border-[#18181B] bg-[#FFFBF2] shadow-2xl outline-none dark:border-[#3A3A52] dark:bg-[#0D0D12]"
       >
-        <div className="flex items-center justify-between gap-3 border-b border-zinc-200/80 px-4 py-3.5 dark:border-zinc-800">
+        <div className="flex items-center justify-between gap-3 border-b-2 border-[#18181B] bg-white px-4 py-3.5 dark:border-[#323244] dark:bg-[#16161F]">
           <div className="min-w-0">
-            <DrawerTitle className="truncate text-sm font-semibold text-zinc-950 dark:text-white">
+            <DrawerTitle className="font-display truncate text-sm font-extrabold text-[#111116] dark:text-[#FAFAF5]">
               {title}
             </DrawerTitle>
             {description && (
-              <DrawerDescription className="truncate text-xs text-zinc-500 dark:text-zinc-400">
+              <DrawerDescription className="truncate text-xs text-[#52525B] dark:text-[#B4B4C6]">
                 {description}
               </DrawerDescription>
             )}
           </div>
           <DrawerClose
             aria-label={`Close ${title}`}
-            className="inline-flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-lg text-zinc-500 transition-colors hover:bg-zinc-100 hover:text-zinc-950 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-white"
+            className="inline-flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-xl border-2 border-transparent text-[#52525B] transition-colors hover:border-[#18181B] hover:bg-[#F6EFE0] hover:text-[#111116] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2563EB] dark:text-[#B4B4C6] dark:hover:border-[#3A3A52] dark:hover:bg-[#1F1F2D] dark:hover:text-[#FAFAF5]"
           >
             <X className="h-4 w-4" aria-hidden="true" />
           </DrawerClose>
