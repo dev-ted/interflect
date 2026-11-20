@@ -1,8 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { useAuth } from "@clerk/nextjs";
-import { useQuery } from "convex/react";
+import { SignInButton, useAuth } from "@clerk/nextjs";
+import {
+  Authenticated,
+  AuthLoading,
+  Unauthenticated,
+  useQuery,
+} from "convex/react";
 import {
   Progress,
   ProgressIndicator,
@@ -23,6 +28,50 @@ import { api } from "@/convex/_generated/api";
 import { PRO_PLAN_SLUG } from "@/lib/auth";
 
 export function DashboardClient() {
+  return (
+    <>
+      <AuthLoading>
+        <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8">
+          <div className="h-24 animate-pulse rounded-2xl bg-zinc-100 dark:bg-zinc-900" />
+          <div className="mt-8 grid grid-cols-2 gap-4 lg:grid-cols-4">
+            <div className="h-24 animate-pulse rounded-2xl bg-zinc-100 dark:bg-zinc-900" />
+            <div className="h-24 animate-pulse rounded-2xl bg-zinc-100 dark:bg-zinc-900" />
+            <div className="h-24 animate-pulse rounded-2xl bg-zinc-100 dark:bg-zinc-900" />
+            <div className="h-24 animate-pulse rounded-2xl bg-zinc-100 dark:bg-zinc-900" />
+          </div>
+        </div>
+      </AuthLoading>
+
+      <Unauthenticated>
+        <div className="mx-auto max-w-2xl px-4 py-20 text-center">
+          <h1 className="text-2xl font-bold text-zinc-950 dark:text-white">
+            Sign in to view your learning dashboard
+          </h1>
+          <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
+            Track enrolled courses, completed lessons, and quiz scores in real
+            time.
+          </p>
+          <div className="mt-6">
+            <SignInButton mode="modal">
+              <button
+                type="button"
+                className="cursor-pointer rounded-xl bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-indigo-500"
+              >
+                Sign In
+              </button>
+            </SignInButton>
+          </div>
+        </div>
+      </Unauthenticated>
+
+      <Authenticated>
+        <AuthenticatedDashboardContent />
+      </Authenticated>
+    </>
+  );
+}
+
+function AuthenticatedDashboardContent() {
   const dashboard = useQuery(api.enrollments.getMyLearningDashboard, {});
   const { has } = useAuth();
   const isPro = Boolean(

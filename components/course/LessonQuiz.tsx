@@ -1,8 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useAuth } from "@clerk/nextjs";
-import { useMutation } from "convex/react";
+import { useConvexAuth, useMutation } from "convex/react";
 import { toast } from "@ui-sdk/react/toast";
 import { CheckCircle2, RotateCcw, Trophy, XCircle } from "lucide-react";
 import { api } from "@/convex/_generated/api";
@@ -27,7 +26,7 @@ export function LessonQuiz({
   questions,
   lastAttempt,
 }: LessonQuizProps) {
-  const { isSignedIn } = useAuth();
+  const { isAuthenticated } = useConvexAuth();
   const recordAttempt = useMutation(api.enrollments.recordQuizAttempt);
   const [selections, setSelections] = useState<Record<string, number>>({});
   const [submitted, setSubmitted] = useState(false);
@@ -53,7 +52,7 @@ export function LessonQuiz({
       return;
     }
     setSubmitted(true);
-    if (isSignedIn) {
+    if (isAuthenticated) {
       setSaving(true);
       try {
         await recordAttempt({

@@ -7,9 +7,13 @@ import {
   SignInButton,
   SignUpButton,
   UserButton,
-  useAuth,
   useUser,
 } from "@clerk/nextjs";
+import {
+  Authenticated,
+  Unauthenticated,
+  useConvexAuth,
+} from "convex/react";
 import {
   BookOpen,
   Crown,
@@ -27,13 +31,10 @@ const NAV_LINKS = [
 
 export function Navbar() {
   const pathname = usePathname();
-  const { has, isSignedIn } = useAuth();
+  const { isAuthenticated } = useConvexAuth();
   const { user } = useUser();
 
   const isAdmin = isAdminRole(user?.publicMetadata);
-  const isPro = Boolean(
-    has?.({ plan: PRO_PLAN_SLUG }) || has?.({ feature: "pro_courses" }),
-  );
 
   return (
     <header className="sticky top-0 z-40 border-b border-zinc-200/80 bg-white/85 backdrop-blur-md dark:border-zinc-800/80 dark:bg-zinc-950/85">
@@ -51,7 +52,7 @@ export function Navbar() {
 
           <nav aria-label="Primary" className="hidden items-center gap-1 md:flex">
             {NAV_LINKS.map((item) => {
-              if (item.authOnly && !isSignedIn) return null;
+              if (item.authOnly && !isAuthenticated) return null;
               const active =
                 pathname === item.href ||
                 (item.href !== "/" && pathname?.startsWith(item.href));
@@ -90,14 +91,19 @@ export function Navbar() {
         </div>
 
         <div className="flex items-center gap-3">
-          {isSignedIn && isPro && (
+          <Show
+            when={(checkHas) =>
+              checkHas({ plan: PRO_PLAN_SLUG }) ||
+              checkHas({ feature: "pro_courses" })
+            }
+          >
             <span className="hidden items-center gap-1 rounded-full border border-indigo-200 bg-indigo-50 px-2.5 py-0.5 text-xs font-semibold text-indigo-700 sm:inline-flex dark:border-indigo-800/70 dark:bg-indigo-950/70 dark:text-indigo-300">
               <Crown className="h-3 w-3" aria-hidden="true" />
               Pro
             </span>
-          )}
+          </Show>
 
-          <Show when="signed-out">
+          <Unauthenticated>
             <SignInButton mode="modal">
               <button
                 type="button"
@@ -114,20 +120,28 @@ export function Navbar() {
                 Get Started
               </button>
             </SignUpButton>
-          </Show>
+          </Unauthenticated>
 
-          <Show when="signed-in">
-            {!isPro && (
-              <Link
-                href="/pricing"
-                className="hidden items-center gap-1.5 rounded-lg bg-indigo-600 px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-indigo-500 sm:inline-flex"
-              >
-                <Crown className="h-3.5 w-3.5" aria-hidden="true" />
-                Upgrade to Pro
-              </Link>
-            )}
+          <Authenticated>
+            <Show
+              when={(checkHas) =>
+                checkHas({ plan: PRO_PLAN_SLUG }) ||
+                checkHas({ feature: "pro_courses" })
+              }
+              fallback={
+                <Link
+                  href="/pricing"
+                  className="hidden items-center gap-1.5 rounded-lg bg-indigo-600 px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-indigo-500 sm:inline-flex"
+                >
+                  <Crown className="h-3.5 w-3.5" aria-hidden="true" />
+                  Upgrade to Pro
+                </Link>
+              }
+            >
+              {null}
+            </Show>
             <UserButton />
-          </Show>
+          </Authenticated>
         </div>
       </div>
     </header>
