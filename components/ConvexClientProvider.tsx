@@ -119,8 +119,9 @@ function AppToaster() {
     <ToastRegion
       side="top"
       align="center"
+      expanded
       aria-label="Notifications"
-      className="pointer-events-none fixed inset-x-0 top-4 z-[100] flex flex-col items-center gap-2 px-4"
+      className="pointer-events-none top-4 m-0 w-[min(24rem,calc(100vw-2rem))] overflow-visible border-0 bg-transparent p-0 [&_[data-slot=toast-list]]:m-0 [&_[data-slot=toast-list]]:flex [&_[data-slot=toast-list]]:list-none [&_[data-slot=toast-list]]:flex-col [&_[data-slot=toast-list]]:gap-2 [&_[data-slot=toast-list]]:p-0"
     >
       {(item) => {
         const type = item.type;
@@ -135,7 +136,7 @@ function AppToaster() {
 
         return (
           <Toast
-            className={`pointer-events-auto flex w-full max-w-md items-center gap-3 rounded-2xl border bg-white/95 px-4 py-3 text-sm text-zinc-950 shadow-xl shadow-zinc-950/12 backdrop-blur-md transition-[opacity,transform] duration-200 data-starting-style:-translate-y-2 data-starting-style:opacity-0 data-ending-style:-translate-y-2 data-ending-style:opacity-0 dark:bg-zinc-900/95 dark:text-zinc-50 dark:shadow-black/50 ${borderAccent}`}
+            className={`pointer-events-auto flex w-full select-none items-center gap-3 rounded-2xl border bg-white px-4 py-3 text-sm text-zinc-950 shadow-xl shadow-zinc-950/15 transition-[opacity,transform] duration-200 data-starting-style:-translate-y-2 data-starting-style:opacity-0 data-ending-style:-translate-y-2 data-ending-style:opacity-0 dark:bg-zinc-900 dark:text-zinc-50 dark:shadow-black/50 ${borderAccent}`}
           >
             {type === "success" ? (
               <CheckCircle2
@@ -166,7 +167,9 @@ function AppToaster() {
 
             <div className="min-w-0 flex-1">
               <ToastTitle className="font-semibold leading-snug text-zinc-950 dark:text-zinc-50" />
-              <ToastDescription className="mt-0.5 text-xs text-zinc-600 dark:text-zinc-400" />
+              {item.description && (
+                <ToastDescription className="mt-0.5 text-xs text-zinc-600 dark:text-zinc-400" />
+              )}
             </div>
 
             {item.action && (
