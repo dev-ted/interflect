@@ -1,0 +1,42 @@
+{
+  "name": "lms-platform",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently -n next,convex -c cyan,magenta \"pnpm run dev:next\" \"pnpm run dev:convex\"",
+    "dev:next": "next dev",
+    "dev:convex": "convex dev",
+    "eve:dev": "eve dev --agent learnly",
+    "eve:build": "eve build",
+    "eve:info": "eve info --agent learnly",
+    "build": "next build --webpack",
+    "start": "next start",
+    "lint": "eslint"
+  },
+  "dependencies": {
+    "@clerk/nextjs": "^7.10.4",
+    "@ui-sdk/core": "0.1.0-beta.10",
+    "@ui-sdk/react": "0.1.0-beta.10",
+    "ai": "^7.0.177",
+    "convex": "^1.51.0",
+    "eve": "^1.1.0",
+    "next": "16.4.6",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "4.3.3",
+    "@tailwindcss/turbopack": "4.3.3",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "babel-plugin-react-compiler": "1.0.0",
+    "concurrently": "^10.0.7",
+    "eslint": "^9",
+    "eslint-config-next": "16.4.6",
+    "tailwindcss": "4.3.3",
+    "typescript": "^5"
+  },
+  "packageManager": "pnpm@11.1.2"
+}
