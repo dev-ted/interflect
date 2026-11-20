@@ -2,7 +2,12 @@
 
 import { useId, useState } from "react";
 import Link from "next/link";
-import { useMutation, useQuery } from "convex/react";
+import {
+  Authenticated,
+  AuthLoading,
+  useMutation,
+  useQuery,
+} from "convex/react";
 import {
   Dialog,
   DialogBackdrop,
@@ -495,6 +500,25 @@ function CourseSettingsForm({
 }
 
 export function AdminStudioClient() {
+  return (
+    <>
+      <AuthLoading>
+        <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+          <div className="h-20 animate-pulse rounded-2xl bg-zinc-100 dark:bg-zinc-900" />
+          <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-12">
+            <div className="h-[480px] animate-pulse rounded-2xl bg-zinc-100 lg:col-span-4 dark:bg-zinc-900" />
+            <div className="h-[480px] animate-pulse rounded-2xl bg-zinc-100 lg:col-span-8 dark:bg-zinc-900" />
+          </div>
+        </div>
+      </AuthLoading>
+      <Authenticated>
+        <AdminStudioAuthenticated />
+      </Authenticated>
+    </>
+  );
+}
+
+function AdminStudioAuthenticated() {
   const courses = useQuery(api.courses.listAllAdmin);
   const [selectedCourseId, setSelectedCourseId] =
     useState<Id<"courses"> | null>(null);

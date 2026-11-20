@@ -2,8 +2,14 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { SignInButton, useAuth } from "@clerk/nextjs";
-import { useMutation, useQuery } from "convex/react";
+import { Show, SignInButton, useAuth, useUser } from "@clerk/nextjs";
+import {
+  Authenticated,
+  Unauthenticated,
+  useConvexAuth,
+  useMutation,
+  useQuery,
+} from "convex/react";
 import {
   Accordion,
   AccordionHeader,
@@ -34,7 +40,7 @@ import {
 } from "lucide-react";
 import { api } from "@/convex/_generated/api";
 import { usePageContext } from "@/components/PageContextProvider";
-import { PRO_PLAN_SLUG } from "@/lib/auth";
+import { isAdminRole, PRO_PLAN_SLUG } from "@/lib/auth";
 
 function formatDuration(seconds: number): string {
   const mins = Math.max(1, Math.round(seconds / 60));
@@ -44,12 +50,17 @@ function formatDuration(seconds: number): string {
 export function CourseDetailClient({ slug }: { slug: string }) {
   const course = useQuery(api.courses.getCourseBySlug, { slug });
   const enroll = useMutation(api.enrollments.enroll);
-  const { isSignedIn, has } = useAuth();
+  const { isAuthenticated } = useConvexAuth();
+  const { has } = useAuth();
+  const { user } = useUser();
   const { setPageDetail } = usePageContext();
   const [enrolling, setEnrolling] = useState(false);
 
+  const isAdmin = isAdminRole(user?.publicMetadata);
   const clientHasPro = Boolean(
-    has?.({ plan: PRO_PLAN_SLUG }) || has?.({ feature: "pro_courses" }),
+    has?.({ plan: PRO_PLAN_SLUG }) ||
+      has?.({ feature: "pro_courses" }) ||
+      isAdmin,
   );
 
   useEffect(() => {
@@ -196,8 +207,8 @@ export function CourseDetailClient({ slug }: { slug: string }) {
                 </Link>
               )}
 
-              {isSignedIn ? (
-                course.isEnrolled ? (
+              <Authenticated>
+                {course.isEnrolled ? (
                   <span className="inline-flex items-center gap-1.5 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-2.5 text-sm font-semibold text-emerald-700 dark:border-emerald-900/60 dark:bg-emerald-950/50 dark:text-emerald-300">
                     <CheckCircle2 className="h-4 w-4" aria-hidden="true" />
                     Enrolled
@@ -211,8 +222,10 @@ export function CourseDetailClient({ slug }: { slug: string }) {
                   >
                     {enrolling ? "Enrolling..." : "Enroll in Course"}
                   </button>
-                )
-              ) : (
+                )}
+              </Authenticated>
+
+              <Unauthenticated>
                 <SignInButton mode="modal">
                   <button
                     type="button"
@@ -221,16 +234,27 @@ export function CourseDetailClient({ slug }: { slug: string }) {
                     Sign in to Enroll
                   </button>
                 </SignInButton>
-              )}
+              </Unauthenticated>
 
-              {course.tier === "pro" && !hasProAccess && (
-                <Link
-                  href="/pricing"
-                  className="inline-flex items-center gap-1.5 rounded-xl border border-indigo-200 bg-indigo-50 px-4 py-2.5 text-sm font-semibold text-indigo-700 transition-colors hover:bg-indigo-100 dark:border-indigo-800/70 dark:bg-indigo-950/50 dark:text-indigo-300"
+              {course.tier === "pro" && (
+                <Show
+                  when={(checkHas) =>
+                    checkHas({ plan: PRO_PLAN_SLUG }) ||
+                    checkHas({ feature: "pro_courses" }) ||
+                    isAdmin
+                  }
+                  fallback={
+                    <Link
+                      href="/pricing"
+                      className="inline-flex items-center gap-1.5 rounded-xl border border-indigo-200 bg-indigo-50 px-4 py-2.5 text-sm font-semibold text-indigo-700 transition-colors hover:bg-indigo-100 dark:border-indigo-800/70 dark:bg-indigo-950/50 dark:text-indigo-300"
+                    >
+                      <Crown className="h-4 w-4" aria-hidden="true" />
+                      Upgrade to Pro
+                    </Link>
+                  }
                 >
-                  <Crown className="h-4 w-4" aria-hidden="true" />
-                  Upgrade to Pro
-                </Link>
+                  {null}
+                </Show>
               )}
             </div>
           </div>
@@ -245,7 +269,7 @@ export function CourseDetailClient({ slug }: { slug: string }) {
           </div>
         </div>
 
-        {isSignedIn && course.totalLessons > 0 && (
+        {isAuthenticated && course.totalLessons > 0 && (
           <div className="border-t border-zinc-200/80 bg-zinc-50/70 px-6 py-4 sm:px-8 dark:border-zinc-800 dark:bg-zinc-950/50">
             <Progress value={progressPct} className="space-y-2">
               <div className="flex items-center justify-between text-xs font-medium">

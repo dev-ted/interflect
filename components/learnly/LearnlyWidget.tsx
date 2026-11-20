@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { SignInButton, useAuth, useUser } from "@clerk/nextjs";
+import { useConvexAuth } from "convex/react";
 import { Button } from "@ui-sdk/react/button";
 import { Textarea } from "@ui-sdk/react/textarea";
 import {
@@ -70,7 +71,8 @@ function getSuggestionChips(context: PageLearningContext): string[] {
 }
 
 export function LearnlyWidget() {
-  const { isSignedIn, has } = useAuth();
+  const { isAuthenticated } = useConvexAuth();
+  const { has } = useAuth();
   const { user } = useUser();
   const { context } = usePageContext();
 
@@ -85,7 +87,7 @@ export function LearnlyWidget() {
   const messageIdRef = useRef(0);
 
   const hasProAccess = Boolean(
-    isSignedIn &&
+    isAuthenticated &&
       (has?.({ plan: PRO_PLAN_SLUG }) ||
         has?.({ feature: "learnly_ai" }) ||
         has?.({ feature: "pro_courses" }) ||
@@ -297,7 +299,7 @@ export function LearnlyWidget() {
                   Upgrade to Pro
                 </Link>
 
-                {!isSignedIn && (
+                {!isAuthenticated && (
                   <SignInButton mode="modal">
                     <button
                       type="button"

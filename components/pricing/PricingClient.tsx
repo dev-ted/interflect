@@ -2,8 +2,9 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Show, SignUpButton, useAuth } from "@clerk/nextjs";
+import { Show, SignUpButton } from "@clerk/nextjs";
 import { CheckoutButton } from "@clerk/nextjs/experimental";
+import { Authenticated, Unauthenticated } from "convex/react";
 import {
   SegmentedControl,
   SegmentedControlIndicator,
@@ -18,6 +19,7 @@ import {
   Sparkles,
   Video,
 } from "lucide-react";
+import { useRefreshConvexAuth } from "@/components/ConvexClientProvider";
 import { PRO_PLAN_ID, PRO_PLAN_SLUG } from "@/lib/auth";
 
 type BillingPeriod = "month" | "annual";
@@ -60,10 +62,7 @@ const FAQS = [
 
 export function PricingClient() {
   const [period, setPeriod] = useState<BillingPeriod>("annual");
-  const { has } = useAuth();
-  const isPro = Boolean(
-    has?.({ plan: PRO_PLAN_SLUG }) || has?.({ feature: "pro_courses" }),
-  );
+  const refreshConvexAuth = useRefreshConvexAuth();
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6 lg:px-8">
@@ -207,7 +206,52 @@ export function PricingClient() {
           </ul>
 
           <div className="mt-8">
-            {isPro ? (
+            <Show
+              when={(has) =>
+                has({ plan: PRO_PLAN_SLUG }) ||
+                has({ feature: "pro_courses" })
+              }
+              fallback={
+                <>
+                  <Authenticated>
+                    <CheckoutButton
+                      planId={PRO_PLAN_ID}
+                      planPeriod={period}
+                      for="user"
+                      newSubscriptionRedirectUrl="/dashboard"
+                      onSubscriptionComplete={() => {
+                        void refreshConvexAuth();
+                        toast.success(
+                          "Welcome to Pro! All courses and Learnly AI are unlocked.",
+                        );
+                      }}
+                    >
+                      <button
+                        type="button"
+                        className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-indigo-500"
+                      >
+                        <Crown className="h-4 w-4" aria-hidden="true" />
+                        {period === "annual"
+                          ? "Upgrade to Pro Yearly ($290/yr)"
+                          : "Upgrade to Pro Monthly ($29/mo)"}
+                      </button>
+                    </CheckoutButton>
+                  </Authenticated>
+
+                  <Unauthenticated>
+                    <SignUpButton mode="modal">
+                      <button
+                        type="button"
+                        className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-indigo-500"
+                      >
+                        <Crown className="h-4 w-4" aria-hidden="true" />
+                        Sign Up to Unlock Pro
+                      </button>
+                    </SignUpButton>
+                  </Unauthenticated>
+                </>
+              }
+            >
               <div className="space-y-2.5">
                 <div className="flex w-full items-center justify-center gap-2 rounded-xl border border-emerald-300 bg-emerald-50 px-5 py-3 text-sm font-semibold text-emerald-800 dark:border-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300">
                   <Check className="h-4 w-4" aria-hidden="true" />
@@ -221,45 +265,7 @@ export function PricingClient() {
                   <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
                 </Link>
               </div>
-            ) : (
-              <>
-                <Show when="signed-in">
-                  <CheckoutButton
-                    planId={PRO_PLAN_ID}
-                    planPeriod={period}
-                    for="user"
-                    newSubscriptionRedirectUrl="/dashboard"
-                    onSubscriptionComplete={() => {
-                      toast.success(
-                        "Welcome to Pro! All courses and Learnly AI are unlocked.",
-                      );
-                    }}
-                  >
-                    <button
-                      type="button"
-                      className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-indigo-500"
-                    >
-                      <Crown className="h-4 w-4" aria-hidden="true" />
-                      {period === "annual"
-                        ? "Upgrade to Pro Yearly ($290/yr)"
-                        : "Upgrade to Pro Monthly ($29/mo)"}
-                    </button>
-                  </CheckoutButton>
-                </Show>
-
-                <Show when="signed-out">
-                  <SignUpButton mode="modal">
-                    <button
-                      type="button"
-                      className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-indigo-500"
-                    >
-                      <Crown className="h-4 w-4" aria-hidden="true" />
-                      Sign Up to Unlock Pro
-                    </button>
-                  </SignUpButton>
-                </Show>
-              </>
-            )}
+            </Show>
           </div>
         </div>
       </div>
