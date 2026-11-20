@@ -611,20 +611,48 @@ export async function POST(request: Request) {
         }
       }
 
+      const activeLessonContext = catalogSnapshot?.activeLesson
+        ? [
+            `\n## Active Lesson Content (${catalogSnapshot.activeLesson.lessonTitle})`,
+            `Summary: ${catalogSnapshot.activeLesson.summary}`,
+            catalogSnapshot.activeLesson.markdownContent.slice(0, 6000),
+          ].join("\n")
+        : "";
+
+      const progressContext = userProgress
+        ? `\n## Learner Progress Snapshot\nTotal completed lessons: ${userProgress.totalCompletedLessons}. Enrolled courses: ${
+            userProgress.enrolledCourses
+              .map(
+                (c) =>
+                  `${c.title} (${c.completedCount}/${c.totalLessons} completed${c.nextLesson ? `, next: ${c.nextLesson.title}` : ""})`,
+              )
+              .join("; ") || "None yet"
+          }.`
+        : "";
+
       const systemPrompt = [
-        "You are Learnly, the Pro AI learning companion and personal tutor for Learnly Studio.",
-        "Always use your tools to inspect the live course catalog, lesson markdown content, and learner progress when answering questions about courses, lessons, or study plans.",
-        "Whenever the learner asks for a quiz, practice questions, or a knowledge check, ALWAYS call the create_interactive_quiz tool with 3 to 4 high-quality questions grounded in the lesson or course material, then briefly invite them to answer the quiz inline.",
-        "Keep responses concise, structured in clean Markdown, encouraging, and directly tailored to what the learner is viewing.",
+        "You are Learnly, the friendly, sharp, deeply knowledgeable Pro AI tutor for Learnly Studio (taught by Teddy).",
+        "Core teaching rules:",
+        "1. Answer the learner's EXACT question directly and naturally — like a great senior engineer pairing with them. Never dump raw tool outputs or generic lesson outlines unless they explicitly ask for a summary.",
+        "2. If they say hello or chat casually, greet them warmly in 1-2 sentences, acknowledge what they're currently studying if relevant, and offer 1-2 concrete ways you can help.",
+        "3. When they ask 'why' or 'how' about a concept (e.g. Suspense, Cache Components, Convex, Clerk Billing, Mux, Eve), give a crystal-clear, intuitive mental model, explain what breaks if you do it wrong, and include a concise code snippet when helpful.",
+        "4. Use your tools (`list_courses`, `get_lesson_content`, `get_user_progress`) when the learner asks about OTHER courses, OTHER lessons, or detailed progress recommendations.",
+        "5. Whenever the learner asks for a quiz, practice questions, or a knowledge check, ALWAYS call `create_interactive_quiz` with 3 to 4 conceptual multiple-choice questions grounded in the material, then invite them to try the interactive quiz card below WITHOUT giving away the answers in your message.",
+        "6. Keep formatting clean, scannable Markdown — concise, punchy, and genuinely insightful.",
         contextLines.length > 0
           ? `\n## Live Learner Context\n${contextLines.join("\n")}`
           : "",
+        activeLessonContext,
+        progressContext,
       ]
         .filter(Boolean)
         .join("\n");
 
+      const modelId =
+        process.env.LEARNLY_MODEL ?? "anthropic/claude-sonnet-4.6";
+
       const result = await generateText({
-        model: "anthropic/claude-sonnet-5",
+        model: modelId,
         system: systemPrompt,
         messages: messages.map((m) => ({
           role: m.role,
@@ -736,7 +764,8 @@ export async function POST(request: Request) {
           toolCalls: Array.from(toolCallsUsed),
         });
       }
-    } catch {
+    } catch (err) {
+      console.error("[learnly] AI Gateway generation failed:", err);
       // Fall back to live Convex context synthesis when gateway/provider credentials fail.
     }
   }
