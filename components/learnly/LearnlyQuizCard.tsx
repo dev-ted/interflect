@@ -40,30 +40,30 @@ export function LearnlyQuizCard({ quiz }: LearnlyQuizCardProps) {
   }
 
   return (
-    <div className="mt-3 overflow-hidden rounded-xl border border-indigo-200/80 bg-white shadow-xs dark:border-indigo-900/60 dark:bg-zinc-900">
-      <div className="flex items-center justify-between gap-2 border-b border-indigo-100 bg-indigo-50/70 px-3.5 py-2.5 dark:border-indigo-900/50 dark:bg-indigo-950/40">
+    <div className="mt-3 overflow-hidden rounded-2xl border-2 border-[#18181B] bg-white shadow-[3px_3px_0_0_#111116] dark:border-[#3A3A52] dark:bg-[#16161F] dark:shadow-[3px_3px_0_0_#000000]">
+      <div className="flex items-center justify-between gap-2 border-b-2 border-[#18181B] bg-[#FFB800] px-3.5 py-2.5 text-[#111116]">
         <div className="min-w-0">
-          <p className="flex items-center gap-1.5 text-[11px] font-semibold tracking-wide text-indigo-700 uppercase dark:text-indigo-300">
+          <p className="flex items-center gap-1 text-[10px] font-extrabold tracking-wide uppercase">
             <Sparkles className="h-3 w-3 shrink-0" aria-hidden="true" />
             Interactive Quiz
           </p>
-          <h4 className="truncate text-xs font-semibold text-zinc-950 dark:text-zinc-50">
+          <h4 className="font-display truncate text-xs font-extrabold">
             {quiz.title}
           </h4>
         </div>
-        <span className="shrink-0 rounded-full bg-white px-2 py-0.5 font-mono text-[11px] font-medium text-indigo-700 ring-1 ring-indigo-200/80 dark:bg-zinc-900 dark:text-indigo-300 dark:ring-indigo-800/70">
+        <span className="shrink-0 rounded-full border-2 border-[#18181B] bg-white px-2 py-0.5 font-mono text-[11px] font-extrabold text-[#111116]">
           {submitted ? `${score}/${total}` : `${answeredCount}/${total}`}
         </span>
       </div>
 
       {submitted && (
-        <div className="flex items-center justify-between gap-2 border-b border-zinc-200/80 bg-zinc-50/90 px-3.5 py-2.5 dark:border-zinc-800 dark:bg-zinc-950/70">
-          <div className="flex items-center gap-2 text-xs font-semibold text-zinc-900 dark:text-zinc-100">
+        <div className="animate-pop-in flex items-center justify-between gap-2 border-b-2 border-[#18181B]/15 bg-[#F6EFE0] px-3.5 py-2.5 dark:border-[#2A2A3B] dark:bg-[#12121A]">
+          <div className="flex items-center gap-2 text-xs font-extrabold text-[#111116] dark:text-[#FAFAF5]">
             <Trophy
               className={`h-4 w-4 shrink-0 ${
                 score === total
-                  ? "text-emerald-600 dark:text-emerald-400"
-                  : "text-indigo-600 dark:text-indigo-400"
+                  ? "text-[#047857] dark:text-[#34D399]"
+                  : "text-[#D93817] dark:text-[#FF6B4A]"
               }`}
               aria-hidden="true"
             />
@@ -73,7 +73,7 @@ export function LearnlyQuizCard({ quiz }: LearnlyQuizCardProps) {
           </div>
           <Button
             onClick={handleRetry}
-            className="inline-flex cursor-pointer items-center gap-1 rounded-lg border border-zinc-300 bg-white px-2.5 py-1 text-[11px] font-semibold text-zinc-700 transition-colors hover:bg-zinc-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-200 dark:hover:bg-zinc-800"
+            className="tactile-btn-sm inline-flex cursor-pointer items-center gap-1 rounded-lg bg-white px-2.5 py-1 text-[11px] font-extrabold text-[#111116] hover:bg-[#FFB800] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2563EB]"
           >
             <RotateCcw className="h-3 w-3" aria-hidden="true" />
             Retry
@@ -81,7 +81,7 @@ export function LearnlyQuizCard({ quiz }: LearnlyQuizCardProps) {
         </div>
       )}
 
-      <div className="divide-y divide-zinc-100 dark:divide-zinc-800/80">
+      <div className="divide-y divide-[#E6DCC6] dark:divide-[#2A2A3B]">
         {quiz.questions.map((question, qIdx) => {
           const chosen = selections[question.id];
           const groupLabelId = `${baseId}-q-${question.id}`;
@@ -90,10 +90,10 @@ export function LearnlyQuizCard({ quiz }: LearnlyQuizCardProps) {
             <div key={question.id} className="p-3.5">
               <p
                 id={groupLabelId}
-                className="text-xs leading-relaxed font-semibold text-zinc-900 dark:text-zinc-100"
+                className="text-xs leading-relaxed font-bold text-[#111116] dark:text-[#FAFAF5]"
               >
-                <span className="mr-1.5 font-mono text-[11px] text-indigo-600 dark:text-indigo-400">
-                  Q{qIdx + 1}.
+                <span className="mr-1.5 inline-flex rounded border border-[#18181B] bg-[#FFB800] px-1 font-mono text-[10px] font-extrabold text-[#111116]">
+                  Q{qIdx + 1}
                 </span>
                 {question.question}
               </p>
@@ -117,40 +117,40 @@ export function LearnlyQuizCard({ quiz }: LearnlyQuizCardProps) {
                   const optionValue = String(optIdx);
 
                   let cardClasses =
-                    "border-zinc-200 bg-zinc-50/50 text-zinc-800 hover:border-indigo-300 hover:bg-indigo-50/40 dark:border-zinc-800 dark:bg-zinc-950/60 dark:text-zinc-200 dark:hover:border-indigo-700";
+                    "border-[#18181B]/20 bg-[#FFFBF2] text-[#111116] hover:border-[#18181B] hover:bg-white dark:border-[#3A3A52] dark:bg-[#12121A] dark:text-[#FAFAF5] dark:hover:border-[#FFB800]";
 
                   if (submitted) {
                     if (isCorrect) {
                       cardClasses =
-                        "border-emerald-500 bg-emerald-50/90 text-emerald-950 dark:border-emerald-600 dark:bg-emerald-950/50 dark:text-emerald-100";
+                        "border-[#047857] bg-[#00B87C]/20 text-[#111116] dark:border-[#34D399] dark:bg-[#00B87C]/20 dark:text-[#FAFAF5]";
                     } else if (isSelected && !isCorrect) {
                       cardClasses =
-                        "border-rose-500 bg-rose-50/90 text-rose-950 dark:border-rose-600 dark:bg-rose-950/50 dark:text-rose-100";
+                        "border-[#D93817] bg-[#FF5A36]/20 text-[#111116] dark:border-[#FF6B4A] dark:bg-[#FF5A36]/20 dark:text-[#FAFAF5]";
                     } else {
                       cardClasses =
-                        "border-zinc-200/70 bg-zinc-50/30 text-zinc-500 opacity-70 dark:border-zinc-800/70 dark:bg-zinc-950/30 dark:text-zinc-400";
+                        "border-[#18181B]/10 bg-[#FFFBF2]/50 text-[#52525B] opacity-65 dark:border-[#2A2A3B] dark:bg-[#12121A]/40 dark:text-[#8C8CA1]";
                     }
                   } else if (isSelected) {
                     cardClasses =
-                      "border-indigo-600 bg-indigo-50/80 text-indigo-950 dark:border-indigo-500 dark:bg-indigo-950/50 dark:text-indigo-100";
+                      "border-[#18181B] bg-[#FFB800] text-[#111116] dark:border-[#18181B] dark:bg-[#FFB800] dark:text-[#111116]";
                   }
 
                   return (
                     <label
                       key={`${question.id}-${optionValue}`}
-                      className={`flex items-start gap-2.5 rounded-lg border px-2.5 py-2 text-xs transition-colors ${
+                      className={`flex items-start gap-2.5 rounded-xl border-2 px-2.5 py-2 text-xs font-semibold transition-colors ${
                         submitted ? "cursor-default" : "cursor-pointer"
                       } ${cardClasses}`}
                     >
                       <Radio
                         value={optionValue}
-                        className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full border border-current/35 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 data-checked:border-indigo-600 dark:data-checked:border-indigo-400"
+                        className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full border-2 border-current/50 bg-white/80 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2563EB] data-checked:border-[#111116] dark:bg-[#16161F]"
                       >
-                        <RadioIndicator className="h-2 w-2 rounded-full bg-indigo-600 dark:bg-indigo-400" />
+                        <RadioIndicator className="h-2 w-2 rounded-full bg-[#111116] dark:bg-[#FFB800]" />
                       </Radio>
 
                       <span className="flex-1 leading-snug">
-                        <span className="mr-1.5 font-mono text-[11px] font-semibold opacity-75">
+                        <span className="mr-1.5 font-mono text-[11px] font-extrabold opacity-80">
                           {String.fromCharCode(65 + optIdx)}.
                         </span>
                         {option}
@@ -158,13 +158,13 @@ export function LearnlyQuizCard({ quiz }: LearnlyQuizCardProps) {
 
                       {submitted && isCorrect && (
                         <CheckCircle2
-                          className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600 dark:text-emerald-400"
+                          className="mt-0.5 h-4 w-4 shrink-0 text-[#047857] dark:text-[#34D399]"
                           aria-hidden="true"
                         />
                       )}
                       {submitted && isSelected && !isCorrect && (
                         <XCircle
-                          className="mt-0.5 h-4 w-4 shrink-0 text-rose-600 dark:text-rose-400"
+                          className="mt-0.5 h-4 w-4 shrink-0 text-[#D93817] dark:text-[#FF6B4A]"
                           aria-hidden="true"
                         />
                       )}
@@ -174,8 +174,8 @@ export function LearnlyQuizCard({ quiz }: LearnlyQuizCardProps) {
               </RadioGroup>
 
               {submitted && (
-                <p className="mt-2.5 rounded-lg bg-zinc-100/80 px-2.5 py-2 text-[11px] leading-relaxed text-zinc-700 dark:bg-zinc-950 dark:text-zinc-300">
-                  <strong className="font-semibold text-zinc-950 dark:text-zinc-100">
+                <p className="mt-2.5 rounded-xl border border-dashed border-[#18181B]/25 bg-[#F6EFE0] px-2.5 py-2 text-[11px] leading-relaxed text-[#111116] dark:border-[#3A3A52] dark:bg-[#12121A] dark:text-[#D4D4E2]">
+                  <strong className="font-extrabold text-[#111116] dark:text-[#FAFAF5]">
                     Explanation:{" "}
                   </strong>
                   {question.explanation}
@@ -187,8 +187,8 @@ export function LearnlyQuizCard({ quiz }: LearnlyQuizCardProps) {
       </div>
 
       {!submitted && (
-        <div className="flex items-center justify-between gap-2 border-t border-zinc-100 bg-zinc-50/70 px-3.5 py-2.5 dark:border-zinc-800 dark:bg-zinc-950/60">
-          <span className="text-[11px] text-zinc-600 dark:text-zinc-400">
+        <div className="flex items-center justify-between gap-2 border-t-2 border-[#18181B]/15 bg-[#F6EFE0] px-3.5 py-2.5 dark:border-[#2A2A3B] dark:bg-[#12121A]">
+          <span className="font-mono text-[11px] font-bold text-[#52525B] dark:text-[#B4B4C6]">
             {answeredCount === total
               ? "Ready to grade"
               : `Select ${total - answeredCount} more`}
@@ -196,7 +196,7 @@ export function LearnlyQuizCard({ quiz }: LearnlyQuizCardProps) {
           <Button
             disabled={answeredCount < total}
             onClick={handleCheckAnswers}
-            className="cursor-pointer rounded-lg bg-indigo-600 px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 data-disabled:cursor-not-allowed data-disabled:opacity-50"
+            className="tactile-btn-sm cursor-pointer rounded-xl bg-[#FF5A36] px-3.5 py-1.5 text-xs font-extrabold text-[#111116] hover:bg-[#FF6E4E] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2563EB] data-disabled:cursor-not-allowed data-disabled:opacity-50"
           >
             Check Answers
           </Button>
