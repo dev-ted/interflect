@@ -1,6 +1,6 @@
 "use client";
 
-import type { ReactNode } from "react";
+import { Suspense, type ReactNode } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -119,7 +119,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   return (
     <div className="flex min-h-dvh">
       <aside className="night sticky top-0 hidden h-dvh w-64 shrink-0 border-r border-line lg:block">
-        <SidebarBody />
+        <Suspense fallback={null}><SidebarBody /></Suspense>
       </aside>
 
       <div className="flex min-w-0 flex-1 flex-col">
@@ -135,7 +135,7 @@ export function AppShell({ children }: { children: ReactNode }) {
               triggerClassName="btn btn-ghost btn-icon"
               triggerContent={<Menu className="h-5 w-5" aria-hidden="true" />}
             >
-              <SidebarBody />
+              <Suspense fallback={null}><SidebarBody /></Suspense>
             </SidebarMobileDrawer>
           </SidebarProvider>
         </header>

@@ -4,7 +4,7 @@ import { Logo, LogoMark } from "@/components/brand/Logo";
 import { ThemeToggle } from "@/components/brand/ThemeToggle";
 
 export const metadata: Metadata = {
-  title: "Brand | Vukora",
+  title: "Brand",
   description: "The Vukora brand guide: idea, logo, colour, type, components, motion and voice.",
 };
 
