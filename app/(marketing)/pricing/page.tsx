@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import { PricingClient } from "@/components/pricing/PricingClient";
 
 export const metadata: Metadata = {
-  title: "Pricing | Vukora Studio",
+  title: "Pricing | Vukora",
   description:
-    "Choose Monthly or Yearly Pro (2 months free) to unlock all courses and the Vukora AI tutor.",
+    "Start free, or go Pro monthly or yearly (two months free) for every course and the Vukora AI tutor.",
 };
 
 export default function PricingPage() {
