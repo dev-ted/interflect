@@ -15,7 +15,7 @@ export function Footer() {
         <div className="max-w-xs space-y-3">
           <Logo />
           <p className="text-sm text-mist">
-            Vuka means rise. Learn to build real software, one lesson at a time.
+            Think better. Design better. Courses in UI design, UX and the frontend craft that holds it together.
           </p>
         </div>
 
@@ -28,7 +28,7 @@ export function Footer() {
         </nav>
       </div>
       <div className="mx-auto flex max-w-6xl flex-wrap justify-between gap-2 border-t border-line px-4 py-5 text-xs text-mist sm:px-6">
-        <span>© Vukora</span>
+        <span>© Interflect</span>
         <span>
           Crafted by{" "}
           <a
