@@ -4,7 +4,7 @@ import { PricingClient } from "@/components/pricing/PricingClient";
 export const metadata: Metadata = {
   title: "Pricing",
   description:
-    "Start free, or go Pro monthly or yearly (two months free) for every course and the Vukora AI tutor.",
+    "Start free, or go Pro monthly or yearly (two months free) for every course and the Interflect tutor.",
 };
 
 export default function PricingPage() {
