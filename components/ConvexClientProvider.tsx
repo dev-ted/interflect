@@ -19,7 +19,15 @@ import {
   ToastRegion,
   ToastTitle,
 } from "@ui-sdk/react/toast";
-import { Loader2, X } from "lucide-react";
+import { CheckCircle2, Info, Loader2, TriangleAlert, X, XCircle } from "lucide-react";
+
+// Status is shown by icon as well as colour, so it never relies on colour alone.
+const TOAST_ICONS = {
+  success: <CheckCircle2 className="h-4 w-4 shrink-0 text-sage" aria-hidden="true" />,
+  error: <XCircle className="h-4 w-4 shrink-0 text-danger" aria-hidden="true" />,
+  warning: <TriangleAlert className="h-4 w-4 shrink-0 text-sun" aria-hidden="true" />,
+  loading: <Loader2 className="h-4 w-4 shrink-0 animate-spin text-mist motion-reduce:animate-none" aria-hidden="true" />,
+} as const;
 import { isAdminRole, PRO_PLAN_SLUG } from "@/lib/auth";
 
 if (!process.env.NEXT_PUBLIC_CONVEX_URL) {
@@ -118,8 +126,8 @@ function AppToaster() {
     >
       {(item) => (
         <Toast className="card pointer-events-auto relative flex w-full items-center gap-3 overflow-hidden py-3 pr-2 pl-4 text-sm text-ink transition-[opacity,translate] duration-200 ease-(--ease-out) select-none before:absolute before:inset-y-0 before:left-0 before:w-1 before:bg-primary data-ending-style:-translate-y-2 data-ending-style:opacity-0 data-starting-style:-translate-y-2 data-starting-style:opacity-0 data-[type=error]:before:bg-danger data-[type=success]:before:bg-sage data-[type=warning]:before:bg-sun motion-reduce:data-ending-style:translate-y-0 motion-reduce:data-starting-style:translate-y-0">
-          {item.type === "loading" && (
-            <Loader2 className="h-4 w-4 shrink-0 animate-spin text-mist motion-reduce:animate-none" aria-hidden="true" />
+          {TOAST_ICONS[item.type as keyof typeof TOAST_ICONS] ?? (
+            <Info className="h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
           )}
           <div className="min-w-0 flex-1">
             <ToastTitle className="font-semibold leading-snug" />
