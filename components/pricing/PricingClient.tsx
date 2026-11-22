@@ -11,331 +11,196 @@ import {
   SegmentedControlItem,
 } from "@ui-sdk/react/segmented-control";
 import { toast } from "@ui-sdk/react/toast";
-import {
-  ArrowRight,
-  Bot,
-  Check,
-  Crown,
-  Sparkles,
-  Video,
-} from "lucide-react";
+import { Check, Crown } from "lucide-react";
 import { useRefreshConvexAuth } from "@/components/ConvexClientProvider";
 import { PRO_PLAN_ID, PRO_PLAN_SLUG } from "@/lib/auth";
 
 type BillingPeriod = "month" | "annual";
 
 const FREE_FEATURES = [
-  "Access to all Free courses",
-  "Free preview lessons inside every Pro course",
-  "Rich markdown guides & syntax-highlighted code blocks",
-  "In-lesson interactive quizzes & explanations",
-  "Course enrollment & lesson completion tracking",
+  "Every free course",
+  "Preview lessons inside every Pro course",
+  "Written notes with highlighted code",
+  "Lesson quizzes with explanations",
+  "Enrollment and progress tracking",
 ];
 
 const PRO_FEATURES = [
-  "Everything in Free, plus unlimited Pro courses",
-  "Full Mux HD video library across every track",
-  "Vukora AI Tutor widget (context-aware on every lesson)",
-  "AI-generated interactive quizzes tailored to your progress",
-  "Personalized course recommendations across the catalog",
-  "All future Pro courses & module updates included",
+  "Everything in Free",
+  "Every Pro course, including future ones",
+  "The full HD video library",
+  "The Vukora AI tutor on every lesson",
+  "Quizzes generated from your progress",
+  "Course recommendations",
 ];
 
 const FAQS = [
   {
-    q: "How does the 2 months free yearly discount work?",
-    a: "Monthly Pro is $29/month ($348/year). Switching to Yearly bills $290/year ($24.17/mo) — saving you $58, which is 2 full months free every year.",
+    q: "How does yearly billing work?",
+    a: "Monthly Pro is $29 a month, or $348 a year. Yearly is $290, about $24.17 a month, which saves you $58: two months free.",
   },
   {
     q: "Can I try a Pro course before upgrading?",
-    a: "Yes! Pro courses include Free Preview lessons so you can watch the Mux video, read the markdown guide, and try the quiz before committing.",
+    a: "Yes. Every Pro course has free preview lessons, so you can watch the video, read the notes and take the quiz first.",
   },
   {
-    q: "How does Vukora AI Tutor work?",
-    a: "Once you upgrade to Pro, click the Vukora button in the bottom-right corner on any page. It authenticates securely via Clerk, knows which lesson you're viewing and which courses you've finished, and can quiz you interactively.",
+    q: "How does the Vukora AI tutor work?",
+    a: "On Pro, open the Vukora button in the bottom-right corner of any page. It knows which lesson you are viewing and which courses you have finished, and it can quiz you.",
   },
   {
-    q: "Can I cancel or switch plans anytime?",
-    a: "Yes. Manage your subscription, invoices, and payment methods directly from your Clerk account menu at any time.",
+    q: "Can I cancel or switch plans?",
+    a: "Yes, at any time. Manage your subscription, invoices and payment methods from your account menu.",
   },
 ];
+
+const segmentItem =
+  "relative z-10 inline-flex h-9 cursor-pointer items-center gap-2 rounded-md px-4 text-sm font-semibold text-mist transition-colors duration-150 data-checked:text-ink";
+
+function FeatureList({ items }: { items: string[] }) {
+  return (
+    <ul className="mt-8 flex-1 space-y-3 text-sm text-ink">
+      {items.map((item) => (
+        <li key={item} className="flex gap-2.5">
+          <Check className="mt-0.5 h-4 w-4 shrink-0 text-sage" aria-hidden="true" />
+          {item}
+        </li>
+      ))}
+    </ul>
+  );
+}
 
 export function PricingClient() {
   const [period, setPeriod] = useState<BillingPeriod>("annual");
   const refreshConvexAuth = useRefreshConvexAuth();
+  const annual = period === "annual";
 
   return (
-    <div className="bg-studio-dots">
-      <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-2xl text-center">
-          <span className="inline-flex -rotate-1 items-center gap-1.5 rounded-full border-2 border-[#18181B] bg-[#FFB800] px-3.5 py-1 text-xs font-extrabold text-[#111116] shadow-[3px_3px_0_0_#111116]">
-            <Crown className="h-3.5 w-3.5" aria-hidden="true" />
-            Simple, Transparent Pricing
-          </span>
-          <h1 className="mt-4 text-3xl font-extrabold tracking-tight text-[#111116] sm:text-5xl dark:text-[#FAFAF5]">
-            Invest in shipping real apps
+    <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:py-24">
+      <div className="flex flex-wrap items-end justify-between gap-8">
+        <div className="max-w-xl">
+          <h1 className="text-[2.441rem] leading-tight font-extrabold text-ink sm:text-[3.052rem]">
+            Start free. Go Pro when you are ready.
           </h1>
-          <p className="mt-3 text-base text-[#52525B] dark:text-[#B4B4C6]">
-            Start free forever, or upgrade to Pro for the complete curriculum and
-            your personal context-aware Vukora AI tutor.
+          <p className="mt-4 text-lg text-mist">
+            Free gets you real courses today. Pro opens the whole library and
+            the AI tutor.
           </p>
-
-          {/* Billing Period Toggle */}
-          <div className="mt-8 flex flex-col items-center gap-2">
-            <SegmentedControl
-              aria-label="Billing period"
-              value={period}
-              onValueChange={(val) => {
-                if (val === "month" || val === "annual") setPeriod(val);
-              }}
-              className="relative isolate inline-flex rounded-2xl border-2 border-[#18181B] bg-[#F6EFE0] p-1.5 shadow-[4px_4px_0_0_#111116] dark:border-[#3A3A52] dark:bg-[#16161F] dark:shadow-[4px_4px_0_0_#000000]"
-            >
-              <SegmentedControlIndicator className="absolute top-(--segmented-control-indicator-top) left-(--segmented-control-indicator-left) -z-10 h-(--segmented-control-indicator-height) w-(--segmented-control-indicator-width) rounded-xl border-2 border-[#18181B] bg-white transition-[top,left,width,height] duration-200 data-[activation-direction=none]:transition-none dark:border-[#18181B] dark:bg-[#FFB800]" />
-              <SegmentedControlItem
-                value="month"
-                className="min-h-10 cursor-pointer rounded-xl px-5 py-2 text-sm font-extrabold text-[#52525B] data-checked:text-[#111116] dark:text-[#B4B4C6] dark:data-checked:text-[#111116]"
-              >
-                Monthly
-              </SegmentedControlItem>
-              <SegmentedControlItem
-                value="annual"
-                className="inline-flex min-h-10 cursor-pointer items-center gap-2 rounded-xl px-5 py-2 text-sm font-extrabold text-[#52525B] data-checked:text-[#111116] dark:text-[#B4B4C6] dark:data-checked:text-[#111116]"
-              >
-                Yearly
-                <span className="rounded-full border border-[#18181B] bg-[#00B87C] px-2 py-0.5 text-[11px] font-extrabold text-[#111116]">
-                  2 Months Free
-                </span>
-              </SegmentedControlItem>
-            </SegmentedControl>
-          </div>
         </div>
 
-        {/* Custom Plan Cards */}
-        <div className="mx-auto mt-12 grid max-w-4xl grid-cols-1 gap-7 md:grid-cols-2">
-          {/* Free Tier */}
-          <div className="tactile-card-lg flex flex-col rounded-3xl p-8">
-            <div className="flex items-center justify-between">
-              <h2 className="text-xl font-extrabold text-[#111116] dark:text-[#FAFAF5]">
-                Free
-              </h2>
-              <span className="inline-flex items-center gap-1 rounded-full border-2 border-[#18181B] bg-[#00B87C] px-3 py-0.5 text-xs font-extrabold text-[#111116] shadow-[2px_2px_0_0_#111116]">
-                <Sparkles className="h-3 w-3" aria-hidden="true" />
-                Starter
-              </span>
-            </div>
+        <SegmentedControl
+          aria-label="Billing period"
+          value={period}
+          onValueChange={(val) => {
+            if (val === "month" || val === "annual") setPeriod(val);
+          }}
+          className="relative inline-flex items-center rounded-lg border border-line bg-subtle p-1"
+        >
+          <SegmentedControlIndicator className="absolute top-(--segmented-control-indicator-top) left-(--segmented-control-indicator-left) h-(--segmented-control-indicator-height) w-(--segmented-control-indicator-width) rounded-md bg-surface shadow-card transition-[left,width] duration-200 ease-(--ease-out) data-[activation-direction=none]:transition-none motion-reduce:transition-none" />
+          <SegmentedControlItem value="month" className={segmentItem}>
+            Monthly
+          </SegmentedControlItem>
+          <SegmentedControlItem value="annual" className={segmentItem}>
+            Yearly
+            <span className="text-xs font-medium text-sage">2 months free</span>
+          </SegmentedControlItem>
+        </SegmentedControl>
+      </div>
 
-            <p className="mt-2.5 text-sm text-[#52525B] dark:text-[#B4B4C6]">
-              Explore free courses and sample free preview lessons across Pro
-              tracks.
-            </p>
+      <div className="mt-12 grid gap-6 md:grid-cols-2">
+        <section aria-labelledby="plan-free" className="card flex flex-col p-6 sm:p-8">
+          <h2 id="plan-free" className="text-xl font-bold text-ink">Free</h2>
+          <p className="mt-2 text-sm text-mist">
+            Take the free courses and sample any Pro course.
+          </p>
+          <p className="mt-6 flex items-baseline gap-1.5">
+            <span className="text-[3.052rem] leading-none font-extrabold text-ink">$0</span>
+            <span className="text-sm text-mist">forever</span>
+          </p>
+          <FeatureList items={FREE_FEATURES} />
+          <Link href="/courses" className="btn btn-secondary btn-lg mt-8 w-full">
+            Browse free courses
+          </Link>
+        </section>
 
-            <div className="mt-6 flex items-baseline gap-1.5">
-              <span className="font-display text-5xl font-extrabold tracking-tight text-[#111116] dark:text-[#FAFAF5]">
-                $0
-              </span>
-              <span className="text-sm font-bold text-[#52525B] dark:text-[#B4B4C6]">
-                / forever
-              </span>
-            </div>
+        <section aria-labelledby="plan-pro" className="night flex flex-col rounded-xl border border-line p-6 sm:p-8">
+          <div className="flex items-center justify-between gap-4">
+            <h2 id="plan-pro" className="text-xl font-bold text-ink">Pro</h2>
+            <Crown className="h-5 w-5 text-sun" aria-hidden="true" />
+          </div>
+          <p className="mt-2 text-sm text-mist">
+            Every Pro course, the HD video library and the AI tutor.
+          </p>
+          <p className="mt-6 flex items-baseline gap-1.5">
+            <span className="text-[3.052rem] leading-none font-extrabold text-ink tabular-nums">
+              {annual ? "$24.17" : "$29"}
+            </span>
+            <span className="text-sm text-mist">a month</span>
+          </p>
+          <p className="mt-2 text-sm text-mist">
+            {annual ? "Billed $290 a year, saving $58." : "Billed monthly. Switch to yearly for two months free."}
+          </p>
+          <FeatureList items={PRO_FEATURES} />
 
-            <ul className="mt-8 flex-1 space-y-3 text-sm font-medium text-[#111116] dark:text-[#E4E4EE]">
-              {FREE_FEATURES.map((item) => (
-                <li key={item} className="flex items-start gap-2.5">
-                  <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-md border border-[#18181B] bg-[#00B87C] text-[#111116]">
-                    <Check className="h-3 w-3 stroke-[3]" aria-hidden="true" />
-                  </span>
-                  <span>{item}</span>
-                </li>
-              ))}
-            </ul>
-
-            <div className="mt-8">
-              <Link
-                href="/courses"
-                className="tactile-btn flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#FFFBF2] px-5 py-3 text-sm font-extrabold text-[#111116] hover:bg-[#FFB800] dark:bg-[#1F1F2D] dark:text-[#FAFAF5] dark:hover:bg-[#FFB800] dark:hover:text-[#111116]"
-              >
-                Browse Free Courses
-                <ArrowRight className="h-4 w-4" aria-hidden="true" />
+          <div className="mt-8">
+            <Show
+              when={(has) =>
+                has({ plan: PRO_PLAN_SLUG }) || has({ feature: "pro_courses" })
+              }
+              fallback={
+                <>
+                  <Authenticated>
+                    <CheckoutButton
+                      planId={PRO_PLAN_ID}
+                      planPeriod={period}
+                      for="user"
+                      newSubscriptionRedirectUrl="/dashboard"
+                      onSubscriptionComplete={() => {
+                        void refreshConvexAuth();
+                        toast.success(
+                          "Welcome to Pro. Every course and the AI tutor are unlocked.",
+                        );
+                      }}
+                    >
+                      <button type="button" className="btn btn-sun btn-lg w-full">
+                        {annual ? "Upgrade for $290 a year" : "Upgrade for $29 a month"}
+                      </button>
+                    </CheckoutButton>
+                  </Authenticated>
+                  <Unauthenticated>
+                    <SignUpButton mode="modal">
+                      <button type="button" className="btn btn-sun btn-lg w-full">
+                        Sign up to go Pro
+                      </button>
+                    </SignUpButton>
+                  </Unauthenticated>
+                </>
+              }
+            >
+              <p className="flex items-center gap-2 text-sm font-semibold text-sage">
+                <Check className="h-4 w-4" aria-hidden="true" />
+                You are on Pro
+              </p>
+              <Link href="/dashboard" className="btn btn-secondary btn-lg mt-4 w-full">
+                Go to my learning
               </Link>
-            </div>
-          </div>
-
-          {/* Pro Tier */}
-          <div className="relative flex flex-col overflow-hidden rounded-3xl border-2 border-[#18181B] bg-[#14141D] p-8 text-[#FAFAF5] shadow-[8px_8px_0_0_#2563EB] dark:border-[#3B82F6]">
-            <svg
-              aria-hidden="true"
-              viewBox="0 0 120 120"
-              className="pointer-events-none absolute -top-6 -right-6 h-28 w-28 text-[#FFB800]/15"
-            >
-              <path
-                fill="currentColor"
-                d="M60 6l12 36 36 12-36 12-12 36-12-36-36-12 36-12z"
-              />
-            </svg>
-
-            <div className="relative flex items-center justify-between">
-              <h2 className="text-xl font-extrabold text-[#FAFAF5]">Pro</h2>
-              <span className="inline-flex rotate-2 items-center gap-1 rounded-full border-2 border-[#111116] bg-[#FFB800] px-3 py-0.5 text-xs font-extrabold text-[#111116] shadow-[2px_2px_0_0_#000000]">
-                <Crown className="h-3 w-3" aria-hidden="true" />
-                Most Popular
-              </span>
-            </div>
-
-            <p className="mt-2.5 text-sm text-[#D4D4E2]">
-              Full access to every Pro course, Mux HD library, and Vukora AI
-              Tutor.
-            </p>
-
-            <div className="mt-6">
-              <div className="flex items-baseline gap-1.5">
-                <span className="font-display text-5xl font-extrabold tracking-tight text-[#FAFAF5]">
-                  {period === "annual" ? "$24.17" : "$29"}
-                </span>
-                <span className="text-sm font-bold text-[#B4B4C6]">/ month</span>
-              </div>
-              {period === "annual" ? (
-                <p className="mt-2 inline-flex rounded-full bg-[#00B87C]/20 px-2.5 py-0.5 text-xs font-bold text-[#7EE2B8]">
-                  Billed $290/year · Save $58 (2 months free)
-                </p>
-              ) : (
-                <p className="mt-2 text-xs font-medium text-[#B4B4C6]">
-                  Billed monthly · Switch to Yearly for 2 months free
-                </p>
-              )}
-            </div>
-
-            <ul className="mt-8 flex-1 space-y-3 text-sm font-medium text-[#FAFAF5]">
-              {PRO_FEATURES.map((item) => (
-                <li key={item} className="flex items-start gap-2.5">
-                  <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-md border border-[#111116] bg-[#FFB800] text-[#111116]">
-                    <Check className="h-3 w-3 stroke-[3]" aria-hidden="true" />
-                  </span>
-                  <span>{item}</span>
-                </li>
-              ))}
-            </ul>
-
-            <div className="mt-8">
-              <Show
-                when={(has) =>
-                  has({ plan: PRO_PLAN_SLUG }) ||
-                  has({ feature: "pro_courses" })
-                }
-                fallback={
-                  <>
-                    <Authenticated>
-                      <CheckoutButton
-                        planId={PRO_PLAN_ID}
-                        planPeriod={period}
-                        for="user"
-                        newSubscriptionRedirectUrl="/dashboard"
-                        onSubscriptionComplete={() => {
-                          void refreshConvexAuth();
-                          toast.success(
-                            "Welcome to Pro! All courses and Vukora AI are unlocked.",
-                          );
-                        }}
-                      >
-                        <button
-                          type="button"
-                          className="tactile-btn flex min-h-12 w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-[#FF5A36] px-5 py-3 text-sm font-extrabold text-[#111116] hover:bg-[#FF6E4E]"
-                        >
-                          <Crown className="h-4 w-4" aria-hidden="true" />
-                          {period === "annual"
-                            ? "Upgrade to Pro Yearly ($290/yr)"
-                            : "Upgrade to Pro Monthly ($29/mo)"}
-                        </button>
-                      </CheckoutButton>
-                    </Authenticated>
-
-                    <Unauthenticated>
-                      <SignUpButton mode="modal">
-                        <button
-                          type="button"
-                          className="tactile-btn flex min-h-12 w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-[#FF5A36] px-5 py-3 text-sm font-extrabold text-[#111116] hover:bg-[#FF6E4E]"
-                        >
-                          <Crown className="h-4 w-4" aria-hidden="true" />
-                          Sign Up to Unlock Pro
-                        </button>
-                      </SignUpButton>
-                    </Unauthenticated>
-                  </>
-                }
-              >
-                <div className="space-y-2.5">
-                  <div className="flex w-full items-center justify-center gap-2 rounded-xl border-2 border-[#111116] bg-[#00B87C] px-5 py-3 text-sm font-extrabold text-[#111116]">
-                    <Check className="h-4 w-4 stroke-[3]" aria-hidden="true" />
-                    You&apos;re an Active Pro Member
-                  </div>
-                  <Link
-                    href="/dashboard"
-                    className="tactile-btn-sm flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-white px-5 py-2.5 text-xs font-extrabold text-[#111116] hover:bg-[#FFB800]"
-                  >
-                    Go to My Learning Dashboard
-                    <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
-                  </Link>
-                </div>
-              </Show>
-            </div>
-          </div>
-        </div>
-
-        {/* Pro Highlights Strip */}
-        <div className="mx-auto mt-12 grid max-w-4xl grid-cols-1 gap-5 sm:grid-cols-2">
-          <div className="tactile-card flex items-start gap-3.5 rounded-2xl p-5">
-            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border-2 border-[#18181B] bg-[#2563EB] text-white shadow-[2px_2px_0_0_#111116]">
-              <Bot className="h-5 w-5" aria-hidden="true" />
-            </span>
-            <div>
-              <h3 className="text-base font-extrabold text-[#111116] dark:text-[#FAFAF5]">
-                Vukora AI Tutor Included
-              </h3>
-              <p className="mt-1 text-xs leading-relaxed text-[#52525B] dark:text-[#B4B4C6]">
-                Powered by Vercel Eve and secured with Clerk auth. Ask questions
-                about the exact lesson on your screen or generate interactive
-                quizzes anytime.
-              </p>
-            </div>
-          </div>
-
-          <div className="tactile-card flex items-start gap-3.5 rounded-2xl p-5">
-            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border-2 border-[#18181B] bg-[#00B87C] text-[#111116] shadow-[2px_2px_0_0_#111116]">
-              <Video className="h-5 w-5" aria-hidden="true" />
-            </span>
-            <div>
-              <h3 className="text-base font-extrabold text-[#111116] dark:text-[#FAFAF5]">
-                Free Preview Before You Commit
-              </h3>
-              <p className="mt-1 text-xs leading-relaxed text-[#52525B] dark:text-[#B4B4C6]">
-                Every Pro course includes unlocked preview lessons so you can
-                verify video clarity, code depth, and quiz quality first.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* FAQ */}
-        <section className="mx-auto mt-16 max-w-4xl">
-          <h2 className="text-center text-2xl font-extrabold tracking-tight text-[#111116] sm:text-3xl dark:text-[#FAFAF5]">
-            Frequently asked questions
-          </h2>
-          <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2">
-            {FAQS.map((item) => (
-              <div
-                key={item.q}
-                className="tactile-card rounded-2xl p-5"
-              >
-                <h3 className="text-sm font-extrabold text-[#111116] dark:text-[#FAFAF5]">
-                  {item.q}
-                </h3>
-                <p className="mt-2 text-sm leading-relaxed text-[#52525B] dark:text-[#B4B4C6]">
-                  {item.a}
-                </p>
-              </div>
-            ))}
+            </Show>
           </div>
         </section>
       </div>
+
+      <section aria-labelledby="faq" className="mt-24 grid gap-10 border-t border-line pt-16 lg:grid-cols-[1fr_2fr]">
+        <h2 id="faq" className="text-[1.953rem] leading-tight font-bold text-ink">
+          Questions
+        </h2>
+        <dl className="divide-y divide-line">
+          {FAQS.map((item) => (
+            <div key={item.q} className="py-5 first:pt-0">
+              <dt className="font-semibold text-ink">{item.q}</dt>
+              <dd className="mt-2 leading-relaxed text-mist">{item.a}</dd>
+            </div>
+          ))}
+        </dl>
+      </section>
     </div>
   );
 }
