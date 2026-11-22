@@ -35,7 +35,7 @@ const FREE_FEATURES = [
 const PRO_FEATURES = [
   "Everything in Free, plus unlimited Pro courses",
   "Full Mux HD video library across every track",
-  "Learnly AI Tutor widget (context-aware on every lesson)",
+  "Vukora AI Tutor widget (context-aware on every lesson)",
   "AI-generated interactive quizzes tailored to your progress",
   "Personalized course recommendations across the catalog",
   "All future Pro courses & module updates included",
@@ -51,8 +51,8 @@ const FAQS = [
     a: "Yes! Pro courses include Free Preview lessons so you can watch the Mux video, read the markdown guide, and try the quiz before committing.",
   },
   {
-    q: "How does Learnly AI Tutor work?",
-    a: "Once you upgrade to Pro, click the Learnly button in the bottom-right corner on any page. It authenticates securely via Clerk, knows which lesson you're viewing and which courses you've finished, and can quiz you interactively.",
+    q: "How does Vukora AI Tutor work?",
+    a: "Once you upgrade to Pro, click the Vukora button in the bottom-right corner on any page. It authenticates securely via Clerk, knows which lesson you're viewing and which courses you've finished, and can quiz you interactively.",
   },
   {
     q: "Can I cancel or switch plans anytime?",
@@ -77,7 +77,7 @@ export function PricingClient() {
           </h1>
           <p className="mt-3 text-base text-[#52525B] dark:text-[#B4B4C6]">
             Start free forever, or upgrade to Pro for the complete curriculum and
-            your personal context-aware Learnly AI tutor.
+            your personal context-aware Vukora AI tutor.
           </p>
 
           {/* Billing Period Toggle */}
@@ -182,7 +182,7 @@ export function PricingClient() {
             </div>
 
             <p className="mt-2.5 text-sm text-[#D4D4E2]">
-              Full access to every Pro course, Mux HD library, and Learnly AI
+              Full access to every Pro course, Mux HD library, and Vukora AI
               Tutor.
             </p>
 
@@ -232,7 +232,7 @@ export function PricingClient() {
                         onSubscriptionComplete={() => {
                           void refreshConvexAuth();
                           toast.success(
-                            "Welcome to Pro! All courses and Learnly AI are unlocked.",
+                            "Welcome to Pro! All courses and Vukora AI are unlocked.",
                           );
                         }}
                       >
@@ -288,7 +288,7 @@ export function PricingClient() {
             </span>
             <div>
               <h3 className="text-base font-extrabold text-[#111116] dark:text-[#FAFAF5]">
-                Learnly AI Tutor Included
+                Vukora AI Tutor Included
               </h3>
               <p className="mt-1 text-xs leading-relaxed text-[#52525B] dark:text-[#B4B4C6]">
                 Powered by Vercel Eve and secured with Clerk auth. Ask questions

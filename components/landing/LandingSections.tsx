@@ -45,9 +45,9 @@ const COURSE_FEATURES = [
     step: "04",
     icon: Bot,
     accentBg: "bg-[#2563EB] text-white",
-    title: "Learnly Context-Aware AI Tutor",
+    title: "Vukora Context-Aware AI Tutor",
     description:
-      "Pro members unlock Learnly in the bottom-right corner — secured by Clerk, aware of the exact lesson you're viewing, your completed courses, and able to quiz you on demand.",
+      "Pro members unlock Vukora in the bottom-right corner — secured by Clerk, aware of the exact lesson you're viewing, your completed courses, and able to quiz you on demand.",
   },
 ];
 
@@ -172,7 +172,7 @@ export function LandingSections() {
                 </p>
                 <p className="mt-4 inline-flex items-center gap-1.5 rounded-full border border-[#FFB800]/50 bg-[#FFB800]/15 px-3 py-1 text-xs font-bold text-[#FFB800]">
                   <Layers className="h-3.5 w-3.5" aria-hidden="true" />
-                  {TUTOR.tagline}
+                  {TUTOR.handle}
                 </p>
               </div>
             </div>
@@ -185,36 +185,11 @@ export function LandingSections() {
                 Learn directly from {TUTOR.name}
               </h2>
               <p className="mt-4 text-base leading-relaxed text-[#52525B] dark:text-[#B4B4C6]">
-                {TUTOR.bio} Every module in Learnly Studio is authored,
+                {TUTOR.bio} Every module in Vukora Studio is authored,
                 recorded, and curated directly — no filler, no outdated
                 boilerplates, only production stacks you can deploy today.
               </p>
 
-              <dl className="mt-8 grid grid-cols-3 gap-3 sm:gap-4">
-                {TUTOR.stats.map((stat, idx) => {
-                  const stripColors = [
-                    "bg-[#FF5A36]",
-                    "bg-[#FFB800]",
-                    "bg-[#00B87C]",
-                  ];
-                  return (
-                    <div
-                      key={stat.label}
-                      className="rounded-2xl border-2 border-[#18181B] bg-[#FFFBF2] p-3.5 shadow-[3px_3px_0_0_#111116] dark:border-[#3A3A52] dark:bg-[#1F1F2D] dark:shadow-[3px_3px_0_0_#000000]"
-                    >
-                      <span
-                        className={`mb-2 block h-1.5 w-8 rounded-full ${stripColors[idx % stripColors.length]}`}
-                      />
-                      <dt className="text-[11px] font-bold text-[#52525B] dark:text-[#B4B4C6]">
-                        {stat.label}
-                      </dt>
-                      <dd className="font-display mt-0.5 text-xl font-extrabold tracking-tight text-[#111116] sm:text-2xl dark:text-[#FAFAF5]">
-                        {stat.value}
-                      </dd>
-                    </div>
-                  );
-                })}
-              </dl>
             </div>
           </div>
         </div>
@@ -240,11 +215,11 @@ export function LandingSections() {
                 Yearly Plan · 2 Months Free
               </span>
               <h2 className="mt-5 text-3xl font-extrabold tracking-tight sm:text-4xl">
-                Ready for every Pro course &amp; Learnly AI?
+                Ready for every Pro course &amp; Vukora AI?
               </h2>
               <p className="mt-3 text-base text-[#D4D4E2]">
                 Unlock the entire Pro library, full Mux HD video tracks, and
-                your personal context-aware Learnly AI tutor with interactive
+                your personal context-aware Vukora AI tutor with interactive
                 quizzes.
               </p>
             </div>

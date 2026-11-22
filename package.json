@@ -6,9 +6,9 @@
     "dev": "concurrently -n next,convex -c cyan,magenta \"pnpm run dev:next\" \"pnpm run dev:convex\"",
     "dev:next": "next dev",
     "dev:convex": "convex dev",
-    "eve:dev": "eve dev --agent learnly",
+    "eve:dev": "eve dev --agent vukora",
     "eve:build": "eve build",
-    "eve:info": "eve info --agent learnly",
+    "eve:info": "eve info --agent vukora",
     "build": "next build --webpack",
     "start": "next start",
     "lint": "eslint"

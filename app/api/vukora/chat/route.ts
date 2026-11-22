@@ -504,7 +504,7 @@ function buildFallbackResponse(params: {
 
     const contextHeader = pageContext?.courseTitle
       ? `You're currently viewing **${pageContext.courseTitle}**. Here's the live course catalog:\n\n`
-      : `Here are the published courses available in **Learnly Studio**:\n\n`;
+      : `Here are the published courses available in **Vukora Studio**:\n\n`;
 
     return {
       reply: `${contextHeader}${courseLines.join("\n")}\n\nAsk me to **check your progress**, **summarize a lesson**, or **quiz you** on any course!`,
@@ -514,7 +514,7 @@ function buildFallbackResponse(params: {
   }
 
   return {
-    reply: `I'm **Learnly**, your Pro AI tutor${pageContext?.pageTitle ? ` (currently viewing **${pageContext.pageTitle}**)` : ""}. Ask me to summarize a lesson, check your learning progress, recommend your next course, or generate an **interactive quiz**!`,
+    reply: `I'm **Vukora**, your Pro AI tutor${pageContext?.pageTitle ? ` (currently viewing **${pageContext.pageTitle}**)` : ""}. Ask me to summarize a lesson, check your learning progress, recommend your next course, or generate an **interactive quiz**!`,
     quizzes,
     toolCalls,
   };
@@ -532,7 +532,7 @@ export async function POST(request: Request) {
 
   if (!authContext.hasProAccess) {
     return NextResponse.json(
-      { error: "Pro membership required for Learnly AI." },
+      { error: "Pro membership required for Vukora AI." },
       { status: 403 },
     );
   }
@@ -631,7 +631,7 @@ export async function POST(request: Request) {
         : "";
 
       const systemPrompt = [
-        "You are Learnly, the friendly, sharp, deeply knowledgeable Pro AI tutor for Learnly Studio (taught by Teddy).",
+        "You are Vukora, the friendly, sharp, deeply knowledgeable Pro AI tutor for Vukora (courses by Teddy, ted.code).",
         "Core teaching rules:",
         "1. Answer the learner's EXACT question directly and naturally — like a great senior engineer pairing with them. Never dump raw tool outputs or generic lesson outlines unless they explicitly ask for a summary.",
         "2. If they say hello or chat casually, greet them warmly in 1-2 sentences, acknowledge what they're currently studying if relevant, and offer 1-2 concrete ways you can help.",
@@ -649,7 +649,7 @@ export async function POST(request: Request) {
         .join("\n");
 
       const modelId =
-        process.env.LEARNLY_MODEL ?? "anthropic/claude-sonnet-5";
+        process.env.VUKORA_MODEL ?? "anthropic/claude-sonnet-5";
 
       const result = await generateText({
         model: modelId,
@@ -662,7 +662,7 @@ export async function POST(request: Request) {
         tools: {
           list_courses: tool({
             description:
-              "List all published courses, modules, and lessons in Learnly Studio.",
+              "List all published courses, modules, and lessons in Vukora Studio.",
             inputSchema: z.object({}),
             execute: async () => {
               toolCallsUsed.add("list_courses");
@@ -735,7 +735,7 @@ export async function POST(request: Request) {
           }),
           create_interactive_quiz: tool({
             description:
-              "Create an interactive multiple-choice quiz rendered inline inside Learnly chat.",
+              "Create an interactive multiple-choice quiz rendered inline inside Vukora chat.",
             inputSchema: quizSchema,
             execute: async (input) => {
               toolCallsUsed.add("create_interactive_quiz");
@@ -765,7 +765,7 @@ export async function POST(request: Request) {
         });
       }
     } catch (err) {
-      console.error("[learnly] AI Gateway generation failed:", err);
+      console.error("[vukora] AI Gateway generation failed:", err);
       // Fall back to live Convex context synthesis when gateway/provider credentials fail.
     }
   }

@@ -190,7 +190,7 @@ export function LessonViewerClient() {
       </h1>
       <p className="mt-2 max-w-md text-sm text-[#D4D4E2]">
         Upgrade to Pro to unlock every lesson, rich markdown code guide,
-        interactive quiz, and the context-aware Learnly AI tutor. Save 2 months
+        interactive quiz, and the context-aware Vukora AI tutor. Save 2 months
         free on Yearly!
       </p>
 

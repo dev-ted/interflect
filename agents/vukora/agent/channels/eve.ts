@@ -53,8 +53,8 @@ function hasProClaim(claims: Record<string, unknown>): boolean {
   if (
     features.some(
       (feature) =>
-        feature === "u:learnly_ai" ||
-        feature === "learnly_ai" ||
+        feature === "u:vukora_ai" ||
+        feature === "vukora_ai" ||
         feature === "u:pro_courses" ||
         feature === "pro_courses",
     )
@@ -97,7 +97,7 @@ const clerkProAuth: AuthFn<Request> = withAuthChallenges(
 
     if (!isPro) {
       throw new ForbiddenError({
-        message: "Learnly AI Tutor requires a Pro subscription.",
+        message: "Vukora AI Tutor requires a Pro subscription.",
       });
     }
 

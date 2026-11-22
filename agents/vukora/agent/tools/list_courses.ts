@@ -4,7 +4,7 @@ import { fetchCatalogSnapshot } from "../lib/convex";
 
 export default defineTool({
   description:
-    "List all published courses in Learnly Studio along with their modules, lessons, tiers, levels, and estimated hours.",
+    "List all published courses in Vukora Studio along with their modules, lessons, tiers, levels, and estimated hours.",
   inputSchema: z.object({}),
   label: {
     start: () => "Browse course catalog",

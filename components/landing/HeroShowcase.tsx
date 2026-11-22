@@ -49,15 +49,15 @@ const SLIDES = [
       "Check your mastery right below each lesson with instant explanations and synced completion across every module.",
   },
   {
-    id: "learnly",
-    label: "Learnly AI Tutor",
+    id: "vukora",
+    label: "Vukora AI Tutor",
     icon: Bot,
     badge: "Pro · Vercel Eve",
     tabBg: "bg-[#2563EB] text-white",
     pillClass: "border-[#3B82F6] bg-[#2563EB]/25 text-[#93C5FD]",
     title: "Context-Aware AI Tutor in Every Lesson",
     subtitle:
-      "Learnly sees the exact lesson you're studying and every course you've completed — ready to explain code or quiz you live.",
+      "Vukora sees the exact lesson you're studying and every course you've completed — ready to explain code or quiz you live.",
   },
 ] as const;
 
@@ -131,7 +131,7 @@ export function HeroShowcase() {
             Structured courses built around crisp Mux 4K video lessons, rich
             markdown code guides, interactive quizzes, and{" "}
             <strong className="rounded-md bg-[#2563EB]/12 px-1.5 py-0.5 font-bold text-[#1D4ED8] dark:bg-[#3B82F6]/20 dark:text-[#93C5FD]">
-              Learnly
+              Vukora
             </strong>{" "}
             — your Pro AI tutor that knows your exact lesson and progress.
           </p>
@@ -178,7 +178,7 @@ export function HeroShowcase() {
                 AI Companion
               </dt>
               <dd className="font-display mt-1 text-lg font-extrabold text-[#111116] sm:text-xl dark:text-[#FAFAF5]">
-                Learnly
+                Vukora
               </dd>
             </div>
           </dl>
@@ -201,7 +201,7 @@ export function HeroShowcase() {
                   <span aria-hidden="true" className="h-3 w-3 rounded-full border border-black/40 bg-[#FFB800]" />
                   <span aria-hidden="true" className="h-3 w-3 rounded-full border border-black/40 bg-[#00B87C]" />
                   <span className="ml-2 rounded-md bg-[#111119] px-2 py-0.5 font-mono text-xs text-[#B4B4C6]">
-                    learnly.studio/{activeSlide.id}
+                    vukora.studio/{activeSlide.id}
                   </span>
                 </div>
 
@@ -329,13 +329,13 @@ export function HeroShowcase() {
                     </div>
                   )}
 
-                  {activeSlide.id === "learnly" && (
+                  {activeSlide.id === "vukora" && (
                     <div className="space-y-3 rounded-2xl border-2 border-[#2563EB]/60 bg-[#1B1B27] p-4 text-xs">
                       <div className="flex items-center gap-2 text-[#93C5FD]">
                         <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-[#2563EB] text-white">
                           <Bot className="h-3.5 w-3.5" aria-hidden="true" />
                         </span>
-                        <span className="font-bold text-white">Learnly AI Tutor</span>
+                        <span className="font-bold text-white">Vukora AI Tutor</span>
                         <span className="rounded-full bg-[#FFB800] px-2 py-0.5 text-[10px] font-extrabold text-[#111116]">
                           Context: Lesson 2
                         </span>

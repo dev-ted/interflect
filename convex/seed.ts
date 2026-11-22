@@ -516,7 +516,7 @@ export async function requireAdmin(ctx: MutationCtx) {
 
 \`\`\`text
 agents/
-└── learnly/
+└── vukora/
     └── agent/
         ├── agent.ts          # defineAgent({ model })
         ├── instructions.md   # stable tutor system prompt
@@ -580,7 +580,7 @@ const clerkProAuth: AuthFn<Request> = async (request) => {
   const pla = typeof claims.pla === "string" ? claims.pla : "";
   const isPro = pla.split(",").some((p) => p === "u:pro" || p === "pro");
   if (!isPro) {
-    throw new ForbiddenError({ message: "Learnly requires a Pro subscription." });
+    throw new ForbiddenError({ message: "Vukora requires a Pro subscription." });
   }
 
   return {
@@ -721,7 +721,7 @@ async function runSeed(ctx: MutationCtx) {
       estimatedHours: courseData.estimatedHours,
       tags: courseData.tags,
       tutorName: "Teddy",
-      tutorTitle: "Founder & Lead Instructor",
+      tutorTitle: "Frontend engineer and instructor",
       order: cIdx,
       createdAt: now,
       updatedAt: now,

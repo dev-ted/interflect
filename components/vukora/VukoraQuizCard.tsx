@@ -12,11 +12,11 @@ import {
 } from "lucide-react";
 import type { InteractiveQuizPayload } from "@/lib/types";
 
-interface LearnlyQuizCardProps {
+interface VukoraQuizCardProps {
   quiz: InteractiveQuizPayload;
 }
 
-export function LearnlyQuizCard({ quiz }: LearnlyQuizCardProps) {
+export function VukoraQuizCard({ quiz }: VukoraQuizCardProps) {
   const baseId = useId();
   const [selections, setSelections] = useState<Record<string, number>>({});
   const [submitted, setSubmitted] = useState(false);

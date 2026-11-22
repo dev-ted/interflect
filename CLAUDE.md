@@ -40,7 +40,7 @@ Follow the installed `modern-web-guidance` skill (`~/.agents/skills/modern-web-g
 
 ## Vercel Eve (`eve`)
 
-This project uses the [Vercel Eve](https://github.com/vercel/eve) multi-agent workspace under `agents/` (starting with `agents/learnly/`).
+This project uses the [Vercel Eve](https://github.com/vercel/eve) multi-agent workspace under `agents/` (starting with `agents/vukora/`).
 
 Whenever creating, editing, or debugging Eve agents:
 - Always read the bundled docs starting at `node_modules/eve/docs/README.md` before writing agent code.

@@ -69,7 +69,7 @@ function useClerkAuthForConvex() {
   const hasPro = Boolean(
     has?.({ plan: PRO_PLAN_SLUG }) ||
       has?.({ feature: "pro_courses" }) ||
-      has?.({ feature: "learnly_ai" }),
+      has?.({ feature: "vukora_ai" }),
   );
   const isAdmin = isAdminRole(user?.publicMetadata);
   const claimsRecord = sessionClaims as Record<string, unknown> | undefined;

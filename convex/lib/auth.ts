@@ -38,7 +38,7 @@ export function isProIdentity(identity: UserIdentity | null): boolean {
   if (
     fea
       .split(",")
-      .some((f) => f === "u:pro_courses" || f === "pro_courses" || f === "u:learnly_ai")
+      .some((f) => f === "u:pro_courses" || f === "pro_courses" || f === "u:vukora_ai")
   ) {
     return true;
   }

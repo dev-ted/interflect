@@ -21,7 +21,7 @@ import {
 } from "lucide-react";
 import { usePageContext } from "@/components/PageContextProvider";
 import { MarkdownContent } from "@/components/course/MarkdownContent";
-import { LearnlyQuizCard } from "@/components/learnly/LearnlyQuizCard";
+import { VukoraQuizCard } from "@/components/vukora/VukoraQuizCard";
 import { isAdminRole, PRO_PLAN_SLUG } from "@/lib/auth";
 import type { InteractiveQuizPayload, PageLearningContext } from "@/lib/types";
 
@@ -70,7 +70,7 @@ function getSuggestionChips(context: PageLearningContext): string[] {
   ];
 }
 
-export function LearnlyWidget() {
+export function VukoraWidget() {
   const { isAuthenticated } = useConvexAuth();
   const { has } = useAuth();
   const { user } = useUser();
@@ -89,7 +89,7 @@ export function LearnlyWidget() {
   const hasProAccess = Boolean(
     isAuthenticated &&
       (has?.({ plan: PRO_PLAN_SLUG }) ||
-        has?.({ feature: "learnly_ai" }) ||
+        has?.({ feature: "vukora_ai" }) ||
         has?.({ feature: "pro_courses" }) ||
         isAdminRole(user?.publicMetadata)),
   );
@@ -128,7 +128,7 @@ export function LearnlyWidget() {
     setLoading(true);
 
     try {
-      const response = await fetch("/api/learnly/chat", {
+      const response = await fetch("/api/vukora/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -148,7 +148,7 @@ export function LearnlyWidget() {
       } | null;
 
       if (!response.ok) {
-        throw new Error(data?.error ?? "Learnly could not respond right now.");
+        throw new Error(data?.error ?? "Vukora could not respond right now.");
       }
 
       messageIdRef.current += 1;
@@ -167,7 +167,7 @@ export function LearnlyWidget() {
       setError(
         err instanceof Error
           ? err.message
-          : "Something went wrong talking to Learnly.",
+          : "Something went wrong talking to Vukora.",
       );
     } finally {
       setLoading(false);
@@ -188,7 +188,7 @@ export function LearnlyWidget() {
     <div className="fixed right-5 bottom-5 z-50 flex flex-col items-end">
       {open && (
         <section
-          aria-label="Learnly AI Tutor"
+          aria-label="Vukora AI Tutor"
           onKeyDown={(event) => {
             if (event.key === "Escape") {
               setOpen(false);
@@ -204,7 +204,7 @@ export function LearnlyWidget() {
               <div className="min-w-0">
                 <div className="flex items-center gap-1.5">
                   <h2 className="font-display truncate text-sm font-extrabold text-[#FAFAF5]">
-                    Learnly AI Tutor
+                    Vukora AI Tutor
                   </h2>
                   <span className="inline-flex items-center gap-0.5 rounded-full border border-[#111116] bg-[#2563EB] px-2 py-0.5 text-[10px] font-extrabold text-white">
                     <Crown className="h-2.5 w-2.5 text-[#FFB800]" aria-hidden="true" />
@@ -220,7 +220,7 @@ export function LearnlyWidget() {
             <div className="flex items-center gap-1">
               {hasProAccess && messages.length > 0 && (
                 <Button
-                  aria-label="Clear Learnly conversation"
+                  aria-label="Clear Vukora conversation"
                   onClick={handleReset}
                   className="inline-flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl text-[#B4B4C6] transition-colors hover:bg-[#1F1F2D] hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFB800]"
                 >
@@ -228,7 +228,7 @@ export function LearnlyWidget() {
                 </Button>
               )}
               <Button
-                aria-label="Close Learnly AI Tutor"
+                aria-label="Close Vukora AI Tutor"
                 onClick={() => setOpen(false)}
                 className="inline-flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl text-[#B4B4C6] transition-colors hover:bg-[#1F1F2D] hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFB800]"
               >
@@ -250,7 +250,7 @@ export function LearnlyWidget() {
                     Study faster with your personal AI Tutor
                   </h3>
                   <p className="mt-1.5 text-sm leading-relaxed text-[#52525B] dark:text-[#B4B4C6]">
-                    Learnly reads the exact lesson you are studying, tracks your
+                    Vukora reads the exact lesson you are studying, tracks your
                     Convex progress, and generates interactive quizzes on demand.
                   </p>
                 </div>
@@ -412,7 +412,7 @@ export function LearnlyWidget() {
                           msg.quizzes.length > 0 && (
                             <div className="w-full">
                               {msg.quizzes.map((quiz) => (
-                                <LearnlyQuizCard
+                                <VukoraQuizCard
                                   key={`${msg.id}-${quiz.title}`}
                                   quiz={quiz}
                                 />
@@ -430,7 +430,7 @@ export function LearnlyWidget() {
                       className="h-3.5 w-3.5 animate-spin text-[#FF5A36]"
                       aria-hidden="true"
                     />
-                    <span>Learnly is thinking...</span>
+                    <span>Vukora is thinking...</span>
                   </div>
                 )}
 
@@ -455,7 +455,7 @@ export function LearnlyWidget() {
                     ref={inputRef}
                     autoResize
                     rows={1}
-                    aria-label="Message Learnly AI Tutor"
+                    aria-label="Message Vukora AI Tutor"
                     placeholder="Ask about this lesson or request a quiz..."
                     value={input}
                     onValueChange={setInput}
@@ -483,7 +483,7 @@ export function LearnlyWidget() {
       )}
 
       <Button
-        aria-label="Open Learnly AI Tutor"
+        aria-label="Open Vukora AI Tutor"
         aria-expanded={open}
         onClick={() => setOpen((prev) => !prev)}
         className="tactile-btn group inline-flex h-13 cursor-pointer items-center gap-2 rounded-full bg-[#2563EB] px-5 text-sm font-extrabold text-white hover:bg-[#1D4ED8] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#111116] dark:focus-visible:outline-[#FFB800]"
@@ -493,7 +493,7 @@ export function LearnlyWidget() {
         ) : (
           <Sparkles className="h-5 w-5 text-[#FFB800]" aria-hidden="true" />
         )}
-        <span>{open ? "Close Learnly" : "Ask Learnly"}</span>
+        <span>{open ? "Close Vukora" : "Ask Vukora"}</span>
       </Button>
     </div>
   );
