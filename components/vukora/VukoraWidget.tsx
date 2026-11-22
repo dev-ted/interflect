@@ -146,7 +146,7 @@ export function VukoraWidget() {
       } | null;
 
       if (!response.ok) {
-        throw new Error(data?.error ?? "The Vukora tutor could not respond. Try again.");
+        throw new Error(data?.error ?? "The Interflect tutor could not respond. Try again.");
       }
 
       messageIdRef.current += 1;
@@ -195,7 +195,7 @@ export function VukoraWidget() {
       }}
     >
       <PopoverTrigger
-        aria-label={open ? "Close Vukora tutor" : "Open Vukora tutor"}
+        aria-label={open ? "Close Interflect tutor" : "Open Interflect tutor"}
         className="btn btn-secondary fixed right-5 bottom-5 z-50 h-12 w-12 rounded-full p-0 shadow-card"
       >
         <LogoMark className="h-6 w-6" />
@@ -212,7 +212,7 @@ export function VukoraWidget() {
           <LogoMark className="h-6 w-6 shrink-0" />
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2">
-              <PopoverTitle className="text-sm font-bold">Vukora tutor</PopoverTitle>
+              <PopoverTitle className="text-sm font-bold">Interflect tutor</PopoverTitle>
               <span className="chip h-5 px-2">Pro</span>
             </div>
             <p className="truncate text-xs text-mist">Viewing {viewingLabel}</p>
@@ -226,7 +226,7 @@ export function VukoraWidget() {
               <RotateCcw className="h-4 w-4" aria-hidden="true" />
             </Button>
           )}
-          <PopoverClose aria-label="Close Vukora tutor" className="btn btn-ghost btn-icon btn-sm w-8 text-mist">
+          <PopoverClose aria-label="Close Interflect tutor" className="btn btn-ghost btn-icon btn-sm w-8 text-mist">
             <X className="h-4 w-4" aria-hidden="true" />
           </PopoverClose>
         </header>
@@ -238,7 +238,7 @@ export function VukoraWidget() {
                 {isAuthenticated ? "The tutor is part of Pro" : "Sign in to use the tutor"}
               </h3>
               <p className="text-sm leading-relaxed text-mist">
-                The Vukora tutor reads the lesson you are on, explains concepts and
+                The Interflect tutor reads the lesson you are on, explains concepts and
                 code, checks your progress and builds quick quizzes. It comes with
                 the Pro plan.
               </p>
@@ -352,7 +352,7 @@ export function VukoraWidget() {
                 ref={inputRef}
                 autoResize
                 rows={1}
-                aria-label="Message the Vukora tutor"
+                aria-label="Message the Interflect tutor"
                 placeholder="Ask about this lesson or request a quiz"
                 value={input}
                 onValueChange={setInput}

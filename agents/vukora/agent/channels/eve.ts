@@ -97,7 +97,7 @@ const clerkProAuth: AuthFn<Request> = withAuthChallenges(
 
     if (!isPro) {
       throw new ForbiddenError({
-        message: "Vukora AI Tutor requires a Pro subscription.",
+        message: "The Interflect tutor requires a Pro subscription.",
       });
     }
 

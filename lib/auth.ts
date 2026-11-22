@@ -9,7 +9,7 @@ export const TUTOR = {
   handle: "ted.code",
   role: "Frontend engineer and instructor",
   url: "https://frontendted.co.za/",
-  bio: "I build web apps for a living and teach the way I learned: by shipping something real. Every Vukora course is a working project you build alongside me, from the first file to deploy.",
+  bio: "I teach UI/UX design and frontend craft by building and critiquing real interfaces with you. Every Interflect course is a hands-on project, so you finish with work you can show.",
 } as const;
 
 export function isAdminRole(metadata: unknown): boolean {

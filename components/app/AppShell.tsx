@@ -34,7 +34,7 @@ function SidebarBody() {
 
   return (
     <div className="flex h-full flex-col gap-6 p-4">
-      <Link href="/" aria-label="Vukora home" className="w-fit rounded-md px-2 pt-1">
+      <Link href="/" aria-label="Interflect home" className="w-fit rounded-md px-2 pt-1">
         <Logo />
       </Link>
 
@@ -104,7 +104,7 @@ function UpgradeCard() {
     <div className="rounded-xl border border-line bg-surface p-4">
       <p className="flex items-center gap-2 text-sm font-semibold">
         <Sparkles className="h-4 w-4 text-sun" aria-hidden="true" />
-        Vukora Pro
+        Interflect Pro
       </p>
       <p className="mt-1 text-xs leading-relaxed text-mist">
         Every course, every lesson, and the AI tutor.
@@ -126,12 +126,12 @@ export function AppShell({ children }: { children: ReactNode }) {
 
       <div className="flex min-w-0 flex-1 flex-col">
         <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-line bg-bg/85 px-4 backdrop-blur-md lg:hidden">
-          <Link href="/" aria-label="Vukora home">
+          <Link href="/" aria-label="Interflect home">
             <Logo />
           </Link>
           <SidebarProvider>
             <SidebarMobileDrawer
-              title="Vukora"
+              title="Interflect"
               className="night"
               triggerLabel="Open navigation"
               triggerClassName="btn btn-ghost btn-icon"
