@@ -2,33 +2,100 @@
 
 import { useMemo, useState } from "react";
 import { useQuery } from "convex/react";
-import { Search, Sparkles } from "lucide-react";
+import { Check, ChevronDown, Search } from "lucide-react";
 import {
   SegmentedControl,
   SegmentedControlIndicator,
   SegmentedControlItem,
 } from "@ui-sdk/react/segmented-control";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectItemIndicator,
+  SelectTrigger,
+  SelectValue,
+} from "@ui-sdk/react/select";
 import { api } from "@/convex/_generated/api";
 import { CourseCard, type CourseCardItem } from "./CourseCard";
 
 type TierFilter = "all" | "free" | "pro";
 
+const TIERS: { value: TierFilter; label: string }[] = [
+  { value: "all", label: "All" },
+  { value: "free", label: "Free" },
+  { value: "pro", label: "Pro" },
+];
+
+const LEVELS = [
+  { value: "all", label: "Any level" },
+  { value: "beginner", label: "Beginner" },
+  { value: "intermediate", label: "Intermediate" },
+  { value: "advanced", label: "Advanced" },
+];
+
+function FilterSelect({
+  label,
+  items,
+  value,
+  onChange,
+}: {
+  label: string;
+  items: { value: string; label: string }[];
+  value: string;
+  onChange: (value: string) => void;
+}) {
+  return (
+    <Select items={items} value={value} onValueChange={(v) => v && onChange(v)}>
+      <SelectTrigger
+        aria-label={label}
+        className="field flex w-full cursor-pointer items-center justify-between gap-2 sm:w-44"
+      >
+        <SelectValue className="truncate" />
+        <ChevronDown className="h-4 w-4 shrink-0 text-mist" aria-hidden="true" />
+      </SelectTrigger>
+      <SelectContent className="card z-50 min-w-(--anchor-width) origin-(--transform-origin) p-1 transition-[opacity,transform] duration-150 ease-(--ease-out) data-starting-style:scale-95 data-starting-style:opacity-0 data-ending-style:scale-95 data-ending-style:opacity-0 motion-reduce:data-starting-style:scale-100 motion-reduce:data-ending-style:scale-100">
+        {items.map((item) => (
+          <SelectItem
+            key={item.value}
+            value={item.value}
+            className="flex cursor-pointer items-center justify-between gap-3 rounded-md px-2.5 py-2 text-sm outline-none data-highlighted:bg-subtle"
+          >
+            {item.label}
+            <SelectItemIndicator>
+              <Check className="h-3.5 w-3.5 text-primary" aria-hidden="true" />
+            </SelectItemIndicator>
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
+  );
+}
+
 export function CourseCatalogClient() {
   const courses = useQuery(api.courses.listPublished, {});
   const [tier, setTier] = useState<TierFilter>("all");
-  const [category, setCategory] = useState<string>("all");
+  const [level, setLevel] = useState("all");
+  const [category, setCategory] = useState("all");
   const [search, setSearch] = useState("");
 
-  const categories = useMemo(() => {
-    if (!courses) return [];
-    return Array.from(new Set(courses.map((c) => c.category)));
-  }, [courses]);
+  const categories = useMemo(
+    () => [
+      { value: "all", label: "All topics" },
+      ...Array.from(new Set(courses?.map((c) => c.category) ?? [])).map((c) => ({
+        value: c,
+        label: c,
+      })),
+    ],
+    [courses],
+  );
 
   const filtered = useMemo(() => {
     if (!courses) return [];
     const q = search.trim().toLowerCase();
     return courses.filter((course) => {
       if (tier !== "all" && course.tier !== tier) return false;
+      if (level !== "all" && course.level !== level) return false;
       if (category !== "all" && course.category !== category) return false;
       if (q) {
         const hay = `${course.title} ${course.subtitle} ${course.category} ${course.tags.join(" ")}`.toLowerCase();
@@ -36,119 +103,80 @@ export function CourseCatalogClient() {
       }
       return true;
     });
-  }, [courses, tier, category, search]);
+  }, [courses, tier, level, category, search]);
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-      <div className="max-w-2xl">
-        <span className="inline-flex -rotate-1 items-center gap-1.5 rounded-full border-2 border-[#18181B] bg-[#FFB800] px-3 py-0.5 text-xs font-extrabold tracking-wide text-[#111116] uppercase shadow-[2px_2px_0_0_#111116]">
-          <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
-          All Courses
-        </span>
-        <h1 className="mt-3 text-3xl font-extrabold tracking-tight text-[#111116] sm:text-5xl dark:text-[#FAFAF5]">
-          Explore the curriculum
-        </h1>
-        <p className="mt-2.5 text-base text-[#52525B] dark:text-[#B4B4C6]">
-          Every Pro course includes free preview lessons so you can experience
-          the teaching style and code depth before upgrading.
-        </p>
-      </div>
+    <>
+      <h1 className="text-3xl font-extrabold sm:text-4xl">Courses</h1>
+      <p className="mt-2 max-w-2xl text-mist">
+        Build real projects with Teddy. Pro courses open with free preview
+        lessons, so you can try the teaching before you upgrade.
+      </p>
 
-      <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div className="relative max-w-md flex-1">
+      <div className="mt-8 flex flex-col gap-3 lg:flex-row lg:items-center">
+        <div className="relative flex-1 lg:max-w-sm">
           <Search
-            className="pointer-events-none absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-[#52525B] dark:text-[#B4B4C6]"
+            className="pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-mist"
             aria-hidden="true"
           />
           <input
             type="search"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search courses, topics, or tags..."
+            placeholder="Search courses or topics"
             aria-label="Search courses"
-            className="min-h-11 w-full rounded-xl border-2 border-[#18181B] bg-white py-2.5 pr-4 pl-10 text-sm font-medium text-[#111116] shadow-[3px_3px_0_0_#111116] placeholder:text-[#71717A] focus:border-[#2563EB] focus:outline-none dark:border-[#3A3A52] dark:bg-[#16161F] dark:text-[#FAFAF5] dark:shadow-[3px_3px_0_0_#000000] dark:placeholder:text-[#8C8CA1]"
+            className="field pl-9"
           />
         </div>
 
-        <SegmentedControl
-          aria-label="Filter by plan tier"
-          value={tier}
-          onValueChange={(val) => {
-            if (val === "all" || val === "free" || val === "pro") {
-              setTier(val);
-            }
-          }}
-          className="relative isolate inline-flex rounded-xl border-2 border-[#18181B] bg-[#F6EFE0] p-1 shadow-[3px_3px_0_0_#111116] dark:border-[#3A3A52] dark:bg-[#16161F] dark:shadow-[3px_3px_0_0_#000000]"
-        >
-          <SegmentedControlIndicator className="absolute top-(--segmented-control-indicator-top) left-(--segmented-control-indicator-left) -z-10 h-(--segmented-control-indicator-height) w-(--segmented-control-indicator-width) rounded-lg border-2 border-[#18181B] bg-[#FFB800] transition-[top,left,width,height] duration-200 data-[activation-direction=none]:transition-none dark:border-[#18181B]" />
-          <SegmentedControlItem
-            value="all"
-            className="min-h-10 cursor-pointer rounded-lg px-4 py-1.5 text-sm font-bold text-[#52525B] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2563EB] data-checked:text-[#111116] sm:min-h-9 dark:text-[#B4B4C6] dark:data-checked:text-[#111116]"
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+          <SegmentedControl
+            aria-label="Plan"
+            value={tier}
+            onValueChange={(val) => {
+              if (val === "all" || val === "free" || val === "pro") setTier(val);
+            }}
+            className="relative isolate inline-flex h-10 w-full rounded-md border border-line bg-subtle p-0.5 sm:w-auto"
           >
-            All
-          </SegmentedControlItem>
-          <SegmentedControlItem
-            value="free"
-            className="min-h-10 cursor-pointer rounded-lg px-4 py-1.5 text-sm font-bold text-[#52525B] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2563EB] data-checked:text-[#111116] sm:min-h-9 dark:text-[#B4B4C6] dark:data-checked:text-[#111116]"
-          >
-            Free
-          </SegmentedControlItem>
-          <SegmentedControlItem
-            value="pro"
-            className="min-h-10 cursor-pointer rounded-lg px-4 py-1.5 text-sm font-bold text-[#52525B] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2563EB] data-checked:text-[#111116] sm:min-h-9 dark:text-[#B4B4C6] dark:data-checked:text-[#111116]"
-          >
-            Pro
-          </SegmentedControlItem>
-        </SegmentedControl>
+            <SegmentedControlIndicator className="absolute top-(--segmented-control-indicator-top) left-(--segmented-control-indicator-left) -z-10 h-(--segmented-control-indicator-height) w-(--segmented-control-indicator-width) rounded-[5px] bg-surface shadow-card transition-[top,left,width,height] duration-200 ease-(--ease-out) data-[activation-direction=none]:transition-none motion-reduce:transition-none" />
+            {TIERS.map((t) => (
+              <SegmentedControlItem
+                key={t.value}
+                value={t.value}
+                className="flex-1 cursor-pointer rounded-[5px] px-4 text-sm font-medium text-mist transition-colors duration-150 data-checked:text-ink sm:flex-none"
+              >
+                {t.label}
+              </SegmentedControlItem>
+            ))}
+          </SegmentedControl>
+
+          <div className="grid grid-cols-2 gap-3 sm:flex">
+            <FilterSelect label="Level" items={LEVELS} value={level} onChange={setLevel} />
+            {categories.length > 2 && (
+              <FilterSelect
+                label="Topic"
+                items={categories}
+                value={category}
+                onChange={setCategory}
+              />
+            )}
+          </div>
+        </div>
       </div>
 
-      {categories.length > 0 && (
-        <div className="mt-5 flex flex-wrap gap-2">
-          <button
-            type="button"
-            aria-pressed={category === "all"}
-            onClick={() => setCategory("all")}
-            className={`min-h-11 cursor-pointer rounded-full border-2 px-3.5 py-1 text-xs font-extrabold transition-all focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2563EB] sm:min-h-9 ${
-              category === "all"
-                ? "border-[#18181B] bg-[#111116] text-[#FFFBF2] shadow-[2px_2px_0_0_#FF5A36] dark:border-[#FAFAF5] dark:bg-[#FAFAF5] dark:text-[#111116]"
-                : "border-[#18181B]/30 bg-white text-[#52525B] hover:border-[#18181B] hover:bg-[#F6EFE0] hover:text-[#111116] dark:border-[#3A3A52] dark:bg-[#16161F] dark:text-[#B4B4C6] dark:hover:text-[#FAFAF5]"
-            }`}
-          >
-            All Categories
-          </button>
-          {categories.map((cat) => (
-            <button
-              key={cat}
-              type="button"
-              aria-pressed={category === cat}
-              onClick={() => setCategory(cat)}
-              className={`min-h-11 cursor-pointer rounded-full border-2 px-3.5 py-1 text-xs font-extrabold transition-all focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2563EB] sm:min-h-9 ${
-                category === cat
-                  ? "border-[#18181B] bg-[#111116] text-[#FFFBF2] shadow-[2px_2px_0_0_#FF5A36] dark:border-[#FAFAF5] dark:bg-[#FAFAF5] dark:text-[#111116]"
-                  : "border-[#18181B]/30 bg-white text-[#52525B] hover:border-[#18181B] hover:bg-[#F6EFE0] hover:text-[#111116] dark:border-[#3A3A52] dark:bg-[#16161F] dark:text-[#B4B4C6] dark:hover:text-[#FAFAF5]"
-              }`}
-            >
-              {cat}
-            </button>
-          ))}
-        </div>
-      )}
-
-      <div className="mt-8 grid grid-cols-1 gap-7 md:grid-cols-2 lg:grid-cols-3">
+      <div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
         {courses === undefined ? (
-          Array.from({ length: 4 }).map((_, i) => (
+          Array.from({ length: 3 }).map((_, i) => (
             <div
               key={`catalog-skeleton-${i}`}
-              className="h-[410px] animate-pulse rounded-2xl border-2 border-[#18181B]/20 bg-[#F6EFE0] dark:border-[#323244] dark:bg-[#16161F]"
+              className="h-96 animate-pulse rounded-xl bg-subtle motion-reduce:animate-none"
             />
           ))
         ) : filtered.length === 0 ? (
-          <div className="col-span-full rounded-3xl border-2 border-dashed border-[#18181B]/40 bg-white p-12 text-center dark:border-[#3A3A52] dark:bg-[#16161F]">
-            <p className="font-display text-lg font-extrabold text-[#111116] dark:text-[#FAFAF5]">
-              No courses match your filters
-            </p>
-            <p className="mt-1 text-sm text-[#52525B] dark:text-[#B4B4C6]">
-              Try clearing your search or switching back to All tiers.
+          <div className="col-span-full rounded-xl border border-dashed border-line p-10 text-center">
+            <p className="font-semibold">No courses match these filters</p>
+            <p className="mt-1 text-sm text-mist">
+              Clear the search or pick another plan or level.
             </p>
           </div>
         ) : (
@@ -157,6 +185,6 @@ export function CourseCatalogClient() {
           ))
         )}
       </div>
-    </div>
+    </>
   );
 }

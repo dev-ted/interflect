@@ -11,13 +11,6 @@ import {
   useQuery,
 } from "convex/react";
 import {
-  Accordion,
-  AccordionHeader,
-  AccordionItem,
-  AccordionPanel,
-  AccordionTrigger,
-} from "@ui-sdk/react/accordion";
-import {
   Progress,
   ProgressIndicator,
   ProgressLabel,
@@ -25,26 +18,17 @@ import {
   ProgressValue,
 } from "@ui-sdk/react/progress";
 import { toast } from "@ui-sdk/react/toast";
-import {
-  ArrowLeft,
-  ArrowRight,
-  BookOpen,
-  CheckCircle2,
-  ChevronDown,
-  Clock,
-  Crown,
-  HelpCircle,
-  Lock,
-  PlayCircle,
-  Sparkles,
-} from "lucide-react";
+import { CheckCircle2, Crown, Lock, PlayCircle } from "lucide-react";
 import { api } from "@/convex/_generated/api";
 import { usePageContext } from "@/components/PageContextProvider";
 import { isAdminRole, PRO_PLAN_SLUG } from "@/lib/auth";
 
 function formatDuration(seconds: number): string {
-  const mins = Math.max(1, Math.round(seconds / 60));
-  return `${mins} min`;
+  return `${Math.max(1, Math.round(seconds / 60))} min`;
+}
+
+function plural(n: number, word: string) {
+  return `${n} ${word}${n === 1 ? "" : "s"}`;
 }
 
 export function CourseDetailClient({ slug }: { slug: string }) {
@@ -76,337 +60,293 @@ export function CourseDetailClient({ slug }: { slug: string }) {
 
   if (course === undefined) {
     return (
-      <div className="mx-auto max-w-5xl px-4 py-12 sm:px-6 lg:px-8">
-        <div className="h-64 animate-pulse rounded-3xl border-2 border-[#18181B]/20 bg-[#F6EFE0] dark:border-[#323244] dark:bg-[#16161F]" />
-        <div className="mt-8 space-y-4">
-          <div className="h-24 animate-pulse rounded-2xl border-2 border-[#18181B]/20 bg-[#F6EFE0] dark:border-[#323244] dark:bg-[#16161F]" />
-          <div className="h-24 animate-pulse rounded-2xl border-2 border-[#18181B]/20 bg-[#F6EFE0] dark:border-[#323244] dark:bg-[#16161F]" />
-        </div>
+      <div className="space-y-6">
+        <div className="h-72 animate-pulse rounded-3xl bg-subtle motion-reduce:animate-none" />
+        <div className="h-48 animate-pulse rounded-xl bg-subtle motion-reduce:animate-none" />
       </div>
     );
   }
 
   if (course === null) {
     return (
-      <div className="mx-auto max-w-3xl px-4 py-20 text-center">
-        <div className="tactile-card rounded-3xl p-10">
-          <h1 className="text-2xl font-extrabold text-[#111116] dark:text-[#FAFAF5]">
-            Course not found
-          </h1>
-          <p className="mt-2 text-sm text-[#52525B] dark:text-[#B4B4C6]">
-            This course may be unpublished or moved.
-          </p>
-          <Link
-            href="/courses"
-            className="tactile-btn mt-6 inline-flex items-center gap-2 rounded-xl bg-[#FF5A36] px-5 py-2.5 text-sm font-extrabold text-[#111116] hover:bg-[#FF6E4E]"
-          >
-            <ArrowLeft className="h-4 w-4" aria-hidden="true" />
-            Back to Courses
-          </Link>
-        </div>
+      <div className="card mx-auto max-w-lg p-8 text-center">
+        <h1 className="text-2xl font-bold">Course not found</h1>
+        <p className="mt-2 text-sm text-mist">
+          It may have been unpublished or moved.
+        </p>
+        <Link href="/courses" className="btn btn-primary mt-6">
+          Browse courses
+        </Link>
       </div>
     );
   }
 
+  const isPro = course.tier === "pro";
   const hasProAccess = course.hasProAccess || clientHasPro || course.isAdmin;
   const allLessons = course.modules.flatMap((m) => m.lessons);
-  const firstLesson = allLessons[0] ?? null;
-  const nextIncompleteLesson =
-    allLessons.find((l) => !l.completed) ?? firstLesson;
+  const previewOnly = isPro && !hasProAccess;
+  const startLesson = previewOnly
+    ? (allLessons.find((l) => l.isFreePreview) ?? allLessons[0])
+    : (allLessons.find((l) => !l.completed) ?? allLessons[0]);
   const progressPct =
     course.totalLessons > 0
       ? Math.round((course.completedLessons / course.totalLessons) * 100)
       : 0;
-  const freePreviewCount = allLessons.filter(
-    (l) => course.tier === "free" || l.isFreePreview,
-  ).length;
+  const freePreviewCount = allLessons.filter((l) => l.isFreePreview).length;
+  const quizCount = allLessons.filter((l) => l.quizCount > 0).length;
+  const videoMinutes = Math.round(
+    allLessons.reduce((sum, l) => sum + l.durationSeconds, 0) / 60,
+  );
 
   async function handleEnroll() {
     if (!course) return;
     setEnrolling(true);
     try {
       await enroll({ courseId: course._id });
-      toast.success(`Enrolled in ${course.title}!`);
+      toast.success(`You're enrolled in ${course.title}.`);
     } catch {
-      toast.error("Could not enroll. Please try again.");
+      toast.error("Could not enroll. Try again.");
     } finally {
       setEnrolling(false);
     }
   }
 
+  const lessonLink = startLesson && (
+    <Link
+      href={`/courses/${course.slug}/lessons/${startLesson.slug}`}
+      className={`btn btn-lg ${course.isEnrolled ? "btn-primary" : "btn-secondary"}`}
+    >
+      <PlayCircle className="h-4 w-4" aria-hidden="true" />
+      {course.completedLessons > 0
+        ? "Continue learning"
+        : previewOnly
+          ? "Watch free preview"
+          : "Start course"}
+    </Link>
+  );
+
   return (
-    <div className="mx-auto max-w-5xl px-4 py-10 sm:px-6 lg:px-8">
-      <Link
-        href="/courses"
-        className="inline-flex items-center gap-1.5 rounded-lg px-2 py-1 text-sm font-bold text-[#52525B] transition-colors hover:bg-[#F6EFE0] hover:text-[#111116] dark:text-[#B4B4C6] dark:hover:bg-[#16161F] dark:hover:text-[#FAFAF5]"
-      >
-        <ArrowLeft className="h-4 w-4" aria-hidden="true" />
-        All Courses
-      </Link>
+    <>
+      <nav aria-label="Breadcrumb" className="mb-4 text-sm text-mist">
+        <ol className="flex min-w-0 items-center gap-2">
+          <li>
+            <Link href="/courses" className="hover:text-ink">
+              Courses
+            </Link>
+          </li>
+          <li aria-hidden="true">/</li>
+          <li aria-current="page" className="truncate text-ink">
+            {course.title}
+          </li>
+        </ol>
+      </nav>
 
-      {/* Course Header */}
-      <div className="tactile-card-lg mt-5 overflow-hidden rounded-3xl">
-        <div className="grid grid-cols-1 lg:grid-cols-12">
-          <div className="p-6 sm:p-8 lg:col-span-7">
-            <div className="flex flex-wrap items-center gap-2">
-              {course.tier === "pro" ? (
-                <span className="inline-flex items-center gap-1 rounded-full border-2 border-[#18181B] bg-[#2563EB] px-3 py-0.5 text-xs font-extrabold text-white shadow-[2px_2px_0_0_#111116]">
-                  <Crown className="h-3.5 w-3.5 text-[#FFB800]" aria-hidden="true" />
-                  Pro Course
-                </span>
-              ) : (
-                <span className="inline-flex items-center gap-1 rounded-full border-2 border-[#18181B] bg-[#00B87C] px-3 py-0.5 text-xs font-extrabold text-[#111116] shadow-[2px_2px_0_0_#111116]">
-                  <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
-                  Free Course
-                </span>
+      <header className="night grid gap-8 rounded-3xl p-6 sm:p-8 lg:grid-cols-[minmax(0,1fr)_20rem] lg:items-center">
+        <div className="min-w-0">
+          <div className="flex flex-wrap gap-2">
+            {isPro ? (
+              <span className="chip text-ink">
+                <Crown className="h-3.5 w-3.5 text-sun" aria-hidden="true" />
+                Pro
+              </span>
+            ) : (
+              <span className="chip">Free</span>
+            )}
+            <span className="chip capitalize">{course.level}</span>
+            <span className="chip">{course.category}</span>
+            <span className="chip">{course.estimatedHours} hours</span>
+          </div>
+
+          <h1 className="mt-4 text-3xl font-extrabold sm:text-4xl">
+            {course.title}
+          </h1>
+          <p className="mt-3 max-w-2xl text-mist sm:text-lg">{course.subtitle}</p>
+          <p className="mt-4 text-sm text-mist">
+            Taught by <span className="font-semibold text-ink">{course.tutorName}</span>
+            {course.tutorTitle && `, ${course.tutorTitle}`}
+          </p>
+
+          <div className="mt-6 flex flex-wrap gap-3">
+            <Authenticated>
+              {!course.isEnrolled && (
+                <button
+                  type="button"
+                  disabled={enrolling}
+                  onClick={handleEnroll}
+                  className="btn btn-primary btn-lg"
+                >
+                  {enrolling ? "Enrolling…" : "Enroll"}
+                </button>
               )}
-              <span className="rounded-full border-2 border-[#18181B]/25 bg-[#F6EFE0] px-3 py-0.5 text-xs font-bold text-[#111116] dark:border-[#3A3A52] dark:bg-[#1F1F2D] dark:text-[#FAFAF5]">
-                {course.category}
-              </span>
-              <span className="rounded-full border-2 border-[#18181B]/25 bg-[#F6EFE0] px-3 py-0.5 text-xs font-bold capitalize text-[#111116] dark:border-[#3A3A52] dark:bg-[#1F1F2D] dark:text-[#FAFAF5]">
-                {course.level}
-              </span>
-            </div>
+            </Authenticated>
+            <Unauthenticated>
+              <SignInButton mode="modal">
+                <button type="button" className="btn btn-primary btn-lg">
+                  Sign in to enroll
+                </button>
+              </SignInButton>
+            </Unauthenticated>
 
-            <h1 className="mt-4 text-2xl font-extrabold tracking-tight text-[#111116] sm:text-3xl dark:text-[#FAFAF5]">
-              {course.title}
-            </h1>
-            <p className="mt-2.5 text-sm leading-relaxed text-[#52525B] sm:text-base dark:text-[#B4B4C6]">
+            {lessonLink}
+
+            {isPro && (
+              <Show
+                when={(checkHas) =>
+                  checkHas({ plan: PRO_PLAN_SLUG }) ||
+                  checkHas({ feature: "pro_courses" }) ||
+                  isAdmin
+                }
+                fallback={
+                  <Link href="/pricing" className="btn btn-ghost btn-lg">
+                    Upgrade for Pro lessons
+                  </Link>
+                }
+              >
+                {null}
+              </Show>
+            )}
+          </div>
+        </div>
+
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={course.thumbnailUrl}
+          alt=""
+          className="aspect-video w-full rounded-xl object-cover"
+        />
+      </header>
+
+      <div className="mt-10 grid gap-10 lg:grid-cols-[minmax(0,1fr)_18rem]">
+        <div className="min-w-0">
+          <section aria-labelledby="about-heading">
+            <h2 id="about-heading" className="text-xl font-bold">
+              About this course
+            </h2>
+            <p className="mt-3 max-w-[70ch] leading-relaxed whitespace-pre-line text-mist">
               {course.description}
             </p>
+          </section>
 
-            <div className="mt-5 flex flex-wrap items-center gap-4 text-xs font-bold text-[#52525B] dark:text-[#B4B4C6]">
-              <span className="inline-flex items-center gap-1.5">
-                <BookOpen className="h-4 w-4 text-[#D93817] dark:text-[#FF6B4A]" aria-hidden="true" />
-                {course.modules.length} modules · {course.totalLessons} lessons
-              </span>
-              <span className="inline-flex items-center gap-1.5 font-mono">
-                <Clock className="h-4 w-4 text-[#1D4ED8] dark:text-[#60A5FA]" aria-hidden="true" />
-                ~{course.estimatedHours} hours
-              </span>
-              {course.tier === "pro" && freePreviewCount > 0 && (
-                <span className="inline-flex items-center gap-1.5 text-[#047857] dark:text-[#34D399]">
-                  <PlayCircle className="h-4 w-4" aria-hidden="true" />
-                  {freePreviewCount} free{" "}
-                  {freePreviewCount === 1 ? "preview" : "previews"}
-                </span>
-              )}
-            </div>
+          <section aria-labelledby="curriculum-heading" className="mt-10">
+            <h2 id="curriculum-heading" className="text-xl font-bold">
+              Curriculum
+            </h2>
+            <p className="mt-1 text-sm text-mist">
+              {plural(course.modules.length, "module")},{" "}
+              {plural(course.totalLessons, "lesson")}
+            </p>
 
-            <div className="mt-7 flex flex-wrap items-center gap-3">
-              {nextIncompleteLesson && (
-                <Link
-                  href={`/courses/${course.slug}/lessons/${nextIncompleteLesson.slug}`}
-                  className="tactile-btn inline-flex min-h-11 items-center gap-2 rounded-xl bg-[#FF5A36] px-5 py-2.5 text-sm font-extrabold text-[#111116] hover:bg-[#FF6E4E]"
-                >
-                  <PlayCircle className="h-4 w-4" aria-hidden="true" />
-                  {course.completedLessons > 0
-                    ? "Continue Learning"
-                    : course.tier === "pro" && !hasProAccess
-                      ? "Watch Free Preview"
-                      : "Start Course"}
-                  <ArrowRight className="h-4 w-4" aria-hidden="true" />
-                </Link>
-              )}
-
-              <Authenticated>
-                {course.isEnrolled ? (
-                  <span className="inline-flex min-h-11 items-center gap-1.5 rounded-xl border-2 border-[#18181B] bg-[#00B87C] px-4 py-2.5 text-sm font-extrabold text-[#111116] shadow-[2px_2px_0_0_#111116]">
-                    <CheckCircle2 className="h-4 w-4" aria-hidden="true" />
-                    Enrolled
-                  </span>
-                ) : (
-                  <button
-                    type="button"
-                    disabled={enrolling}
-                    onClick={handleEnroll}
-                    className="tactile-btn-sm min-h-11 cursor-pointer rounded-xl bg-white px-4 py-2.5 text-sm font-bold text-[#111116] hover:bg-[#F6EFE0] disabled:opacity-50 dark:bg-[#1F1F2D] dark:text-[#FAFAF5] dark:hover:bg-[#2A2A3B]"
-                  >
-                    {enrolling ? "Enrolling..." : "Enroll in Course"}
-                  </button>
-                )}
-              </Authenticated>
-
-              <Unauthenticated>
-                <SignInButton mode="modal">
-                  <button
-                    type="button"
-                    className="tactile-btn-sm min-h-11 cursor-pointer rounded-xl bg-white px-4 py-2.5 text-sm font-bold text-[#111116] hover:bg-[#F6EFE0] dark:bg-[#1F1F2D] dark:text-[#FAFAF5] dark:hover:bg-[#2A2A3B]"
-                  >
-                    Sign in to Enroll
-                  </button>
-                </SignInButton>
-              </Unauthenticated>
-
-              {course.tier === "pro" && (
-                <Show
-                  when={(checkHas) =>
-                    checkHas({ plan: PRO_PLAN_SLUG }) ||
-                    checkHas({ feature: "pro_courses" }) ||
-                    isAdmin
-                  }
-                  fallback={
-                    <Link
-                      href="/pricing"
-                      className="tactile-btn-sm inline-flex min-h-11 items-center gap-1.5 rounded-xl bg-[#2563EB] px-4 py-2.5 text-sm font-extrabold text-white hover:bg-[#1D4ED8]"
-                    >
-                      <Crown className="h-4 w-4 text-[#FFB800]" aria-hidden="true" />
-                      Upgrade to Pro
-                    </Link>
-                  }
-                >
-                  {null}
-                </Show>
-              )}
-            </div>
-          </div>
-
-          <div className="relative min-h-[220px] border-t-2 border-[#18181B] bg-[#F6EFE0] lg:col-span-5 lg:border-t-0 lg:border-l-2 dark:border-[#3A3A52] dark:bg-[#1F1F2D]">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={course.thumbnailUrl}
-              alt={course.title}
-              className="h-full w-full object-cover"
-            />
-          </div>
-        </div>
-
-        {isAuthenticated && course.totalLessons > 0 && (
-          <div className="border-t-2 border-[#18181B] bg-[#F6EFE0]/80 px-6 py-4 sm:px-8 dark:border-[#323244] dark:bg-[#12121A]">
-            <Progress value={progressPct} className="space-y-2">
-              <div className="flex items-center justify-between text-xs font-bold">
-                <ProgressLabel className="text-[#111116] dark:text-[#FAFAF5]">
-                  Course Progress ({course.completedLessons} of{" "}
-                  {course.totalLessons} lessons completed)
-                </ProgressLabel>
-                <ProgressValue className="font-mono text-[#047857] dark:text-[#34D399]" />
-              </div>
-              <ProgressTrack className="h-3 w-full overflow-hidden rounded-full border-2 border-[#18181B] bg-white dark:border-[#3A3A52] dark:bg-[#1F1F2D]">
-                <ProgressIndicator className="h-full rounded-full bg-[#00B87C] transition-all" />
-              </ProgressTrack>
-            </Progress>
-          </div>
-        )}
-      </div>
-
-      {/* Curriculum Modules */}
-      <section className="mt-10">
-        <div className="flex flex-wrap items-center justify-between gap-2">
-          <h2 className="text-2xl font-extrabold tracking-tight text-[#111116] dark:text-[#FAFAF5]">
-            Course Curriculum
-          </h2>
-          <span className="rounded-full border-2 border-[#18181B]/25 bg-[#F6EFE0] px-3 py-0.5 text-xs font-bold text-[#52525B] dark:border-[#3A3A52] dark:bg-[#16161F] dark:text-[#B4B4C6]">
-            Taught by {course.tutorName}
-          </span>
-        </div>
-
-        <Accordion
-          multiple
-          defaultValue={course.modules.map((m) => m._id)}
-          className="mt-5 space-y-4"
-        >
-          {course.modules.map((mod, modIndex) => (
-            <AccordionItem
-              key={mod._id}
-              value={mod._id}
-              className="tactile-card overflow-hidden rounded-2xl"
-            >
-              <AccordionHeader>
-                <AccordionTrigger className="flex w-full cursor-pointer items-center justify-between gap-4 px-5 py-4 text-left transition-colors hover:bg-[#FFFBF2] focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[#2563EB] dark:hover:bg-[#1F1F2D]">
-                  <div className="flex items-start gap-3">
-                    <span className="mt-0.5 inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border-2 border-[#18181B] bg-[#FFB800] font-mono text-xs font-extrabold text-[#111116] shadow-[2px_2px_0_0_#111116]">
-                      {String(modIndex + 1).padStart(2, "0")}
+            <ol className="mt-5 space-y-6">
+              {course.modules.map((mod, modIndex) => (
+                <li key={mod._id}>
+                  <h3 className="flex items-baseline gap-3 font-semibold">
+                    <span className="text-sm text-mist tabular-nums">
+                      {modIndex + 1}
                     </span>
-                    <div>
-                      <p className="font-display text-base font-extrabold text-[#111116] dark:text-[#FAFAF5]">
-                        {mod.title}
-                      </p>
-                      {mod.description && (
-                        <p className="mt-0.5 text-xs text-[#52525B] dark:text-[#B4B4C6]">
-                          {mod.description}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                  <div className="flex shrink-0 items-center gap-3">
-                    <span className="rounded-lg border border-[#18181B]/20 bg-[#F6EFE0] px-2.5 py-0.5 font-mono text-xs font-bold text-[#111116] dark:border-[#3A3A52] dark:bg-[#1F1F2D] dark:text-[#FAFAF5]">
-                      {mod.lessons.length}{" "}
-                      {mod.lessons.length === 1 ? "lesson" : "lessons"}
-                    </span>
-                    <ChevronDown
-                      className="h-4 w-4 text-[#52525B] transition-transform duration-200 in-data-open:rotate-180 dark:text-[#B4B4C6]"
-                      aria-hidden="true"
-                    />
-                  </div>
-                </AccordionTrigger>
-              </AccordionHeader>
+                    {mod.title}
+                  </h3>
+                  {mod.description && (
+                    <p className="mt-1 ml-6 text-sm text-mist">{mod.description}</p>
+                  )}
 
-              <AccordionPanel className="border-t-2 border-[#18181B]/15 dark:border-[#2A2A3B]">
-                <ul className="divide-y divide-[#E6DCC6] dark:divide-[#2A2A3B]">
-                  {mod.lessons.map((lesson) => {
-                    const locked =
-                      course.tier === "pro" &&
-                      !lesson.isFreePreview &&
-                      !hasProAccess;
-                    return (
-                      <li key={lesson._id}>
-                        <Link
-                          href={`/courses/${course.slug}/lessons/${lesson.slug}`}
-                          className="flex min-h-14 items-center justify-between gap-4 px-5 py-3.5 transition-colors hover:bg-[#FFFBF2] dark:hover:bg-[#1F1F2D]/70"
-                        >
-                          <div className="flex min-w-0 items-center gap-3">
+                  <ol className="card mt-3 divide-y divide-line overflow-hidden">
+                    {mod.lessons.map((lesson) => {
+                      const locked = isPro && !lesson.isFreePreview && !hasProAccess;
+                      return (
+                        <li key={lesson._id}>
+                          <Link
+                            href={`/courses/${course.slug}/lessons/${lesson.slug}`}
+                            className="flex min-h-14 items-center gap-3 px-4 py-3 transition-colors duration-150 hover:bg-subtle"
+                          >
                             {lesson.completed ? (
                               <CheckCircle2
-                                className="h-5 w-5 shrink-0 text-[#00B87C]"
+                                className="h-5 w-5 shrink-0 text-sage"
                                 aria-hidden="true"
                               />
                             ) : locked ? (
                               <Lock
-                                className="h-4.5 w-4.5 shrink-0 text-[#71717A]"
+                                className="h-5 w-5 shrink-0 p-0.5 text-mist"
                                 aria-hidden="true"
                               />
                             ) : (
                               <PlayCircle
-                                className="h-5 w-5 shrink-0 text-[#D93817] dark:text-[#FF6B4A]"
+                                className="h-5 w-5 shrink-0 text-primary"
                                 aria-hidden="true"
                               />
                             )}
-                            <div className="min-w-0">
-                              <p className="truncate text-sm font-bold text-[#111116] dark:text-[#FAFAF5]">
+                            <span className="min-w-0 flex-1">
+                              <span className="block truncate text-sm font-medium">
                                 {lesson.title}
-                              </p>
-                              <p className="truncate text-xs text-[#52525B] dark:text-[#B4B4C6]">
-                                {lesson.summary}
-                              </p>
-                            </div>
-                          </div>
-
-                          <div className="flex shrink-0 items-center gap-2.5 text-xs">
-                            {course.tier === "pro" && lesson.isFreePreview && (
-                              <span className="rounded-full border border-[#18181B] bg-[#00B87C] px-2.5 py-0.5 font-extrabold text-[#111116]">
-                                Free Preview
+                                {lesson.completed && (
+                                  <span className="sr-only"> (completed)</span>
+                                )}
+                                {locked && <span className="sr-only"> (Pro)</span>}
+                              </span>
+                              {lesson.summary && (
+                                <span className="block truncate text-xs text-mist">
+                                  {lesson.summary}
+                                </span>
+                              )}
+                            </span>
+                            {isPro && lesson.isFreePreview && (
+                              <span className="chip hidden sm:inline-flex">
+                                Free preview
                               </span>
                             )}
-                            {lesson.quizCount > 0 && (
-                              <span className="hidden items-center gap-1 rounded-md border border-[#18181B]/20 bg-[#FFB800]/25 px-2 py-0.5 font-bold text-[#111116] sm:inline-flex dark:border-[#FFB800]/40 dark:bg-[#FFB800]/15 dark:text-[#FFD166]">
-                                <HelpCircle className="h-3 w-3" aria-hidden="true" />
-                                Quiz
-                              </span>
-                            )}
-                            <span className="font-mono font-semibold text-[#52525B] dark:text-[#B4B4C6]">
+                            <span className="shrink-0 text-xs text-mist tabular-nums">
                               {formatDuration(lesson.durationSeconds)}
                             </span>
-                          </div>
-                        </Link>
-                      </li>
-                    );
-                  })}
-                </ul>
-              </AccordionPanel>
-            </AccordionItem>
-          ))}
-        </Accordion>
-      </section>
-    </div>
+                          </Link>
+                        </li>
+                      );
+                    })}
+                  </ol>
+                </li>
+              ))}
+            </ol>
+          </section>
+        </div>
+
+        <aside className="space-y-6 lg:sticky lg:top-8 lg:self-start">
+          {isAuthenticated && course.isEnrolled && course.totalLessons > 0 && (
+            <div className="card p-5">
+              <Progress value={progressPct}>
+                <div className="flex items-baseline justify-between gap-2">
+                  <ProgressLabel className="text-sm font-semibold">
+                    Your progress
+                  </ProgressLabel>
+                  <ProgressValue className="text-sm font-semibold tabular-nums" />
+                </div>
+                <ProgressTrack className="mt-3 h-2 w-full overflow-hidden rounded-full bg-subtle">
+                  <ProgressIndicator className="h-full rounded-full bg-sun" />
+                </ProgressTrack>
+              </Progress>
+              <p className="mt-2 text-xs text-mist">
+                {course.completedLessons} of {course.totalLessons} lessons done
+              </p>
+            </div>
+          )}
+
+          <div className="card p-5">
+            <h2 className="text-sm font-semibold">What&apos;s included</h2>
+            <ul className="mt-3 space-y-2 text-sm text-mist">
+              <li>{plural(course.totalLessons, "video lesson")}</li>
+              {videoMinutes > 0 && <li>{videoMinutes} minutes of video</li>}
+              <li>A written guide with every lesson</li>
+              {quizCount > 0 && (
+                <li>
+                  {quizCount} {quizCount === 1 ? "quiz" : "quizzes"} to check
+                  what you learned
+                </li>
+              )}
+              {isPro && freePreviewCount > 0 && (
+                <li>{plural(freePreviewCount, "free preview lesson")}</li>
+              )}
+              <li>Progress saved to your account</li>
+            </ul>
+          </div>
+        </aside>
+      </div>
+    </>
   );
 }

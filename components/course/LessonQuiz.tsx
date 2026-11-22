@@ -2,8 +2,9 @@
 
 import { useState } from "react";
 import { useConvexAuth, useMutation } from "convex/react";
+import { Radio, RadioGroup, RadioIndicator } from "@ui-sdk/react/radio";
 import { toast } from "@ui-sdk/react/toast";
-import { CheckCircle2, RotateCcw, Sparkles, Trophy, XCircle } from "lucide-react";
+import { CheckCircle2, RotateCcw, Trophy, XCircle } from "lucide-react";
 import { api } from "@/convex/_generated/api";
 import type { Id } from "@/convex/_generated/dataModel";
 import type { QuizQuestion } from "@/lib/types";
@@ -20,6 +21,10 @@ interface LessonQuizProps {
   } | null;
 }
 
+// Revealed content eases in when the learner checks their answers.
+const REVEAL =
+  "transition-[opacity,transform] duration-300 ease-(--ease-out) starting:translate-y-1 starting:opacity-0 motion-reduce:starting:translate-y-0";
+
 export function LessonQuiz({
   courseId,
   lessonId,
@@ -34,9 +39,9 @@ export function LessonQuiz({
 
   if (questions.length === 0) {
     return (
-      <div className="rounded-2xl border-2 border-dashed border-[#18181B]/35 bg-white p-8 text-center text-sm font-medium text-[#52525B] dark:border-[#3A3A52] dark:bg-[#16161F] dark:text-[#B4B4C6]">
-        No quiz questions have been added to this lesson yet.
-      </div>
+      <p className="rounded-xl border border-dashed border-line p-6 text-center text-sm text-mist">
+        This lesson has no quiz yet.
+      </p>
     );
   }
 
@@ -50,7 +55,7 @@ export function LessonQuiz({
 
   async function handleSubmit() {
     if (answeredCount < questions.length) {
-      toast.error("Please select an answer for every question first.");
+      toast.error("Answer every question first.");
       return;
     }
     setSubmitted(true);
@@ -64,9 +69,8 @@ export function LessonQuiz({
           score,
           total: questions.length,
         });
-        toast.success(`Quiz saved: ${score}/${questions.length} correct!`);
       } catch {
-        toast.error("Could not save quiz attempt.");
+        toast.error("Could not save your quiz result.");
       } finally {
         setSaving(false);
       }
@@ -79,169 +83,113 @@ export function LessonQuiz({
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {lastAttempt && !submitted && (
-        <div className="flex flex-wrap items-center justify-between gap-2 rounded-2xl border-2 border-[#18181B] bg-[#00B87C]/20 px-4 py-3 text-sm text-[#111116] shadow-[3px_3px_0_0_#111116] dark:border-[#00B87C]/70 dark:bg-[#00B87C]/15 dark:text-[#FAFAF5] dark:shadow-[3px_3px_0_0_#000000]">
-          <span className="inline-flex items-center gap-2 font-bold">
-            <Trophy className="h-4 w-4 text-[#047857] dark:text-[#34D399]" aria-hidden="true" />
-            Previous best: {lastAttempt.score} / {lastAttempt.total} correct
-          </span>
-          <span className="rounded-full border border-[#18181B]/25 bg-white px-2.5 py-0.5 text-xs font-bold text-[#111116] dark:border-[#3A3A52] dark:bg-[#16161F] dark:text-[#FAFAF5]">
-            Take it again anytime
-          </span>
-        </div>
-      )}
-
-      {submitted && (
-        <div
-          className={`animate-pop-in relative overflow-hidden rounded-2xl border-2 border-[#18181B] p-5 shadow-[5px_5px_0_0_#111116] dark:border-[#3A3A52] dark:shadow-[5px_5px_0_0_#000000] ${
-            isPerfect
-              ? "bg-[#FFB800] text-[#111116]"
-              : isPassing
-                ? "bg-[#00B87C] text-[#111116]"
-                : "bg-[#F6EFE0] text-[#111116] dark:bg-[#1F1F2D] dark:text-[#FAFAF5]"
-          }`}
-        >
-          {isPassing && (
-            <svg
-              aria-hidden="true"
-              viewBox="0 0 120 80"
-              className="pointer-events-none absolute top-1 right-28 hidden h-16 w-24 opacity-30 sm:block"
-            >
-              <circle cx="18" cy="18" r="6" fill="currentColor" />
-              <path d="M55 8l5 15 15 5-15 5-5 15-5-15-15-5 15-5z" fill="currentColor" />
-              <rect x="92" y="42" width="12" height="12" rx="3" transform="rotate(20 92 42)" fill="currentColor" />
-            </svg>
-          )}
-          <div className="relative flex flex-wrap items-center justify-between gap-4">
-            <div className="flex items-start gap-3">
-              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border-2 border-[#18181B] bg-white text-[#111116] shadow-[2px_2px_0_0_#111116]">
-                {isPerfect ? (
-                  <Trophy className="h-5 w-5 text-[#D93817]" aria-hidden="true" />
-                ) : (
-                  <Sparkles className="h-5 w-5 text-[#2563EB]" aria-hidden="true" />
-                )}
-              </span>
-              <div>
-                <p className="font-display text-base font-extrabold">
-                  You scored {score} out of {questions.length} (
-                  {Math.round((score / questions.length) * 100)}%)
-                </p>
-                <p className="mt-0.5 text-xs font-semibold opacity-90">
-                  {isPerfect
-                    ? "Perfect score! You nailed every single concept in this lesson."
-                    : "Review the explanations below and retry whenever you're ready."}
-                </p>
-              </div>
-            </div>
-            <button
-              type="button"
-              onClick={handleReset}
-              className="tactile-btn-sm inline-flex min-h-10 cursor-pointer items-center gap-1.5 rounded-xl bg-white px-4 py-2 text-xs font-extrabold text-[#111116] hover:bg-[#FFFBF2]"
-            >
-              <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
-              Retry Quiz
-            </button>
-          </div>
-        </div>
+        <p className="text-sm text-mist">
+          Your last result: {lastAttempt.score} of {lastAttempt.total} correct.
+        </p>
       )}
 
       {questions.map((q, qIdx) => {
         const chosen = selections[q.id];
+        const gotIt = chosen === q.correctIndex;
+        const labelId = `quiz-${q.id}`;
         return (
-          <fieldset
-            key={q.id}
-            className="tactile-card rounded-2xl p-5 sm:p-6"
-          >
-            <legend className="font-display text-base font-extrabold text-[#111116] dark:text-[#FAFAF5]">
-              <span className="mr-2 inline-flex rounded-md border border-[#18181B] bg-[#FFB800] px-1.5 py-0.5 font-mono text-xs font-extrabold text-[#111116]">
-                Q{qIdx + 1}
-              </span>
+          <div key={q.id}>
+            <p id={labelId} className="font-semibold">
+              <span className="mr-2 text-mist tabular-nums">{qIdx + 1}.</span>
               {q.question}
-            </legend>
+            </p>
 
-            <div className="mt-4 space-y-2.5">
+            <RadioGroup
+              aria-labelledby={labelId}
+              readOnly={submitted}
+              value={chosen === undefined ? null : String(chosen)}
+              onValueChange={(val) => {
+                if (val !== null) setSelections((prev) => ({ ...prev, [q.id]: Number(val) }));
+              }}
+              className="mt-3 space-y-2"
+            >
               {q.options.map((opt, optIdx) => {
-                const isSelected = chosen === optIdx;
                 const isCorrect = optIdx === q.correctIndex;
-                let style =
-                  "border-2 border-[#18181B]/20 bg-[#FFFBF2] text-[#111116] hover:border-[#18181B] hover:bg-white dark:border-[#3A3A52] dark:bg-[#12121A] dark:text-[#FAFAF5] dark:hover:border-[#FFB800]";
-
-                if (submitted) {
-                  if (isCorrect) {
-                    style =
-                      "border-2 border-[#047857] bg-[#00B87C]/20 text-[#111116] shadow-[2px_2px_0_0_#047857] dark:border-[#34D399] dark:bg-[#00B87C]/20 dark:text-[#FAFAF5]";
-                  } else if (isSelected && !isCorrect) {
-                    style =
-                      "border-2 border-[#D93817] bg-[#FF5A36]/20 text-[#111116] dark:border-[#FF6B4A] dark:bg-[#FF5A36]/20 dark:text-[#FAFAF5]";
-                  } else {
-                    style =
-                      "border-2 border-[#18181B]/15 bg-[#F6EFE0]/60 text-[#52525B] dark:border-[#2A2A3B] dark:bg-[#12121A]/70 dark:text-[#B4B4C6]";
-                  }
-                } else if (isSelected) {
-                  style =
-                    "border-2 border-[#18181B] bg-[#FFB800] text-[#111116] shadow-[3px_3px_0_0_#111116] dark:border-[#18181B] dark:bg-[#FFB800] dark:text-[#111116]";
-                }
-
+                const isSelected = chosen === optIdx;
+                const state = !submitted
+                  ? "border-line bg-surface hover:border-mist data-checked:border-primary data-checked:bg-primary/5"
+                  : isCorrect
+                    ? "border-sage bg-sage/10"
+                    : isSelected
+                      ? "border-danger bg-danger/10"
+                      : "border-line bg-surface text-mist";
                 return (
-                  <button
-                    key={`${q.id}-opt-${optIdx}`}
-                    type="button"
-                    disabled={submitted}
-                    aria-pressed={isSelected}
-                    onClick={() =>
-                      setSelections((prev) => ({ ...prev, [q.id]: optIdx }))
-                    }
-                    className={`flex min-h-12 w-full cursor-pointer items-center justify-between gap-3 rounded-xl px-4 py-3 text-left text-sm font-semibold transition-all focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2563EB] disabled:cursor-default ${style}`}
+                  <Radio
+                    key={optIdx}
+                    value={String(optIdx)}
+                    className={`flex min-h-12 w-full cursor-pointer items-center gap-3 rounded-md border px-4 py-3 text-left text-sm transition-colors duration-150 data-readonly:cursor-default ${state}`}
                   >
-                    <span className="flex items-center gap-3">
-                      <span className="flex h-6.5 w-6.5 shrink-0 items-center justify-center rounded-lg border-2 border-current/30 bg-white/80 font-mono text-xs font-extrabold text-[#111116] dark:bg-[#16161F]/80 dark:text-[#FAFAF5]">
-                        {String.fromCharCode(65 + optIdx)}
-                      </span>
-                      <span>{opt}</span>
+                    <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full border border-mist in-data-checked:border-primary">
+                      <RadioIndicator className="h-2 w-2 rounded-full bg-primary" />
                     </span>
-
+                    <span className="flex-1">{opt}</span>
                     {submitted && isCorrect && (
-                      <CheckCircle2
-                        className="h-5 w-5 shrink-0 text-[#047857] dark:text-[#34D399]"
-                        aria-hidden="true"
-                      />
+                      <CheckCircle2 className={`h-5 w-5 shrink-0 text-sage ${REVEAL}`} aria-label="Correct answer" />
                     )}
                     {submitted && isSelected && !isCorrect && (
-                      <XCircle
-                        className="h-5 w-5 shrink-0 text-[#D93817] dark:text-[#FF6B4A]"
-                        aria-hidden="true"
-                      />
+                      <XCircle className={`h-5 w-5 shrink-0 text-danger ${REVEAL}`} aria-label="Your answer, incorrect" />
                     )}
-                  </button>
+                  </Radio>
                 );
               })}
-            </div>
+            </RadioGroup>
 
             {submitted && (
-              <p className="mt-4 rounded-xl border-2 border-dashed border-[#18181B]/25 bg-[#F6EFE0] p-3.5 text-xs leading-relaxed text-[#111116] dark:border-[#3A3A52] dark:bg-[#12121A] dark:text-[#D4D4E2]">
-                <strong className="font-extrabold text-[#111116] dark:text-[#FAFAF5]">
-                  Explanation:{" "}
+              <p className={`mt-3 rounded-md bg-subtle p-3 text-sm leading-relaxed ${REVEAL}`}>
+                <strong className={gotIt ? "text-sage" : "text-danger"}>
+                  {gotIt ? "Correct. " : "Not quite. "}
                 </strong>
                 {q.explanation}
               </p>
             )}
-          </fieldset>
+          </div>
         );
       })}
 
-      {!submitted && (
-        <div className="flex items-center justify-between pt-2">
-          <span className="rounded-lg border border-[#18181B]/20 bg-[#F6EFE0] px-3 py-1 font-mono text-xs font-bold text-[#52525B] dark:border-[#3A3A52] dark:bg-[#16161F] dark:text-[#B4B4C6]">
+      {submitted ? (
+        <div role="status" className={`card flex flex-wrap items-center justify-between gap-4 p-5 ${REVEAL}`}>
+          <div className="flex items-center gap-3">
+            {isPerfect ? (
+              <Trophy className="h-6 w-6 shrink-0 text-sun" aria-hidden="true" />
+            ) : isPassing ? (
+              <CheckCircle2 className="h-6 w-6 shrink-0 text-sage" aria-hidden="true" />
+            ) : null}
+            <div>
+              <p className="font-semibold">
+                You got {score} of {questions.length} right
+              </p>
+              <p className="text-sm text-mist">
+                {isPerfect
+                  ? "Every answer correct."
+                  : "Read the explanations, then try again when you're ready."}
+                {saving && " Saving…"}
+              </p>
+            </div>
+          </div>
+          <button type="button" onClick={handleReset} className="btn btn-secondary">
+            <RotateCcw className="h-4 w-4" aria-hidden="true" />
+            Try again
+          </button>
+        </div>
+      ) : (
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <span className="text-sm text-mist">
             {answeredCount} of {questions.length} answered
           </span>
           <button
             type="button"
             disabled={saving || answeredCount < questions.length}
             onClick={handleSubmit}
-            className="tactile-btn min-h-11 cursor-pointer rounded-xl bg-[#FF5A36] px-6 py-2.5 text-sm font-extrabold text-[#111116] hover:bg-[#FF6E4E] disabled:cursor-not-allowed disabled:opacity-50"
+            className="btn btn-primary"
           >
-            {saving ? "Saving..." : "Check Answers"}
+            Check answers
           </button>
         </div>
       )}
