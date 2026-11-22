@@ -227,7 +227,7 @@ export function LessonViewerClient() {
             {data.isCompleted ? (
               <>
                 <CheckCircle2
-                  className="h-4 w-4 transition-[transform,opacity] duration-200 ease-(--ease-out) starting:scale-50 starting:opacity-0 motion-reduce:starting:scale-100"
+                  className="h-4 w-4 transition-[transform,opacity] duration-200 ease-(--ease-out) starting:scale-90 starting:opacity-0 motion-reduce:starting:scale-100"
                   aria-hidden="true"
                 />
                 Completed

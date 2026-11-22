@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { CourseCatalogClient } from "@/components/landing/CourseCatalogClient";
 
 export const metadata: Metadata = {
-  title: "Courses | Vukora",
+  title: "Courses",
   description:
     "Free and Pro full-stack and AI engineering courses with video lessons, written guides and quizzes.",
 };
