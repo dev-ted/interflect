@@ -3,7 +3,7 @@ import { LandingSections } from "@/components/landing/LandingSections";
 
 export default function HomePage() {
   return (
-    <main className="flex-1 bg-background text-foreground">
+    <main className="flex-1">
       <HeroShowcase />
       <LandingSections />
     </main>
