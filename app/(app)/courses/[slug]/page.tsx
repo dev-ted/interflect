@@ -16,12 +16,10 @@ export default function CourseDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   return (
-    <main className="flex-1">
+    <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-10">
       <Suspense
         fallback={
-          <div className="mx-auto max-w-5xl px-4 py-12">
-            <div className="h-64 animate-pulse rounded-3xl border-2 border-[#18181B]/20 bg-[#F6EFE0] dark:border-[#323244] dark:bg-[#16161F]" />
-          </div>
+          <div className="h-72 animate-pulse rounded-3xl bg-subtle motion-reduce:animate-none" />
         }
       >
         <CourseRouteContent params={params} />
