@@ -68,7 +68,7 @@ function SidebarBody() {
           <UpgradeCard />
         </Unauthenticated>
 
-        <div className="flex items-center justify-between gap-2 border-t border-line pt-4">
+        <div className="flex flex-col gap-3 border-t border-line pt-4">
           <Authenticated>
             <div className="flex min-w-0 items-center gap-2.5">
               <UserButton />
@@ -78,16 +78,19 @@ function SidebarBody() {
             </div>
           </Authenticated>
           <Unauthenticated>
-            <div className="flex gap-2">
+            <div className="grid grid-cols-2 gap-2">
               <SignInButton mode="modal">
-                <button type="button" className="btn btn-ghost btn-sm">Sign in</button>
+                <button type="button" className="btn btn-secondary btn-sm">Sign in</button>
               </SignInButton>
               <SignUpButton mode="modal">
                 <button type="button" className="btn btn-primary btn-sm">Sign up</button>
               </SignUpButton>
             </div>
           </Unauthenticated>
-          <ThemeToggle />
+          <div className="flex items-center justify-between">
+            <span className="text-xs text-mist">Theme</span>
+            <ThemeToggle />
+          </div>
         </div>
       </div>
     </div>

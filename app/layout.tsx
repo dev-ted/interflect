@@ -35,7 +35,23 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="flex min-h-full flex-col">
         <AppPreferences>
-          <ClerkProvider>
+          <ClerkProvider
+            appearance={{
+              // CSS variables keep Clerk's modals and menus in step with the day/night theme.
+              variables: {
+                colorPrimary: "var(--primary)",
+                colorBackground: "var(--surface)",
+                colorForeground: "var(--ink)",
+                colorMutedForeground: "var(--mist)",
+                colorInput: "var(--surface)",
+                colorInputForeground: "var(--ink)",
+                colorDanger: "var(--danger)",
+                colorSuccess: "var(--sage)",
+                fontFamily: "var(--font-schibsted), system-ui, sans-serif",
+                borderRadius: "6px",
+              },
+            }}
+          >
             <ConvexClientProvider>
               <PageContextProvider>
                 {children}
