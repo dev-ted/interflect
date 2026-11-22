@@ -30,7 +30,7 @@ export function MarketingNav() {
         </nav>
 
         <div className="ml-auto flex items-center gap-2">
-          <ThemeToggle className="hidden sm:inline-flex" />
+          <span className="hidden sm:block"><ThemeToggle /></span>
           <Unauthenticated>
             <SignInButton mode="modal">
               <button type="button" className="btn btn-ghost hidden sm:inline-flex">
