@@ -5,15 +5,11 @@ export const PRO_PLAN_ID =
   "cplan_3MMnVBY7M2i9cGKZO0o0i4Br9uq";
 
 export const TUTOR = {
-  name: "Sonny Sangha",
-  role: "Founder & Lead Instructor",
-  tagline: "PAPAFAM · Full-Stack & AI Systems Architect",
-  bio: "Teaching millions of developers worldwide to ship production full-stack web and AI applications — from Next.js and real-time backends to autonomous AI agents.",
-  stats: [
-    { label: "Developers Taught", value: "1M+" },
-    { label: "Production Builds", value: "250+" },
-    { label: "Avg. Lesson Depth", value: "Hands-On" },
-  ],
+  name: "Teddy",
+  handle: "ted.code",
+  role: "Frontend engineer and instructor",
+  url: "https://frontendted.co.za/",
+  bio: "I build web apps for a living and teach the way I learned: by shipping something real. Every Vukora course is a working project you build alongside me, from the first file to deploy.",
 } as const;
 
 export function isAdminRole(metadata: unknown): boolean {

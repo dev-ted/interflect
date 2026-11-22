@@ -1,48 +1,45 @@
 import Link from "next/link";
-import { GraduationCap } from "lucide-react";
+import { Logo } from "@/components/brand/Logo";
+
+const LINKS = [
+  { href: "/courses", label: "Courses" },
+  { href: "/pricing", label: "Pricing" },
+  { href: "/dashboard", label: "My learning" },
+  { href: "/brand", label: "Brand" },
+];
 
 export function Footer() {
   return (
-    <footer className="border-t-2 border-[#18181B] bg-[#F6EFE0] dark:border-[#323244] dark:bg-[#12121A]">
-      <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-4 py-8 text-sm text-[#52525B] sm:flex-row sm:px-6 lg:px-8 dark:text-[#B4B4C6]">
-        <div className="flex flex-wrap items-center justify-center gap-2.5 font-bold text-[#111116] dark:text-[#FAFAF5]">
-          <span className="flex h-7 w-7 -rotate-3 items-center justify-center rounded-lg border-2 border-[#18181B] bg-[#FF5A36] text-[#111116] shadow-[2px_2px_0_0_#111116] dark:border-[#111116]">
-            <GraduationCap className="h-3.5 w-3.5" aria-hidden="true" />
-          </span>
-          <span className="font-display font-extrabold tracking-tight">
-            Learnly Studio
-          </span>
-          <span className="rounded-full border border-[#18181B]/30 bg-white px-2.5 py-0.5 text-xs font-semibold text-[#52525B] dark:border-[#3A3A52] dark:bg-[#16161F] dark:text-[#B4B4C6]">
-            Crafted by Sonny Sangha
-          </span>
+    <footer className="border-t border-line">
+      <div className="mx-auto flex max-w-6xl flex-col gap-8 px-4 py-12 sm:px-6 md:flex-row md:items-start md:justify-between">
+        <div className="max-w-xs space-y-3">
+          <Logo />
+          <p className="text-sm text-mist">
+            Vuka means rise. Learn to build real software, one lesson at a time.
+          </p>
         </div>
 
-        <nav aria-label="Footer" className="flex flex-wrap items-center justify-center gap-6 font-semibold">
-          <Link
-            href="/courses"
-            className="transition-colors hover:text-[#111116] hover:underline decoration-2 underline-offset-4 decoration-[#FF5A36] dark:hover:text-[#FAFAF5]"
-          >
-            Courses
-          </Link>
-          <Link
-            href="/pricing"
-            className="transition-colors hover:text-[#111116] hover:underline decoration-2 underline-offset-4 decoration-[#2563EB] dark:hover:text-[#FAFAF5]"
-          >
-            Pricing
-          </Link>
-          <Link
-            href="/dashboard"
-            className="transition-colors hover:text-[#111116] hover:underline decoration-2 underline-offset-4 decoration-[#00B87C] dark:hover:text-[#FAFAF5]"
-          >
-            My Learning
-          </Link>
-          <Link
-            href="/admin"
-            className="transition-colors hover:text-[#111116] hover:underline decoration-2 underline-offset-4 decoration-[#FFB800] dark:hover:text-[#FAFAF5]"
-          >
-            Admin Studio
-          </Link>
+        <nav aria-label="Footer" className="flex flex-wrap gap-x-6 gap-y-2 text-sm text-mist">
+          {LINKS.map((l) => (
+            <Link key={l.href} href={l.href} className="hover:text-ink">
+              {l.label}
+            </Link>
+          ))}
         </nav>
+      </div>
+      <div className="mx-auto flex max-w-6xl flex-wrap justify-between gap-2 border-t border-line px-4 py-5 text-xs text-mist sm:px-6">
+        <span>© Vukora</span>
+        <span>
+          Crafted by{" "}
+          <a
+            href="https://frontendted.co.za/"
+            target="_blank"
+            rel="noopener"
+            className="font-semibold text-ink underline-offset-4 hover:underline"
+          >
+            ted.code
+          </a>
+        </span>
       </div>
     </footer>
   );

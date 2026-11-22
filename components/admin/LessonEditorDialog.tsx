@@ -359,7 +359,7 @@ function LessonEditorForm({
                 rows={3}
                 value={summary}
                 onChange={(e) => setSummary(e.target.value)}
-                placeholder="Short overview shown in curriculum lists and shared with the Learnly AI Tutor..."
+                placeholder="Short overview shown in curriculum lists and shared with the Vukora AI Tutor..."
                 className={INPUT_CLASS}
               />
             </div>

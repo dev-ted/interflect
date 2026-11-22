@@ -31,7 +31,7 @@ export async function getServerAuthContext(): Promise<ServerAuthContext> {
   const isPro =
     has({ plan: PRO_PLAN_SLUG }) ||
     has({ feature: "pro_courses" }) ||
-    has({ feature: "learnly_ai" });
+    has({ feature: "vukora_ai" });
 
   return {
     isAuthenticated: true,

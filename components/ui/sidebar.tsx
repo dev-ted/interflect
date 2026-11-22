@@ -36,11 +36,6 @@ export function useSidebar() {
   return ctx;
 }
 
-/**
- * shadcn/ui-pattern Sidebar architecture backed by Vercel Labs UI SDK
- * (`@ui-sdk/react/drawer`) for the mobile slide-over sheet (native top-layer,
- * focus trap, Escape/swipe dismissal, and WAI-ARIA modal dialog semantics).
- */
 export function SidebarProvider({
   children,
   side = "left",
@@ -49,10 +44,7 @@ export function SidebarProvider({
   side?: "left" | "right";
 }) {
   const [openMobile, setOpenMobile] = useState(false);
-  const toggleMobile = useCallback(
-    () => setOpenMobile((prev) => !prev),
-    [],
-  );
+  const toggleMobile = useCallback(() => setOpenMobile((prev) => !prev), []);
 
   const value = useMemo(
     () => ({ openMobile, setOpenMobile, toggleMobile, side }),
@@ -64,12 +56,14 @@ export function SidebarProvider({
   );
 }
 
+/** Mobile slide-over built on the UI SDK Drawer. Pass `className="night"` to render it on the night palette. */
 export function SidebarMobileDrawer({
   title,
   description,
-  triggerLabel = "Toggle Sidebar",
-  triggerClassName = "",
+  triggerLabel = "Open menu",
+  triggerClassName = "btn btn-secondary btn-sm",
   triggerContent,
+  className = "",
   children,
 }: {
   title: string;
@@ -77,24 +71,14 @@ export function SidebarMobileDrawer({
   triggerLabel?: string;
   triggerClassName?: string;
   triggerContent?: ReactNode;
+  className?: string;
   children: ReactNode;
 }) {
   const { openMobile, setOpenMobile, side } = useSidebar();
 
   return (
-    <Drawer
-      side={side}
-      open={openMobile}
-      onOpenChange={setOpenMobile}
-      preventEdgeSwipe
-    >
-      <DrawerTrigger
-        aria-label={triggerLabel}
-        className={
-          triggerClassName ||
-          "tactile-btn-sm inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-xl bg-white px-3.5 py-2 text-sm font-bold text-[#111116] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2563EB] dark:bg-[#16161F] dark:text-[#FAFAF5]"
-        }
-      >
+    <Drawer side={side} open={openMobile} onOpenChange={setOpenMobile} preventEdgeSwipe>
+      <DrawerTrigger aria-label={triggerLabel} className={triggerClassName}>
         {triggerContent ?? (
           <>
             <PanelLeft className="h-4 w-4" aria-hidden="true" />
@@ -103,34 +87,31 @@ export function SidebarMobileDrawer({
         )}
       </DrawerTrigger>
 
-      <DrawerBackdrop className="bg-[#111116]/60 backdrop-blur-[2px]" />
+      <DrawerBackdrop className="bg-night/60 transition-opacity duration-200 data-starting-style:opacity-0 data-ending-style:opacity-0" />
 
       <DrawerContent
         initialFocus="content"
-        className="flex h-dvh w-[min(22rem,88vw)] flex-col border-r-2 border-[#18181B] bg-[#FFFBF2] shadow-2xl outline-none dark:border-[#3A3A52] dark:bg-[#0D0D12]"
+        className={`flex h-dvh w-[min(20rem,86vw)] flex-col border-line bg-bg text-ink outline-none transition-transform duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] data-ending-style:duration-200 motion-reduce:transition-none ${
+          side === "left"
+            ? "border-r data-starting-style:-translate-x-full data-ending-style:-translate-x-full"
+            : "border-l data-starting-style:translate-x-full data-ending-style:translate-x-full"
+        } ${className}`}
       >
-        <div className="flex items-center justify-between gap-3 border-b-2 border-[#18181B] bg-white px-4 py-3.5 dark:border-[#323244] dark:bg-[#16161F]">
+        <div className="flex items-center justify-between gap-3 border-b border-line px-4 py-3">
           <div className="min-w-0">
-            <DrawerTitle className="font-display truncate text-sm font-extrabold text-[#111116] dark:text-[#FAFAF5]">
-              {title}
-            </DrawerTitle>
+            <DrawerTitle className="truncate text-sm font-bold">{title}</DrawerTitle>
             {description && (
-              <DrawerDescription className="truncate text-xs text-[#52525B] dark:text-[#B4B4C6]">
+              <DrawerDescription className="truncate text-xs text-mist">
                 {description}
               </DrawerDescription>
             )}
           </div>
-          <DrawerClose
-            aria-label={`Close ${title}`}
-            className="inline-flex h-11 w-11 shrink-0 cursor-pointer items-center justify-center rounded-xl border-2 border-transparent text-[#52525B] transition-colors hover:border-[#18181B] hover:bg-[#F6EFE0] hover:text-[#111116] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2563EB] dark:text-[#B4B4C6] dark:hover:border-[#3A3A52] dark:hover:bg-[#1F1F2D] dark:hover:text-[#FAFAF5]"
-          >
+          <DrawerClose aria-label={`Close ${title}`} className="btn btn-ghost btn-icon">
             <X className="h-4 w-4" aria-hidden="true" />
           </DrawerClose>
         </div>
 
-        <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain [scrollbar-gutter:stable]">
-          {children}
-        </div>
+        <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain">{children}</div>
       </DrawerContent>
     </Drawer>
   );

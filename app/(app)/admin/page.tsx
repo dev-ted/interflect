@@ -6,7 +6,7 @@ import { getServerAuthContext } from "@/lib/server-auth";
 import { AdminStudioClient } from "@/components/admin/AdminStudioClient";
 
 export const metadata: Metadata = {
-  title: "Admin Studio | Learnly Studio",
+  title: "Admin Studio | Vukora Studio",
   description:
     "Manage courses, curriculum modules, Mux video uploads, Markdown notes, and quizzes.",
 };
