@@ -95,7 +95,9 @@ export function VukoraWidget() {
 
   useEffect(() => {
     if (!open) return;
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    // Scroll only the message list; scrollIntoView would also scroll the panel and hide its header.
+    const list = messagesEndRef.current?.parentElement;
+    list?.scrollTo({ top: list.scrollHeight, behavior: "smooth" });
   }, [messages, loading, open]);
 
   useEffect(() => {

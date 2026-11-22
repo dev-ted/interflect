@@ -59,11 +59,13 @@ function SidebarBody() {
       </nav>
 
       <div className="mt-auto flex flex-col gap-4">
-        <Authenticated>
-          <Show when={(has) => isPro(has)} fallback={<UpgradeCard />}>
-            {null}
-          </Show>
-        </Authenticated>
+        {!isAdmin && (
+          <Authenticated>
+            <Show when={(has) => isPro(has)} fallback={<UpgradeCard />}>
+              {null}
+            </Show>
+          </Authenticated>
+        )}
         <Unauthenticated>
           <UpgradeCard />
         </Unauthenticated>
