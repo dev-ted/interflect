@@ -158,7 +158,7 @@ export function LessonViewerClient() {
       </span>
       <h1 className="mt-5 text-2xl font-bold">{data.lesson.title}</h1>
       <p className="mx-auto mt-2 max-w-md text-mist">
-        This lesson is part of Vukora Pro. Pro opens every lesson, written
+        This lesson is part of Interflect Pro. Pro opens every lesson, written
         guide and quiz, plus the AI tutor that knows what you&apos;re watching.
       </p>
       <div className="mt-6 flex flex-wrap justify-center gap-3">
