@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675" fill="none">
+<defs><pattern id="g" width="24" height="24" patternUnits="userSpaceOnUse"><path d="M24 0H0V24" stroke="#E5E5E5" stroke-width="1"/></pattern></defs>
+<rect width="1200" height="675" fill="#F5F5F5"/><rect width="1200" height="675" fill="url(#g)" opacity="0.7"/>
+<g fill="#14B8A6" opacity="0.05"><rect x="96" width="72" height="675"/><rect x="264" width="72" height="675"/><rect x="432" width="72" height="675"/><rect x="600" width="72" height="675"/><rect x="768" width="72" height="675"/><rect x="936" width="72" height="675"/></g>
+<path d="M384 112H816" stroke="#14B8A6" stroke-dasharray="4 4"/><path d="M384 106V118M816 106V118" stroke="#14B8A6"/>
+<rect x="384" y="132" width="432" height="420" rx="16" fill="#FFFFFF" stroke="#E5E5E5" stroke-width="2"/>
+<path d="M408 132V180M402 132H414M402 180H414" stroke="#14B8A6"/>
+<rect x="432" y="180" width="72" height="14" rx="4" fill="#737373"/>
+<rect x="432" y="218" width="200" height="56" rx="6" fill="#171717"/><rect x="648" y="246" width="88" height="20" rx="4" fill="#737373" opacity="0.6"/>
+<path d="M784 274V290M778 274H790M778 290H790" stroke="#14B8A6"/>
+<rect x="432" y="290" width="336" height="12" rx="4" fill="#737373" opacity="0.45"/><rect x="432" y="310" width="260" height="12" rx="4" fill="#737373" opacity="0.45"/>
+<g fill="#E5E5E5"><rect x="432" y="354" width="304" height="10" rx="4"/><rect x="432" y="374" width="280" height="10" rx="4"/><rect x="432" y="394" width="296" height="10" rx="4"/></g>
+<path d="M784 364V372M778 364H790M778 372H790" stroke="#14B8A6"/>
+<rect x="432" y="456" width="336" height="48" rx="10" fill="#14B8A6"/>
+<path d="M408 504V552M402 504H414M402 552H414" stroke="#14B8A6"/>
+<path d="M432 72V612M768 72V612" stroke="#14B8A6" stroke-width="1" opacity="0.6"/>
+<rect x="888" y="132" width="216" height="200" rx="16" fill="#FFFFFF" stroke="#E5E5E5" stroke-width="2"/><rect x="912" y="156" width="96" height="14" rx="4" fill="#E5E5E5"/><rect x="912" y="184" width="140" height="28" rx="6" fill="#E5E5E5"/>
+<rect x="96" y="132" width="216" height="200" rx="16" fill="#FFFFFF" stroke="#E5E5E5" stroke-width="2"/><rect x="120" y="156" width="96" height="14" rx="4" fill="#E5E5E5"/><rect x="120" y="184" width="140" height="28" rx="6" fill="#E5E5E5"/>
+<g font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="13" fill="#14B8A6">
+<text x="418" y="160">24</text><text x="806" y="292">16</text><text x="806" y="380">8</text><text x="418" y="532">24</text><text x="600" y="104" text-anchor="middle">432</text>
+</g>
+</svg>

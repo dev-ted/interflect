@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675" fill="none">
+<defs><pattern id="g" width="24" height="24" patternUnits="userSpaceOnUse"><path d="M24 0H0V24" stroke="#E5E5E5" stroke-width="1"/></pattern></defs>
+<rect width="1200" height="675" fill="#F5F5F5"/><rect width="1200" height="675" fill="url(#g)" opacity="0.7"/>
+<g fill="#14B8A6" opacity="0.05"><rect x="96" width="72" height="675"/><rect x="264" width="72" height="675"/><rect x="432" width="72" height="675"/><rect x="600" width="72" height="675"/><rect x="768" width="72" height="675"/><rect x="936" width="72" height="675"/></g>
+<rect x="384" y="236" width="432" height="88" rx="18" stroke="#14B8A6" stroke-width="4"/>
+<rect x="392" y="244" width="416" height="72" rx="14" fill="#FFFFFF"/>
+<rect x="396" y="248" width="408" height="64" rx="12" fill="#171717"/>
+<rect x="540" y="274" width="120" height="12" rx="4" fill="#FFFFFF" opacity="0.9"/>
+<path d="M824 232V240M818 232H830M818 240H830" stroke="#14B8A6"/>
+<path d="M824 248V312M818 248H830M818 312H830" stroke="#14B8A6"/>
+<rect x="384" y="132" width="120" height="12" rx="4" fill="#737373"/>
+<rect x="384" y="156" width="432" height="48" rx="10" fill="#FFFFFF" stroke="#E5E5E5" stroke-width="2"/>
+<rect x="400" y="176" width="160" height="10" rx="4" fill="#E5E5E5"/>
+<rect x="384" y="372" width="96" height="12" rx="4" fill="#737373"/>
+<rect x="384" y="396" width="432" height="48" rx="10" fill="#FFFFFF" stroke="#F25F5C" stroke-width="2"/>
+<rect x="400" y="416" width="120" height="10" rx="4" fill="#404040"/>
+<circle cx="392" cy="470" r="7" fill="#F25F5C"/><rect x="408" y="465" width="220" height="10" rx="4" fill="#F25F5C" opacity="0.7"/>
+<rect x="384" y="520" width="200" height="48" rx="12" fill="#FFFFFF" stroke="#E5E5E5" stroke-width="2"/><rect x="440" y="540" width="88" height="10" rx="4" fill="#737373"/>
+<rect x="600" y="520" width="48" height="48" rx="12" fill="#FFFFFF" stroke="#E5E5E5" stroke-width="2"/><path d="M616 536L632 552M632 536L616 552" stroke="#171717" stroke-width="3" stroke-linecap="round"/>
+<path d="M352 280H372" stroke="#14B8A6" stroke-dasharray="4 4"/><path d="M324 420H372" stroke="#14B8A6" stroke-dasharray="4 4"/>
+<path d="M384 72V612M816 72V612" stroke="#14B8A6" opacity="0.6"/>
+<g font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="13" fill="#14B8A6">
+<text x="836" y="244">2</text><text x="836" y="300">44</text><text x="292" y="436">3:1</text>
+</g>
+</svg>

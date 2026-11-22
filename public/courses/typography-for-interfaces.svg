@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675" fill="none">
+<defs><pattern id="g" width="24" height="24" patternUnits="userSpaceOnUse"><path d="M24 0H0V24" stroke="#E5E5E5" stroke-width="1"/></pattern></defs>
+<rect width="1200" height="675" fill="#F5F5F5"/><rect width="1200" height="675" fill="url(#g)" opacity="0.7"/>
+<g fill="#14B8A6" opacity="0.05"><rect x="96" width="72" height="675"/><rect x="264" width="72" height="675"/><rect x="432" width="72" height="675"/><rect x="600" width="72" height="675"/><rect x="768" width="72" height="675"/><rect x="936" width="72" height="675"/></g>
+<g stroke="#14B8A6" opacity="0.8"><path d="M168 152H1080"/><path d="M168 232H1080"/><path d="M168 324H1080"/><path d="M168 432H1080"/><path d="M168 576H1080"/></g>
+<path d="M168 104H1080" stroke="#14B8A6" stroke-dasharray="4 4"/><path d="M168 98V110M1080 98V110" stroke="#14B8A6"/>
+<g fill="#737373"><rect x="168" y="140" width="40" height="12" rx="2"/><rect x="216" y="136" width="64" height="16" rx="2"/><rect x="288" y="140" width="48" height="12" rx="2"/><rect x="344" y="136" width="88" height="16" rx="2"/></g>
+<g fill="#404040"><rect x="168" y="216" width="56" height="16" rx="3"/><rect x="232" y="210" width="96" height="22" rx="3"/><rect x="336" y="216" width="72" height="16" rx="3"/><rect x="416" y="210" width="120" height="22" rx="3"/><rect x="544" y="216" width="64" height="16" rx="3"/></g>
+<g fill="#171717"><rect x="168" y="304" width="72" height="20" rx="3"/><rect x="248" y="296" width="132" height="28" rx="3"/><rect x="388" y="304" width="96" height="20" rx="3"/><rect x="492" y="296" width="160" height="28" rx="3"/></g>
+<g fill="#171717"><rect x="168" y="406" width="96" height="26" rx="4"/><rect x="276" y="396" width="172" height="36" rx="4"/><rect x="460" y="406" width="120" height="26" rx="4"/></g>
+<g fill="#171717"><rect x="168" y="536" width="148" height="40" rx="6"/><rect x="332" y="520" width="248" height="56" rx="6"/></g>
+<rect x="596" y="536" width="120" height="40" rx="6" fill="#14B8A6"/>
+<path d="M740 520V576M734 520H746M734 576H746" stroke="#14B8A6"/>
+<path d="M168 72V624" stroke="#14B8A6" opacity="0.6"/>
+<g font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="13" fill="#14B8A6">
+<text x="136" y="152" text-anchor="end">12</text><text x="136" y="232" text-anchor="end">16</text><text x="136" y="324" text-anchor="end">20</text><text x="136" y="432" text-anchor="end">25</text><text x="136" y="576" text-anchor="end">39</text>
+<text x="1080" y="96" text-anchor="end">65ch</text>
+</g>
+</svg>
