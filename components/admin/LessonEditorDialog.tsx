@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useState } from "react";
+import { useId, useState, type ReactNode } from "react";
 import { useMutation } from "convex/react";
 import {
   Dialog,
@@ -13,25 +13,16 @@ import {
 import { Switch, SwitchThumb } from "@ui-sdk/react/switch";
 import { Tabs, TabsList, TabsPanel, TabsTab } from "@ui-sdk/react/tabs";
 import { toast } from "@ui-sdk/react/toast";
-import {
-  CheckCircle2,
-  Eye,
-  FileText,
-  Film,
-  HelpCircle,
-  Loader2,
-  Plus,
-  Settings2,
-  Trash2,
-  X,
-} from "lucide-react";
+import { Check, Loader2, Plus, Trash2, X } from "lucide-react";
 import { api } from "@/convex/_generated/api";
 import type { Doc, Id } from "@/convex/_generated/dataModel";
 import type { QuizQuestion } from "@/lib/types";
 import { MarkdownContent } from "@/components/course/MarkdownContent";
 import { MuxUploader, type MuxUploadResult } from "./MuxUploader";
 
-function slugify(input: string): string {
+/* ── Shared studio pieces (also used by AdminStudioClient) ──────────── */
+
+export function slugify(input: string): string {
   return input
     .toLowerCase()
     .trim()
@@ -39,13 +30,151 @@ function slugify(input: string): string {
     .replace(/^-+|-+$/g, "");
 }
 
+export const TAB_LIST_CLASS = "flex gap-5 overflow-x-auto border-b border-line px-5";
+export const TAB_CLASS =
+  "-mb-px inline-flex h-11 shrink-0 cursor-pointer items-center gap-1.5 border-b-2 border-transparent text-sm font-medium text-mist transition-colors duration-150 hover:text-ink data-selected:border-primary data-selected:text-ink";
+export const DIALOG_FOOTER_CLASS =
+  "flex items-center justify-end gap-2 border-t border-line px-5 py-4";
+
+interface TextFieldProps {
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  type?: string;
+  rows?: number;
+  required?: boolean;
+  placeholder?: string;
+  min?: number;
+  max?: number;
+  step?: number;
+  mono?: boolean;
+  className?: string;
+}
+
+export function TextField({
+  label,
+  onChange,
+  type = "text",
+  rows,
+  min,
+  max,
+  step,
+  mono,
+  className,
+  ...rest
+}: TextFieldProps) {
+  const id = useId();
+  const fieldClass = `field mt-1.5${mono ? " font-mono text-xs" : ""}`;
+  return (
+    <div className={className}>
+      <label htmlFor={id} className="block text-sm font-medium">
+        {label}
+      </label>
+      {rows ? (
+        <textarea
+          id={id}
+          rows={rows}
+          onChange={(e) => onChange(e.target.value)}
+          className={fieldClass}
+          {...rest}
+        />
+      ) : (
+        <input
+          id={id}
+          type={type}
+          min={min}
+          max={max}
+          step={step}
+          onChange={(e) => onChange(e.target.value)}
+          className={fieldClass}
+          {...rest}
+        />
+      )}
+    </div>
+  );
+}
+
+export function SettingSwitch({
+  label,
+  description,
+  checked,
+  onCheckedChange,
+}: {
+  label: string;
+  description?: string;
+  checked: boolean;
+  onCheckedChange: (checked: boolean) => void;
+}) {
+  return (
+    <label className="flex cursor-pointer items-center justify-between gap-4 rounded-md border border-line px-3 py-2.5">
+      <span className="min-w-0">
+        <span className="block text-sm font-medium">{label}</span>
+        {description && (
+          <span className="block text-xs text-mist">{description}</span>
+        )}
+      </span>
+      <Switch
+        checked={checked}
+        onCheckedChange={(next) => onCheckedChange(next)}
+        className="relative inline-flex h-6 w-10 shrink-0 items-center rounded-full bg-mist/40 transition-colors duration-150 data-checked:bg-primary"
+      >
+        <SwitchThumb className="block size-5 translate-x-0.5 rounded-full bg-white shadow-sm transition-transform duration-200 ease-(--ease-out) data-checked:translate-x-4.5 motion-reduce:transition-none" />
+      </Switch>
+    </label>
+  );
+}
+
+export function StudioDialog({
+  open,
+  onOpenChange,
+  title,
+  description,
+  className = "max-w-lg",
+  children,
+}: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  title: string;
+  description?: string;
+  className?: string;
+  children: ReactNode;
+}) {
+  return (
+    <Dialog open={open} onOpenChange={(next) => onOpenChange(next)}>
+      <DialogBackdrop className="fixed inset-0 z-50 bg-night/60 transition-opacity duration-200 ease-(--ease-out) data-starting-style:opacity-0 data-ending-style:opacity-0" />
+      <DialogContent
+        className={`fixed top-1/2 left-1/2 z-50 flex max-h-[90dvh] w-[calc(100vw-2rem)] -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-xl border border-line bg-surface text-ink shadow-card transition-[opacity,scale] duration-200 ease-(--ease-out) data-starting-style:scale-96 data-starting-style:opacity-0 data-ending-style:scale-96 data-ending-style:opacity-0 motion-reduce:transition-opacity ${className}`}
+      >
+        <div className="flex items-start justify-between gap-4 border-b border-line px-5 py-4">
+          <div className="min-w-0">
+            <DialogTitle className="text-lg font-bold">{title}</DialogTitle>
+            {description && (
+              <DialogDescription className="mt-0.5 text-sm text-mist">
+                {description}
+              </DialogDescription>
+            )}
+          </div>
+          <DialogClose
+            aria-label="Close dialog"
+            className="btn btn-ghost btn-icon -mt-1 -mr-2 shrink-0"
+          >
+            <X className="h-4 w-4" aria-hidden="true" />
+          </DialogClose>
+        </div>
+        {children}
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+/* ── Lesson editor ──────────────────────────────────────────────────── */
+
+const OPTION_LETTERS = ["A", "B", "C", "D"] as const;
+
 function createEmptyQuestion(): QuizQuestion {
-  const id =
-    typeof crypto !== "undefined" && "randomUUID" in crypto
-      ? `q-${crypto.randomUUID().slice(0, 8)}`
-      : `q-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
   return {
-    id,
+    // randomUUID is missing on plain-http LAN dev hosts.
+    id: `q-${crypto.randomUUID?.().slice(0, 8) ?? Math.random().toString(36).slice(2, 10)}`,
     question: "",
     options: ["", "", "", ""],
     correctIndex: 0,
@@ -57,15 +186,7 @@ function normalizeQuiz(lesson: Doc<"lessons"> | null): QuizQuestion[] {
   if (!lesson?.quiz) return [];
   return lesson.quiz.map((q) => ({
     ...q,
-    options:
-      q.options.length === 4
-        ? [...q.options]
-        : [
-            q.options[0] ?? "",
-            q.options[1] ?? "",
-            q.options[2] ?? "",
-            q.options[3] ?? "",
-          ],
+    options: OPTION_LETTERS.map((_, i) => q.options[i] ?? ""),
   }));
 }
 
@@ -78,9 +199,6 @@ interface LessonEditorDialogProps {
   lesson: Doc<"lessons"> | null;
 }
 
-const INPUT_CLASS =
-  "mt-1.5 w-full rounded-xl border-2 border-[#18181B]/30 bg-white px-3.5 py-2.5 text-sm text-[#111116] placeholder:text-[#71717A] focus:border-[#2563EB] focus:outline-none dark:border-[#3A3A52] dark:bg-[#12121A] dark:text-[#FAFAF5]";
-
 function LessonEditorForm({
   courseId,
   moduleId,
@@ -92,11 +210,6 @@ function LessonEditorForm({
   lesson: Doc<"lessons"> | null;
   onClose: () => void;
 }) {
-  const titleId = useId();
-  const slugId = useId();
-  const summaryId = useId();
-  const minutesId = useId();
-  const secondsId = useId();
   const markdownId = useId();
 
   const createLesson = useMutation(api.courses.createLesson);
@@ -117,7 +230,7 @@ function LessonEditorForm({
   );
   const [markdownContent, setMarkdownContent] = useState(
     lesson?.markdownContent ??
-      "# Lesson Notes\n\nWrite clear explanations, code blocks, and takeaways for students.\n",
+      "# Lesson notes\n\nExplain the idea, show the code, and end with the key takeaways.\n",
   );
   const [muxPlaybackId, setMuxPlaybackId] = useState(
     lesson?.muxPlaybackId ?? "",
@@ -150,7 +263,7 @@ function LessonEditorForm({
       setDurationMinutes(String(Math.floor(result.durationSeconds / 60)));
       setDurationRemainderSeconds(String(result.durationSeconds % 60));
     }
-    toast.success("Video uploaded and ready on Mux!");
+    toast.success("Video uploaded and ready to play.");
   }
 
   function handlePlaybackIdChange(nextPlaybackId: string) {
@@ -165,15 +278,8 @@ function LessonEditorForm({
     setMuxStatus("idle");
   }
 
-  function updateQuizQuestion(
-    id: string,
-    updater: (q: QuizQuestion) => QuizQuestion,
-  ) {
-    setQuiz((prev) => prev.map((q) => (q.id === id ? updater(q) : q)));
-  }
-
-  function removeQuizQuestion(id: string) {
-    setQuiz((prev) => prev.filter((q) => q.id !== id));
+  function updateQuizQuestion(id: string, patch: Partial<QuizQuestion>) {
+    setQuiz((prev) => prev.map((q) => (q.id === id ? { ...q, ...patch } : q)));
   }
 
   async function handleSave(event: React.FormEvent<HTMLFormElement>) {
@@ -184,24 +290,22 @@ function LessonEditorForm({
     const cleanSummary = summary.trim();
 
     if (!cleanTitle) {
-      toast.error("Please enter a lesson title.");
+      toast.error("Add a lesson title to save.");
       return;
     }
     if (!cleanSlug) {
-      toast.error("Please enter a valid lesson slug.");
+      toast.error("Add a slug using letters or numbers to save.");
       return;
     }
 
     for (let i = 0; i < quiz.length; i++) {
       const q = quiz[i];
       if (!q.question.trim()) {
-        toast.error(`Quiz question #${i + 1} is missing its prompt.`);
+        toast.error(`Question ${i + 1} needs a prompt.`);
         return;
       }
       if (q.options.some((opt) => !opt.trim())) {
-        toast.error(
-          `Quiz question #${i + 1} needs all 4 answer options filled.`,
-        );
+        toast.error(`Question ${i + 1} needs all four answers filled in.`);
         return;
       }
     }
@@ -239,10 +343,10 @@ function LessonEditorForm({
           muxStatus: cleanPlaybackId ? "ready" : muxStatus,
           quiz: cleanQuiz,
         });
-        toast.success(`Updated "${cleanTitle}".`);
+        toast.success(`Saved "${cleanTitle}".`);
       } else {
         if (!moduleId) {
-          toast.error("Select a module before creating a lesson.");
+          toast.error("Choose a module before creating a lesson.");
           return;
         }
         await createLesson({
@@ -265,159 +369,98 @@ function LessonEditorForm({
       onClose();
     } catch (error) {
       toast.error(
-        error instanceof Error ? error.message : "Could not save lesson.",
+        error instanceof Error
+          ? error.message
+          : "Couldn't save the lesson. Check your connection and try again.",
       );
     } finally {
       setSaving(false);
     }
   }
 
-  const tabClass =
-    "inline-flex cursor-pointer items-center gap-1.5 rounded-xl border-2 border-transparent px-3 py-1.5 text-xs font-extrabold text-[#52525B] transition-all hover:bg-white hover:text-[#111116] data-selected:border-[#18181B] data-selected:bg-[#FFB800] data-selected:text-[#111116] data-selected:shadow-[2px_2px_0_0_#111116] dark:text-[#B4B4C6] dark:hover:bg-[#1F1F2D] dark:hover:text-[#FAFAF5] dark:data-selected:border-[#18181B] dark:data-selected:bg-[#FFB800] dark:data-selected:text-[#111116]";
-
   return (
     <form onSubmit={handleSave} className="flex min-h-0 flex-1 flex-col">
       <Tabs defaultValue="details" className="flex min-h-0 flex-1 flex-col">
-        <div className="border-b-2 border-[#18181B]/15 bg-[#F6EFE0] px-6 dark:border-[#2A2A3B] dark:bg-[#12121A]">
-          <TabsList
-            aria-label="Lesson editor sections"
-            className="flex flex-wrap gap-1.5 py-2.5"
-          >
-            <TabsTab value="details" className={tabClass}>
-              <Settings2 className="h-3.5 w-3.5" aria-hidden="true" />
-              Details
-            </TabsTab>
-            <TabsTab value="video" className={tabClass}>
-              <Film className="h-3.5 w-3.5" aria-hidden="true" />
-              Mux Video
-              {muxPlaybackId.trim() && (
-                <span className="h-2 w-2 rounded-full bg-[#00B87C]" />
-              )}
-            </TabsTab>
-            <TabsTab value="markdown" className={tabClass}>
-              <FileText className="h-3.5 w-3.5" aria-hidden="true" />
-              Markdown Notes
-            </TabsTab>
-            <TabsTab value="quiz" className={tabClass}>
-              <HelpCircle className="h-3.5 w-3.5" aria-hidden="true" />
-              Quiz ({quiz.length})
-            </TabsTab>
-          </TabsList>
-        </div>
+        <TabsList aria-label="Lesson editor sections" className={TAB_LIST_CLASS}>
+          <TabsTab value="details" className={TAB_CLASS}>
+            Details
+          </TabsTab>
+          <TabsTab value="video" className={TAB_CLASS}>
+            Video
+            {muxPlaybackId.trim() && (
+              <span className="size-1.5 rounded-full bg-sage" aria-hidden="true" />
+            )}
+          </TabsTab>
+          <TabsTab value="markdown" className={TAB_CLASS}>
+            Notes
+          </TabsTab>
+          <TabsTab value="quiz" className={TAB_CLASS}>
+            Quiz
+            <span className="text-xs text-mist">{quiz.length}</span>
+          </TabsTab>
+        </TabsList>
 
-        <div className="min-h-0 flex-1 overflow-y-auto px-6 py-5">
+        <div className="min-h-0 flex-1 overflow-y-auto px-5 py-5">
           <TabsPanel value="details" keepMounted className="space-y-4">
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-              <div>
-                <label
-                  htmlFor={titleId}
-                  className="block text-xs font-extrabold uppercase tracking-wide text-[#52525B] dark:text-[#B4B4C6]"
-                >
-                  Lesson Title
-                </label>
-                <input
-                  id={titleId}
-                  type="text"
-                  required
-                  value={title}
-                  onChange={(e) => handleTitleChange(e.target.value)}
-                  placeholder="e.g. Cache Components & Suspense"
-                  className={INPUT_CLASS}
-                />
-              </div>
-              <div>
-                <label
-                  htmlFor={slugId}
-                  className="block text-xs font-extrabold uppercase tracking-wide text-[#52525B] dark:text-[#B4B4C6]"
-                >
-                  Slug
-                </label>
-                <input
-                  id={slugId}
-                  type="text"
-                  required
-                  value={slug}
-                  onChange={(e) => {
-                    setSlugTouched(true);
-                    setSlug(e.target.value);
-                  }}
-                  placeholder="cache-components-and-suspense"
-                  className={`${INPUT_CLASS} font-mono text-xs`}
-                />
-              </div>
-            </div>
-
-            <div>
-              <label
-                htmlFor={summaryId}
-                className="block text-xs font-extrabold uppercase tracking-wide text-[#52525B] dark:text-[#B4B4C6]"
-              >
-                Lesson Summary
-              </label>
-              <textarea
-                id={summaryId}
-                rows={3}
-                value={summary}
-                onChange={(e) => setSummary(e.target.value)}
-                placeholder="Short overview shown in curriculum lists and shared with the Vukora AI Tutor..."
-                className={INPUT_CLASS}
+              <TextField
+                label="Title"
+                required
+                value={title}
+                onChange={handleTitleChange}
+                placeholder="Cache components and Suspense"
+              />
+              <TextField
+                label="Slug"
+                required
+                mono
+                value={slug}
+                onChange={(next) => {
+                  setSlugTouched(true);
+                  setSlug(next);
+                }}
+                placeholder="cache-components-and-suspense"
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-4 sm:max-w-xs">
-              <div>
-                <label
-                  htmlFor={minutesId}
-                  className="block text-xs font-extrabold uppercase tracking-wide text-[#52525B] dark:text-[#B4B4C6]"
-                >
-                  Minutes
-                </label>
-                <input
-                  id={minutesId}
+            <TextField
+              label="Summary"
+              rows={3}
+              value={summary}
+              onChange={setSummary}
+              placeholder="A short overview for the curriculum list and the AI tutor."
+            />
+
+            <fieldset>
+              <legend className="text-sm font-medium">Duration</legend>
+              <div className="mt-1.5 grid max-w-xs grid-cols-2 gap-3">
+                <TextField
+                  label="Minutes"
                   type="number"
                   min={0}
                   max={600}
                   value={durationMinutes}
-                  onChange={(e) => setDurationMinutes(e.target.value)}
-                  className={INPUT_CLASS}
+                  onChange={setDurationMinutes}
+                  className="text-mist"
                 />
-              </div>
-              <div>
-                <label
-                  htmlFor={secondsId}
-                  className="block text-xs font-extrabold uppercase tracking-wide text-[#52525B] dark:text-[#B4B4C6]"
-                >
-                  Seconds
-                </label>
-                <input
-                  id={secondsId}
+                <TextField
+                  label="Seconds"
                   type="number"
                   min={0}
                   max={59}
                   value={durationRemainderSeconds}
-                  onChange={(e) => setDurationRemainderSeconds(e.target.value)}
-                  className={INPUT_CLASS}
+                  onChange={setDurationRemainderSeconds}
+                  className="text-mist"
                 />
               </div>
-            </div>
+            </fieldset>
 
-            <label className="flex cursor-pointer items-center justify-between gap-4 rounded-2xl border-2 border-[#18181B]/25 bg-[#F6EFE0]/80 p-4 dark:border-[#3A3A52] dark:bg-[#12121A]">
-              <div>
-                <div className="text-sm font-extrabold text-[#111116] dark:text-[#FAFAF5]">
-                  Free Preview
-                </div>
-                <p className="mt-0.5 text-xs text-[#52525B] dark:text-[#B4B4C6]">
-                  Free Preview — allow non-Pro users to watch this lesson
-                </p>
-              </div>
-              <Switch
-                checked={isFreePreview}
-                onCheckedChange={(checked) => setIsFreePreview(checked)}
-                className="relative inline-flex h-6.5 w-12 shrink-0 cursor-pointer items-center rounded-full border-2 border-[#18181B] transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2563EB] data-checked:bg-[#00B87C] data-unchecked:bg-[#E6DCC6] dark:border-[#3A3A52] dark:data-unchecked:bg-[#2A2A3B]"
-              >
-                <SwitchThumb className="block h-4.5 w-4.5 rounded-full border border-[#18181B] bg-white shadow-xs transition-transform data-checked:translate-x-5.5 data-unchecked:translate-x-0.5" />
-              </Switch>
-            </label>
+            <SettingSwitch
+              label="Free preview"
+              description="Let learners without Pro watch this lesson."
+              checked={isFreePreview}
+              onCheckedChange={setIsFreePreview}
+            />
           </TabsPanel>
 
           <TabsPanel value="video" keepMounted>
@@ -431,33 +474,25 @@ function LessonEditorForm({
             />
           </TabsPanel>
 
-          <TabsPanel value="markdown" keepMounted className="space-y-3">
+          <TabsPanel value="markdown" keepMounted>
             <Tabs defaultValue="write" className="space-y-3">
-              <div className="flex items-center justify-between gap-3">
-                <label
-                  htmlFor={markdownId}
-                  className="text-xs font-extrabold uppercase tracking-wide text-[#52525B] dark:text-[#B4B4C6]"
-                >
-                  GitHub-Flavored Markdown
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <label htmlFor={markdownId} className="text-sm font-medium">
+                  Notes in Markdown
                 </label>
                 <TabsList
-                  aria-label="Markdown mode"
-                  className="inline-flex rounded-xl border-2 border-[#18181B] bg-[#F6EFE0] p-0.5 dark:border-[#3A3A52] dark:bg-[#12121A]"
+                  aria-label="Notes view"
+                  className="inline-flex rounded-md bg-subtle p-0.5"
                 >
-                  <TabsTab
-                    value="write"
-                    className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg px-2.5 py-1 text-xs font-extrabold text-[#52525B] transition-colors data-selected:bg-[#FFB800] data-selected:text-[#111116] dark:text-[#B4B4C6] dark:data-selected:bg-[#FFB800] dark:data-selected:text-[#111116]"
-                  >
-                    <FileText className="h-3 w-3" aria-hidden="true" />
-                    Write
-                  </TabsTab>
-                  <TabsTab
-                    value="preview"
-                    className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg px-2.5 py-1 text-xs font-extrabold text-[#52525B] transition-colors data-selected:bg-[#FFB800] data-selected:text-[#111116] dark:text-[#B4B4C6] dark:data-selected:bg-[#FFB800] dark:data-selected:text-[#111116]"
-                  >
-                    <Eye className="h-3 w-3" aria-hidden="true" />
-                    Live Preview
-                  </TabsTab>
+                  {(["write", "preview"] as const).map((mode) => (
+                    <TabsTab
+                      key={mode}
+                      value={mode}
+                      className="h-7 cursor-pointer rounded-[5px] px-3 text-xs font-medium text-mist transition-colors duration-150 data-selected:bg-surface data-selected:text-ink data-selected:shadow-sm"
+                    >
+                      {mode === "write" ? "Write" : "Preview"}
+                    </TabsTab>
+                  ))}
                 </TabsList>
               </div>
 
@@ -467,19 +502,18 @@ function LessonEditorForm({
                   rows={16}
                   value={markdownContent}
                   onChange={(e) => setMarkdownContent(e.target.value)}
-                  placeholder="# Lesson Title&#10;&#10;Write rich Markdown notes with fenced code blocks..."
-                  className="w-full rounded-2xl border-2 border-[#18181B]/30 bg-white p-4 font-mono text-xs leading-relaxed text-[#111116] placeholder:text-[#71717A] focus:border-[#2563EB] focus:outline-none dark:border-[#3A3A52] dark:bg-[#12121A] dark:text-[#FAFAF5]"
+                  placeholder="# Lesson title"
+                  className="field font-mono text-xs leading-relaxed"
                 />
               </TabsPanel>
 
               <TabsPanel value="preview">
-                <div className="min-h-[320px] rounded-2xl border-2 border-[#18181B]/25 bg-white p-6 dark:border-[#3A3A52] dark:bg-[#16161F]">
+                <div className="min-h-80 rounded-md border border-line p-5">
                   {markdownContent.trim() ? (
                     <MarkdownContent content={markdownContent} />
                   ) : (
-                    <p className="text-sm text-[#52525B] dark:text-[#B4B4C6]">
-                      Nothing to preview yet. Switch to Write to compose lesson
-                      notes.
+                    <p className="text-sm text-mist">
+                      Nothing to preview yet. Write some notes first.
                     </p>
                   )}
                 </div>
@@ -489,189 +523,130 @@ function LessonEditorForm({
 
           <TabsPanel value="quiz" keepMounted className="space-y-4">
             <div className="flex flex-wrap items-center justify-between gap-3">
-              <div>
-                <h3 className="font-display text-sm font-extrabold text-[#111116] dark:text-[#FAFAF5]">
-                  Interactive Lesson Quiz
-                </h3>
-                <p className="text-xs text-[#52525B] dark:text-[#B4B4C6]">
-                  Add multiple-choice knowledge checks with explanations.
-                </p>
-              </div>
+              <p className="text-sm text-mist">
+                Multiple-choice questions shown after the lesson.
+              </p>
               <button
                 type="button"
-                onClick={() =>
-                  setQuiz((prev) => [...prev, createEmptyQuestion()])
-                }
-                className="tactile-btn-sm inline-flex cursor-pointer items-center gap-1.5 rounded-xl bg-[#FF5A36] px-3.5 py-2 text-xs font-extrabold text-[#111116] hover:bg-[#FF6E4E]"
+                onClick={() => setQuiz((prev) => [...prev, createEmptyQuestion()])}
+                className="btn btn-secondary btn-sm"
               >
                 <Plus className="h-3.5 w-3.5" aria-hidden="true" />
-                Add Question
+                Add question
               </button>
             </div>
 
             {quiz.length === 0 ? (
-              <div className="rounded-2xl border-2 border-dashed border-[#18181B]/30 px-6 py-10 text-center dark:border-[#3A3A52]">
-                <HelpCircle
-                  className="mx-auto h-7 w-7 text-[#52525B] dark:text-[#B4B4C6]"
-                  aria-hidden="true"
-                />
-                <p className="mt-2 text-sm font-bold text-[#111116] dark:text-[#FAFAF5]">
-                  No quiz questions yet
-                </p>
-                <p className="mt-1 text-xs text-[#52525B] dark:text-[#B4B4C6]">
-                  Click &ldquo;Add Question&rdquo; to attach an interactive quiz
-                  to this lesson.
+              <div className="rounded-md border border-dashed border-line px-6 py-10 text-center">
+                <p className="text-sm font-medium">No questions yet</p>
+                <p className="mt-1 text-sm text-mist">
+                  Add a question to check what learners took away.
                 </p>
               </div>
             ) : (
-              <div className="space-y-4">
-                {quiz.map((q, qIdx) => (
-                  <div
-                    key={q.id}
-                    className="rounded-2xl border-2 border-[#18181B]/25 bg-[#F6EFE0]/60 p-4 dark:border-[#3A3A52] dark:bg-[#12121A]"
-                  >
-                    <div className="flex items-center justify-between gap-2">
-                      <span className="rounded-md border border-[#18181B] bg-[#FFB800] px-2 py-0.5 text-xs font-extrabold uppercase tracking-wide text-[#111116]">
-                        Question {qIdx + 1}
+              quiz.map((q, qIdx) => (
+                <div
+                  key={q.id}
+                  className="space-y-3 rounded-md border border-line p-4"
+                >
+                  <div className="flex items-center justify-between gap-2">
+                    <h3 className="text-sm font-semibold">Question {qIdx + 1}</h3>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setQuiz((prev) => prev.filter((item) => item.id !== q.id))
+                      }
+                      aria-label={`Remove question ${qIdx + 1}`}
+                      className="btn btn-ghost btn-sm text-danger"
+                    >
+                      <Trash2 className="h-3.5 w-3.5" aria-hidden="true" />
+                      Remove
+                    </button>
+                  </div>
+
+                  <TextField
+                    label="Prompt"
+                    value={q.question}
+                    onChange={(question) => updateQuizQuestion(q.id, { question })}
+                    placeholder="What happens when…?"
+                  />
+
+                  <div>
+                    <p className="text-sm font-medium">
+                      Answers{" "}
+                      <span className="font-normal text-mist">
+                        (select the correct one)
                       </span>
-                      <button
-                        type="button"
-                        onClick={() => removeQuizQuestion(q.id)}
-                        aria-label={`Delete question ${qIdx + 1}`}
-                        className="inline-flex cursor-pointer items-center gap-1 rounded-lg px-2 py-1 text-xs font-bold text-[#D93817] transition-colors hover:bg-[#FF5A36]/15 dark:text-[#FF6B4A]"
-                      >
-                        <Trash2 className="h-3.5 w-3.5" aria-hidden="true" />
-                        Remove
-                      </button>
-                    </div>
-
-                    <div className="mt-3 space-y-3">
-                      <div>
-                        <label
-                          htmlFor={`${q.id}-prompt`}
-                          className="block text-xs font-bold text-[#111116] dark:text-[#FAFAF5]"
-                        >
-                          Question Prompt
-                        </label>
-                        <input
-                          id={`${q.id}-prompt`}
-                          type="text"
-                          value={q.question}
-                          onChange={(e) =>
-                            updateQuizQuestion(q.id, (curr) => ({
-                              ...curr,
-                              question: e.target.value,
-                            }))
-                          }
-                          placeholder="What happens when...?"
-                          className="mt-1 w-full rounded-xl border-2 border-[#18181B]/25 bg-white px-3 py-2 text-sm text-[#111116] focus:border-[#2563EB] focus:outline-none dark:border-[#3A3A52] dark:bg-[#16161F] dark:text-[#FAFAF5]"
-                        />
-                      </div>
-
-                      <fieldset className="space-y-2">
-                        <legend className="text-xs font-bold text-[#111116] dark:text-[#FAFAF5]">
-                          Answer Options (select the correct one)
-                        </legend>
-                        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-                          {(["A", "B", "C", "D"] as const).map(
-                            (letter, optIdx) => {
-                              const isCorrect = q.correctIndex === optIdx;
-                              return (
-                                <div
-                                  key={`${q.id}-${letter}`}
-                                  className={`flex items-center gap-2 rounded-xl border-2 p-2 transition-colors ${
-                                    isCorrect
-                                      ? "border-[#047857] bg-[#00B87C]/20 dark:border-[#34D399] dark:bg-[#00B87C]/15"
-                                      : "border-[#18181B]/20 bg-white dark:border-[#3A3A52] dark:bg-[#16161F]"
-                                  }`}
-                                >
-                                  <input
-                                    type="radio"
-                                    id={`${q.id}-correct-${letter}`}
-                                    name={`${q.id}-correct`}
-                                    checked={isCorrect}
-                                    onChange={() =>
-                                      updateQuizQuestion(q.id, (curr) => ({
-                                        ...curr,
-                                        correctIndex: optIdx,
-                                      }))
-                                    }
-                                    aria-label={`Mark option ${letter} as correct for question ${qIdx + 1}`}
-                                    className="h-4 w-4 cursor-pointer accent-[#047857]"
-                                  />
-                                  <input
-                                    type="text"
-                                    aria-label={`Option ${letter} for question ${qIdx + 1}`}
-                                    value={q.options[optIdx] ?? ""}
-                                    onChange={(e) =>
-                                      updateQuizQuestion(q.id, (curr) => {
-                                        const nextOptions = [...curr.options];
-                                        nextOptions[optIdx] = e.target.value;
-                                        return {
-                                          ...curr,
-                                          options: nextOptions,
-                                        };
-                                      })
-                                    }
-                                    placeholder={`Option ${letter}`}
-                                    className="w-full bg-transparent text-xs font-medium text-[#111116] placeholder:text-[#71717A] focus:outline-none dark:text-[#FAFAF5]"
-                                  />
-                                  {isCorrect && (
-                                    <CheckCircle2
-                                      className="h-4 w-4 shrink-0 text-[#047857] dark:text-[#34D399]"
-                                      aria-hidden="true"
-                                    />
-                                  )}
-                                </div>
-                              );
-                            },
-                          )}
-                        </div>
-                      </fieldset>
-
-                      <div>
-                        <label
-                          htmlFor={`${q.id}-explanation`}
-                          className="block text-xs font-bold text-[#111116] dark:text-[#FAFAF5]"
-                        >
-                          Explanation
-                        </label>
-                        <textarea
-                          id={`${q.id}-explanation`}
-                          rows={2}
-                          value={q.explanation}
-                          onChange={(e) =>
-                            updateQuizQuestion(q.id, (curr) => ({
-                              ...curr,
-                              explanation: e.target.value,
-                            }))
-                          }
-                          placeholder="Explain why the correct answer is right..."
-                          className="mt-1 w-full rounded-xl border-2 border-[#18181B]/25 bg-white px-3 py-2 text-xs text-[#111116] focus:border-[#2563EB] focus:outline-none dark:border-[#3A3A52] dark:bg-[#16161F] dark:text-[#FAFAF5]"
-                        />
-                      </div>
+                    </p>
+                    <div className="mt-1.5 grid grid-cols-1 gap-2 sm:grid-cols-2">
+                      {OPTION_LETTERS.map((letter, optIdx) => {
+                        const isCorrect = q.correctIndex === optIdx;
+                        return (
+                          <div
+                            key={letter}
+                            className={`flex items-center gap-2 rounded-md border px-2.5 ${
+                              isCorrect ? "border-sage" : "border-line"
+                            }`}
+                          >
+                            <input
+                              type="radio"
+                              name={`${q.id}-correct`}
+                              checked={isCorrect}
+                              onChange={() =>
+                                updateQuizQuestion(q.id, { correctIndex: optIdx })
+                              }
+                              aria-label={`Answer ${letter} is correct`}
+                              className="size-4 shrink-0 cursor-pointer accent-sage"
+                            />
+                            <input
+                              type="text"
+                              aria-label={`Answer ${letter} for question ${qIdx + 1}`}
+                              value={q.options[optIdx] ?? ""}
+                              onChange={(e) =>
+                                updateQuizQuestion(q.id, {
+                                  options: q.options.map((o, i) =>
+                                    i === optIdx ? e.target.value : o,
+                                  ),
+                                })
+                              }
+                              placeholder={`Answer ${letter}`}
+                              className="h-10 w-full bg-transparent text-sm outline-none placeholder:text-mist"
+                            />
+                            {isCorrect && (
+                              <Check
+                                className="h-4 w-4 shrink-0 text-sage"
+                                aria-hidden="true"
+                              />
+                            )}
+                          </div>
+                        );
+                      })}
                     </div>
                   </div>
-                ))}
-              </div>
+
+                  <TextField
+                    label="Explanation"
+                    rows={2}
+                    value={q.explanation}
+                    onChange={(explanation) =>
+                      updateQuizQuestion(q.id, { explanation })
+                    }
+                    placeholder="Why the correct answer is right."
+                  />
+                </div>
+              ))
             )}
           </TabsPanel>
         </div>
       </Tabs>
 
-      <div className="flex items-center justify-end gap-2.5 border-t-2 border-[#18181B]/15 bg-[#F6EFE0] px-6 py-4 dark:border-[#2A2A3B] dark:bg-[#12121A]">
-        <DialogClose className="tactile-btn-sm cursor-pointer rounded-xl bg-white px-4 py-2 text-xs font-bold text-[#111116] hover:bg-[#FFFBF2] dark:bg-[#16161F] dark:text-[#FAFAF5]">
-          Cancel
-        </DialogClose>
-        <button
-          type="submit"
-          disabled={saving}
-          className="tactile-btn-sm inline-flex cursor-pointer items-center gap-2 rounded-xl bg-[#FF5A36] px-5 py-2 text-xs font-extrabold text-[#111116] hover:bg-[#FF6E4E] disabled:cursor-not-allowed disabled:opacity-60"
-        >
+      <div className={DIALOG_FOOTER_CLASS}>
+        <DialogClose className="btn btn-secondary">Cancel</DialogClose>
+        <button type="submit" disabled={saving} className="btn btn-primary">
           {saving && (
-            <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden="true" />
+            <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
           )}
-          {lesson ? "Save Lesson" : "Create Lesson"}
+          {lesson ? "Save lesson" : "Create lesson"}
         </button>
       </div>
     </form>
@@ -687,36 +662,20 @@ export function LessonEditorDialog({
   lesson,
 }: LessonEditorDialogProps) {
   return (
-    <Dialog open={open} onOpenChange={(next) => onOpenChange(next)}>
-      <DialogBackdrop className="fixed inset-0 z-50 bg-[#111116]/65 backdrop-blur-xs transition-opacity duration-200 data-starting-style:opacity-0 data-ending-style:opacity-0" />
-      <DialogContent className="fixed top-1/2 left-1/2 z-50 flex max-h-[90vh] w-[calc(100vw-2rem)] max-w-4xl -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-3xl border-2 border-[#18181B] bg-[#FFFBF2] shadow-[8px_8px_0_0_#111116] transition-[opacity,scale] duration-200 data-starting-style:scale-96 data-starting-style:opacity-0 data-ending-style:scale-96 data-ending-style:opacity-0 dark:border-[#3A3A52] dark:bg-[#0D0D12] dark:shadow-[8px_8px_0_0_#000000]">
-        <div className="flex items-start justify-between gap-4 border-b-2 border-[#18181B] bg-white px-6 py-4 dark:border-[#323244] dark:bg-[#16161F]">
-          <div>
-            <DialogTitle className="font-display text-lg font-extrabold tracking-tight text-[#111116] dark:text-[#FAFAF5]">
-              {lesson ? "Edit Lesson" : "New Lesson"}
-            </DialogTitle>
-            <DialogDescription className="mt-0.5 text-xs text-[#52525B] dark:text-[#B4B4C6]">
-              {moduleTitle
-                ? `Module: ${moduleTitle}`
-                : "Configure lesson metadata, Mux video, Markdown notes, and quiz questions."}
-            </DialogDescription>
-          </div>
-          <DialogClose
-            aria-label="Close lesson editor"
-            className="inline-flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl border-2 border-transparent text-[#52525B] transition-colors hover:border-[#18181B] hover:bg-[#F6EFE0] hover:text-[#111116] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2563EB] dark:text-[#B4B4C6] dark:hover:border-[#3A3A52] dark:hover:bg-[#1F1F2D] dark:hover:text-[#FAFAF5]"
-          >
-            <X className="h-4 w-4" aria-hidden="true" />
-          </DialogClose>
-        </div>
-
-        <LessonEditorForm
-          key={`${lesson?._id ?? "new"}-${lesson?.updatedAt ?? 0}-${moduleId ?? "none"}`}
-          courseId={courseId}
-          moduleId={moduleId}
-          lesson={lesson}
-          onClose={() => onOpenChange(false)}
-        />
-      </DialogContent>
-    </Dialog>
+    <StudioDialog
+      open={open}
+      onOpenChange={onOpenChange}
+      title={lesson ? "Edit lesson" : "New lesson"}
+      description={moduleTitle ? `In ${moduleTitle}` : undefined}
+      className="max-w-3xl"
+    >
+      <LessonEditorForm
+        key={`${lesson?._id ?? "new"}-${lesson?.updatedAt ?? 0}-${moduleId ?? "none"}`}
+        courseId={courseId}
+        moduleId={moduleId}
+        lesson={lesson}
+        onClose={() => onOpenChange(false)}
+      />
+    </StudioDialog>
   );
 }
