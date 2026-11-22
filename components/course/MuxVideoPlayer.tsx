@@ -11,19 +11,14 @@ interface MuxVideoPlayerProps {
   title?: string;
 }
 
-export function MuxVideoPlayer({ playbackId, title }: MuxVideoPlayerProps) {
+export function MuxVideoPlayer({ playbackId }: MuxVideoPlayerProps) {
   if (!playbackId) {
     return (
-      <div className="flex aspect-video w-full flex-col items-center justify-center rounded-2xl border-2 border-[#18181B] bg-[#14141D] p-6 text-center text-[#B4B4C6] shadow-[5px_5px_0_0_#111116] dark:border-[#3A3A52] dark:shadow-[5px_5px_0_0_#000000]">
-        <span className="flex h-12 w-12 -rotate-3 items-center justify-center rounded-2xl border-2 border-[#111116] bg-[#FFB800] text-[#111116] shadow-[3px_3px_0_0_#000000]">
-          <Film className="h-6 w-6" aria-hidden="true" />
-        </span>
-        <p className="font-display mt-4 text-base font-extrabold text-[#FAFAF5]">
-          {title ? `${title} — Video uploading soon` : "Video coming soon"}
-        </p>
-        <p className="mt-1 max-w-sm text-xs text-[#B4B4C6]">
-          Read the full written guide and complete the interactive quiz below in
-          the meantime.
+      <div className="night flex aspect-video w-full flex-col items-center justify-center rounded-xl p-6 text-center">
+        <Film className="h-6 w-6 text-mist" aria-hidden="true" />
+        <p className="mt-3 font-semibold">Video coming soon</p>
+        <p className="mt-1 max-w-sm text-sm text-mist">
+          The written guide and quiz below cover this lesson in the meantime.
         </p>
       </div>
     );
@@ -32,7 +27,7 @@ export function MuxVideoPlayer({ playbackId, title }: MuxVideoPlayerProps) {
   const posterUrl = `https://image.mux.com/${playbackId}/thumbnail.webp?width=1280&height=720&fit_mode=smartcrop`;
 
   return (
-    <div className="relative aspect-video w-full overflow-clip rounded-2xl border-2 border-[#18181B] bg-black shadow-[5px_5px_0_0_#111116] dark:border-[#3A3A52] dark:shadow-[5px_5px_0_0_#000000]">
+    <div className="relative aspect-video w-full overflow-clip rounded-xl bg-night">
       <VideoPlayer key={playbackId}>
         <VideoSkin className="block h-full w-full" style={{ aspectRatio: "16 / 9" }}>
           <MuxVideo
