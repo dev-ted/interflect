@@ -3,13 +3,7 @@
 import { useId, useState } from "react";
 import { Button } from "@ui-sdk/react/button";
 import { Radio, RadioGroup, RadioIndicator } from "@ui-sdk/react/radio";
-import {
-  CheckCircle2,
-  RotateCcw,
-  Sparkles,
-  Trophy,
-  XCircle,
-} from "lucide-react";
+import { CheckCircle2, RotateCcw, XCircle } from "lucide-react";
 import type { InteractiveQuizPayload } from "@/lib/types";
 
 interface VukoraQuizCardProps {
@@ -40,61 +34,38 @@ export function VukoraQuizCard({ quiz }: VukoraQuizCardProps) {
   }
 
   return (
-    <div className="mt-3 overflow-hidden rounded-2xl border-2 border-[#18181B] bg-white shadow-[3px_3px_0_0_#111116] dark:border-[#3A3A52] dark:bg-[#16161F] dark:shadow-[3px_3px_0_0_#000000]">
-      <div className="flex items-center justify-between gap-2 border-b-2 border-[#18181B] bg-[#FFB800] px-3.5 py-2.5 text-[#111116]">
+    <div className="mt-3 w-full overflow-hidden rounded-xl border border-line bg-surface">
+      <div className="flex items-center justify-between gap-2 border-b border-line px-3.5 py-2.5">
         <div className="min-w-0">
-          <p className="flex items-center gap-1 text-[10px] font-extrabold tracking-wide uppercase">
-            <Sparkles className="h-3 w-3 shrink-0" aria-hidden="true" />
-            Interactive Quiz
-          </p>
-          <h4 className="font-display truncate text-xs font-extrabold">
-            {quiz.title}
-          </h4>
+          <p className="text-xs text-mist">Quiz</p>
+          <h4 className="truncate text-sm font-semibold">{quiz.title}</h4>
         </div>
-        <span className="shrink-0 rounded-full border-2 border-[#18181B] bg-white px-2 py-0.5 font-mono text-[11px] font-extrabold text-[#111116]">
-          {submitted ? `${score}/${total}` : `${answeredCount}/${total}`}
+        <span className="chip shrink-0 tabular-nums">
+          {submitted ? `${score} of ${total} correct` : `${answeredCount} of ${total} answered`}
         </span>
       </div>
 
       {submitted && (
-        <div className="animate-pop-in flex items-center justify-between gap-2 border-b-2 border-[#18181B]/15 bg-[#F6EFE0] px-3.5 py-2.5 dark:border-[#2A2A3B] dark:bg-[#12121A]">
-          <div className="flex items-center gap-2 text-xs font-extrabold text-[#111116] dark:text-[#FAFAF5]">
-            <Trophy
-              className={`h-4 w-4 shrink-0 ${
-                score === total
-                  ? "text-[#047857] dark:text-[#34D399]"
-                  : "text-[#D93817] dark:text-[#FF6B4A]"
-              }`}
-              aria-hidden="true"
-            />
-            <span>
-              Score: {score}/{total} ({scorePercent}%)
-            </span>
-          </div>
-          <Button
-            onClick={handleRetry}
-            className="tactile-btn-sm inline-flex cursor-pointer items-center gap-1 rounded-lg bg-white px-2.5 py-1 text-[11px] font-extrabold text-[#111116] hover:bg-[#FFB800] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2563EB]"
-          >
-            <RotateCcw className="h-3 w-3" aria-hidden="true" />
-            Retry
+        <div className="flex items-center justify-between gap-2 border-b border-line bg-subtle px-3.5 py-2.5">
+          <p className={`text-sm font-semibold ${score === total ? "text-sage" : "text-ink"}`}>
+            You scored {score} out of {total} ({scorePercent}%)
+          </p>
+          <Button onClick={handleRetry} className="btn btn-secondary btn-sm">
+            <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
+            Try again
           </Button>
         </div>
       )}
 
-      <div className="divide-y divide-[#E6DCC6] dark:divide-[#2A2A3B]">
+      <div className="divide-y divide-line">
         {quiz.questions.map((question, qIdx) => {
           const chosen = selections[question.id];
           const groupLabelId = `${baseId}-q-${question.id}`;
 
           return (
             <div key={question.id} className="p-3.5">
-              <p
-                id={groupLabelId}
-                className="text-xs leading-relaxed font-bold text-[#111116] dark:text-[#FAFAF5]"
-              >
-                <span className="mr-1.5 inline-flex rounded border border-[#18181B] bg-[#FFB800] px-1 font-mono text-[10px] font-extrabold text-[#111116]">
-                  Q{qIdx + 1}
-                </span>
+              <p id={groupLabelId} className="text-sm leading-relaxed font-semibold">
+                <span className="mr-1.5 text-mist">{qIdx + 1}.</span>
                 {question.question}
               </p>
 
@@ -116,57 +87,38 @@ export function VukoraQuizCard({ quiz }: VukoraQuizCardProps) {
                   const isCorrect = optIdx === question.correctIndex;
                   const optionValue = String(optIdx);
 
-                  let cardClasses =
-                    "border-[#18181B]/20 bg-[#FFFBF2] text-[#111116] hover:border-[#18181B] hover:bg-white dark:border-[#3A3A52] dark:bg-[#12121A] dark:text-[#FAFAF5] dark:hover:border-[#FFB800]";
-
+                  let rowClasses = "border-line hover:border-mist";
                   if (submitted) {
-                    if (isCorrect) {
-                      cardClasses =
-                        "border-[#047857] bg-[#00B87C]/20 text-[#111116] dark:border-[#34D399] dark:bg-[#00B87C]/20 dark:text-[#FAFAF5]";
-                    } else if (isSelected && !isCorrect) {
-                      cardClasses =
-                        "border-[#D93817] bg-[#FF5A36]/20 text-[#111116] dark:border-[#FF6B4A] dark:bg-[#FF5A36]/20 dark:text-[#FAFAF5]";
-                    } else {
-                      cardClasses =
-                        "border-[#18181B]/15 bg-[#F6EFE0]/60 text-[#52525B] dark:border-[#2A2A3B] dark:bg-[#12121A]/70 dark:text-[#B4B4C6]";
-                    }
+                    rowClasses = isCorrect
+                      ? "border-sage bg-sage/10"
+                      : isSelected
+                        ? "border-danger bg-danger/10"
+                        : "border-line text-mist";
                   } else if (isSelected) {
-                    cardClasses =
-                      "border-[#18181B] bg-[#FFB800] text-[#111116] dark:border-[#18181B] dark:bg-[#FFB800] dark:text-[#111116]";
+                    rowClasses = "border-primary bg-primary/10";
                   }
 
                   return (
                     <label
                       key={`${question.id}-${optionValue}`}
-                      className={`flex items-start gap-2.5 rounded-xl border-2 px-2.5 py-2 text-xs font-semibold transition-colors ${
+                      className={`flex items-start gap-2.5 rounded-md border px-2.5 py-2 text-sm transition-colors ${
                         submitted ? "cursor-default" : "cursor-pointer"
-                      } ${cardClasses}`}
+                      } ${rowClasses}`}
                     >
                       <Radio
                         value={optionValue}
-                        className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full border-2 border-current/50 bg-white/80 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2563EB] data-checked:border-[#111116] dark:bg-[#16161F]"
+                        className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full border border-mist bg-surface data-checked:border-primary"
                       >
-                        <RadioIndicator className="h-2 w-2 rounded-full bg-[#111116] dark:bg-[#FFB800]" />
+                        <RadioIndicator className="h-2 w-2 rounded-full bg-primary" />
                       </Radio>
 
-                      <span className="flex-1 leading-snug">
-                        <span className="mr-1.5 font-mono text-[11px] font-extrabold opacity-80">
-                          {String.fromCharCode(65 + optIdx)}.
-                        </span>
-                        {option}
-                      </span>
+                      <span className="flex-1 leading-snug">{option}</span>
 
                       {submitted && isCorrect && (
-                        <CheckCircle2
-                          className="mt-0.5 h-4 w-4 shrink-0 text-[#047857] dark:text-[#34D399]"
-                          aria-hidden="true"
-                        />
+                        <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-sage" aria-label="Correct answer" />
                       )}
                       {submitted && isSelected && !isCorrect && (
-                        <XCircle
-                          className="mt-0.5 h-4 w-4 shrink-0 text-[#D93817] dark:text-[#FF6B4A]"
-                          aria-hidden="true"
-                        />
+                        <XCircle className="mt-0.5 h-4 w-4 shrink-0 text-danger" aria-label="Your answer, incorrect" />
                       )}
                     </label>
                   );
@@ -174,10 +126,10 @@ export function VukoraQuizCard({ quiz }: VukoraQuizCardProps) {
               </RadioGroup>
 
               {submitted && (
-                <p className="mt-2.5 rounded-xl border border-dashed border-[#18181B]/25 bg-[#F6EFE0] px-2.5 py-2 text-[11px] leading-relaxed text-[#111116] dark:border-[#3A3A52] dark:bg-[#12121A] dark:text-[#D4D4E2]">
-                  <strong className="font-extrabold text-[#111116] dark:text-[#FAFAF5]">
-                    Explanation:{" "}
-                  </strong>
+                <p className="mt-2.5 text-sm leading-relaxed text-mist">
+                  <span className={`font-semibold ${chosen === question.correctIndex ? "text-sage" : "text-danger"}`}>
+                    {chosen === question.correctIndex ? "Correct. " : "Not quite. "}
+                  </span>
                   {question.explanation}
                 </p>
               )}
@@ -187,18 +139,18 @@ export function VukoraQuizCard({ quiz }: VukoraQuizCardProps) {
       </div>
 
       {!submitted && (
-        <div className="flex items-center justify-between gap-2 border-t-2 border-[#18181B]/15 bg-[#F6EFE0] px-3.5 py-2.5 dark:border-[#2A2A3B] dark:bg-[#12121A]">
-          <span className="font-mono text-[11px] font-bold text-[#52525B] dark:text-[#B4B4C6]">
+        <div className="flex items-center justify-between gap-2 border-t border-line px-3.5 py-2.5">
+          <span className="text-xs text-mist">
             {answeredCount === total
-              ? "Ready to grade"
-              : `Select ${total - answeredCount} more`}
+              ? "Ready to check"
+              : `Answer ${total - answeredCount} more to check`}
           </span>
           <Button
             disabled={answeredCount < total}
             onClick={handleCheckAnswers}
-            className="tactile-btn-sm cursor-pointer rounded-xl bg-[#FF5A36] px-3.5 py-1.5 text-xs font-extrabold text-[#111116] hover:bg-[#FF6E4E] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2563EB] data-disabled:cursor-not-allowed data-disabled:opacity-50"
+            className="btn btn-primary btn-sm"
           >
-            Check Answers
+            Check answers
           </Button>
         </div>
       )}
