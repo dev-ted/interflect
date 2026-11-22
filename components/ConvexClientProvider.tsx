@@ -19,14 +19,7 @@ import {
   ToastRegion,
   ToastTitle,
 } from "@ui-sdk/react/toast";
-import {
-  CheckCircle2,
-  Info,
-  Loader2,
-  TriangleAlert,
-  X,
-  XCircle,
-} from "lucide-react";
+import { Loader2, X } from "lucide-react";
 import { isAdminRole, PRO_PLAN_SLUG } from "@/lib/auth";
 
 if (!process.env.NEXT_PUBLIC_CONVEX_URL) {
@@ -121,68 +114,23 @@ function AppToaster() {
       align="center"
       expanded
       aria-label="Notifications"
-      className="pointer-events-none top-4 m-0 w-[min(25rem,calc(100vw-2rem))] overflow-visible border-0 bg-transparent p-0 [&_[data-slot=toast-list]]:m-0 [&_[data-slot=toast-list]]:flex [&_[data-slot=toast-list]]:list-none [&_[data-slot=toast-list]]:flex-col [&_[data-slot=toast-list]]:gap-2.5 [&_[data-slot=toast-list]]:p-0"
+      className="pointer-events-none top-4 m-0 w-[min(25rem,calc(100vw-2rem))] overflow-visible border-0 bg-transparent p-0 [&_[data-slot=toast-list]]:m-0 [&_[data-slot=toast-list]]:flex [&_[data-slot=toast-list]]:list-none [&_[data-slot=toast-list]]:flex-col [&_[data-slot=toast-list]]:gap-2 [&_[data-slot=toast-list]]:p-0"
     >
-      {(item) => {
-        const type = item.type;
-        const badgeAccent =
-          type === "success"
-            ? "bg-[#00B87C] text-[#111116]"
-            : type === "error"
-              ? "bg-[#FF5A36] text-[#111116]"
-              : type === "warning"
-                ? "bg-[#FFB800] text-[#111116]"
-                : "bg-[#2563EB] text-white";
-
-        const borderAccent =
-          type === "success"
-            ? "border-[#18181B] dark:border-[#00B87C]/70"
-            : type === "error"
-              ? "border-[#18181B] dark:border-[#FF5A36]/75"
-              : type === "warning"
-                ? "border-[#18181B] dark:border-[#FFB800]/75"
-                : "border-[#18181B] dark:border-[#3A3A52]";
-
-        return (
-          <Toast
-            className={`pointer-events-auto flex w-full select-none items-center gap-3 rounded-2xl border-2 bg-[#FFFBF2] px-3.5 py-3 text-sm text-[#111116] shadow-[4px_4px_0_0_#111116] transition-[opacity,transform] duration-200 data-starting-style:-translate-y-2 data-starting-style:opacity-0 data-ending-style:-translate-y-2 data-ending-style:opacity-0 motion-reduce:transition-none dark:bg-[#16161F] dark:text-[#FAFAF5] dark:shadow-[4px_4px_0_0_#000000] ${borderAccent}`}
-          >
-            <span
-              className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-xl border-2 border-[#18181B] shadow-[2px_2px_0_0_#111116] dark:border-[#111116] dark:shadow-[2px_2px_0_0_#000000] ${badgeAccent}`}
-            >
-              {type === "success" ? (
-                <CheckCircle2 className="h-4 w-4" aria-hidden="true" />
-              ) : type === "error" ? (
-                <XCircle className="h-4 w-4" aria-hidden="true" />
-              ) : type === "warning" ? (
-                <TriangleAlert className="h-4 w-4" aria-hidden="true" />
-              ) : type === "loading" ? (
-                <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
-              ) : (
-                <Info className="h-4 w-4" aria-hidden="true" />
-              )}
-            </span>
-
-            <div className="min-w-0 flex-1">
-              <ToastTitle className="font-display font-extrabold leading-snug text-[#111116] dark:text-[#FAFAF5]" />
-              {item.description && (
-                <ToastDescription className="mt-0.5 text-xs font-medium text-[#52525B] dark:text-[#B4B4C6]" />
-              )}
-            </div>
-
-            {item.action && (
-              <ToastAction className="tactile-btn-sm shrink-0 cursor-pointer rounded-xl bg-[#FF5A36] px-3 py-1.5 text-xs font-extrabold text-[#111116] hover:bg-[#FF6E4E] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2563EB]" />
-            )}
-
-            <ToastClose
-              aria-label="Dismiss notification"
-              className="inline-flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded-xl border-2 border-transparent text-[#52525B] transition-colors hover:border-[#18181B] hover:bg-[#F6EFE0] hover:text-[#111116] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2563EB] dark:text-[#B4B4C6] dark:hover:border-[#3A3A52] dark:hover:bg-[#1F1F2D] dark:hover:text-[#FAFAF5]"
-            >
-              <X className="h-3.5 w-3.5" aria-hidden="true" />
-            </ToastClose>
-          </Toast>
-        );
-      }}
+      {(item) => (
+        <Toast className="card pointer-events-auto relative flex w-full items-center gap-3 overflow-hidden py-3 pr-2 pl-4 text-sm text-ink transition-[opacity,translate] duration-200 ease-(--ease-out) select-none before:absolute before:inset-y-0 before:left-0 before:w-1 before:bg-primary data-ending-style:-translate-y-2 data-ending-style:opacity-0 data-starting-style:-translate-y-2 data-starting-style:opacity-0 data-[type=error]:before:bg-danger data-[type=success]:before:bg-sage data-[type=warning]:before:bg-sun motion-reduce:data-ending-style:translate-y-0 motion-reduce:data-starting-style:translate-y-0">
+          {item.type === "loading" && (
+            <Loader2 className="h-4 w-4 shrink-0 animate-spin text-mist motion-reduce:animate-none" aria-hidden="true" />
+          )}
+          <div className="min-w-0 flex-1">
+            <ToastTitle className="font-semibold leading-snug" />
+            {item.description && <ToastDescription className="mt-0.5 text-mist" />}
+          </div>
+          {item.action && <ToastAction className="btn btn-secondary btn-sm shrink-0" />}
+          <ToastClose aria-label="Dismiss notification" className="btn btn-ghost btn-icon btn-sm w-8 shrink-0 text-mist">
+            <X className="h-4 w-4" aria-hidden="true" />
+          </ToastClose>
+        </Toast>
+      )}
     </ToastRegion>
   );
 }
