@@ -318,32 +318,9 @@ p {
   background-position: -1px -1px;
 }
 
-/* ── Signature moment: the sun rises once on the landing page ──────── */
-@keyframes vk-sun-rise {
-  from {
-    transform: translateY(40%);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-@keyframes vk-fade {
-  from {
-    opacity: 0;
-  }
-}
-.sun-rise {
-  animation: vk-sun-rise 900ms var(--ease-out) both;
-}
-
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
-  }
-  .sun-rise {
-    animation: vk-fade 400ms ease both;
   }
   .btn:active:not(:disabled) {
     transform: none;
