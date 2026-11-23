@@ -1,12 +1,16 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 import { getOptionalIdentity, requireIdentity } from "./lib/auth";
+import { requireLearnerLesson } from "./lib/access";
+import { rateLimiter } from "./lib/rateLimits";
 import { publicCourse } from "./lib/features";
+import { thumbnailUrlFor } from "./lib/media";
 
 export const enroll = mutation({
   args: { courseId: v.id("courses") },
   handler: async (ctx, args) => {
     const identity = await requireIdentity(ctx);
+    await rateLimiter.limit(ctx, "progressWrite", { key: identity.tokenIdentifier, throws: true });
     const course = await ctx.db.get("courses", args.courseId);
     if (!course || !course.published) {
       throw new Error("Course not found.");
@@ -62,6 +66,8 @@ export const toggleLessonComplete = mutation({
   },
   handler: async (ctx, args) => {
     const identity = await requireIdentity(ctx);
+    await rateLimiter.limit(ctx, "progressWrite", { key: identity.tokenIdentifier, throws: true });
+    await requireLearnerLesson(ctx, identity, args.courseId, args.lessonId);
     const now = Date.now();
 
     const enrollment = await ctx.db
@@ -117,19 +123,27 @@ export const recordQuizAttempt = mutation({
     courseId: v.id("courses"),
     lessonId: v.id("lessons"),
     answers: v.array(v.number()),
-    score: v.number(),
-    total: v.number(),
+    // Ignored: the score is worked out here from the stored answers. Kept so older clients still validate.
+    score: v.optional(v.number()),
+    total: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
     const identity = await requireIdentity(ctx);
+    await rateLimiter.limit(ctx, "quizAttempt", { key: identity.tokenIdentifier, throws: true });
+    const { lesson } = await requireLearnerLesson(ctx, identity, args.courseId, args.lessonId);
+    const quiz = lesson.quiz ?? [];
+    if (quiz.length === 0 || args.answers.length !== quiz.length) {
+      throw new Error("Answers don't match this lesson's quiz.");
+    }
+    const score = quiz.reduce((acc, q, i) => acc + (args.answers[i] === q.correctIndex ? 1 : 0), 0);
     return await ctx.db.insert("quizAttempts", {
       userId: identity.tokenIdentifier,
       clerkUserId: identity.subject,
       courseId: args.courseId,
       lessonId: args.lessonId,
-      answers: args.answers,
-      score: args.score,
-      total: args.total,
+      answers: args.answers.map((a) => Math.trunc(a)),
+      score,
+      total: quiz.length,
       completedAt: Date.now(),
     });
   },
@@ -201,7 +215,7 @@ export const getMyLearningDashboard = query({
             slug: course.slug,
             title: course.title,
             subtitle: course.subtitle,
-            thumbnailUrl: course.thumbnailUrl,
+            thumbnailUrl: await thumbnailUrlFor(ctx, course),
             category: course.category,
             level: course.level,
             tier: publicCourse(course).tier,

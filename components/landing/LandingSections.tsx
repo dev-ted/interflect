@@ -5,7 +5,7 @@ import { useQuery } from "convex/react";
 import { Check, ExternalLink, Loader2 } from "lucide-react";
 import { api } from "@/convex/_generated/api";
 import { TUTOR } from "@/lib/auth";
-import { PRO_ENABLED } from "@/convex/lib/features";
+import { PRO_ENABLED, TUTOR_ENABLED } from "@/convex/lib/features";
 import { LogoMark } from "@/components/brand/Logo";
 import { CourseCard, type CourseCardItem } from "./CourseCard";
 import { StartLearning } from "./HeroShowcase";
@@ -277,6 +277,7 @@ export function LandingSections() {
       </section>
 
       {/* Tutor (Pro) */}
+      {TUTOR_ENABLED && (
       <section className="mx-auto grid max-w-6xl items-center gap-14 px-4 py-24 sm:px-6 lg:grid-cols-2">
         <div className="max-w-md">
           {PRO_ENABLED && <span className="chip">Pro</span>}
@@ -321,6 +322,7 @@ export function LandingSections() {
           </div>
         </figure>
       </section>
+      )}
 
       {/* Instructor */}
       <section className="border-t border-line">
@@ -357,8 +359,8 @@ export function LandingSections() {
       <section className="mx-auto max-w-6xl px-4 pb-24 sm:px-6">
         <div className="grid gap-4 md:grid-cols-2">
           {[
-            { name: "Free", price: "$0", items: FREE },
-            { name: "Pro", price: "From $24 a month", items: PRO },
+            { name: "Free", price: "R0", items: FREE },
+            { name: "Pro", price: "R50 a month", items: PRO },
           ].map((plan) => (
             <div key={plan.name} className="card p-6 sm:p-7">
               <div className="flex items-baseline justify-between gap-4">

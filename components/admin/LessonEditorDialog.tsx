@@ -24,6 +24,7 @@ import type { Doc, Id } from "@/convex/_generated/dataModel";
 import type { QuizQuestion } from "@/lib/types";
 import { MarkdownContent } from "@/components/course/MarkdownContent";
 import { MuxUploader, type MuxUploadResult } from "./MuxUploader";
+import { StorageUploader } from "./StorageUploader";
 import { MuxVideoPlayer } from "@/components/course/MuxVideoPlayer";
 import { parseVideoUrl, SUPPORTED_VIDEO_HINT } from "@/convex/lib/video";
 
@@ -238,13 +239,14 @@ function LessonEditorForm({
 
   const createLesson = useMutation(api.courses.createLesson);
   const updateLesson = useMutation(api.courses.updateLesson);
+  const setLessonVideo = useMutation(api.files.setLessonVideo);
 
   const [title, setTitle] = useState(lesson?.title ?? "");
   const [slug, setSlug] = useState(lesson?.slug ?? "");
   const [slugTouched, setSlugTouched] = useState(Boolean(lesson));
   const [summary, setSummary] = useState(lesson?.summary ?? "");
   const [durationMinutes, setDurationMinutes] = useState(
-    lesson ? String(Math.floor(lesson.durationSeconds / 60)) : "10",
+    lesson ? String(Math.floor(lesson.durationSeconds / 60)) : "0",
   );
   const [durationRemainderSeconds, setDurationRemainderSeconds] = useState(
     lesson ? String(lesson.durationSeconds % 60) : "0",
@@ -269,7 +271,10 @@ function LessonEditorForm({
     "idle" | "waiting" | "ready" | "errored"
   >(lesson?.muxStatus ?? "idle");
   const [videoUrl, setVideoUrl] = useState(lesson?.videoUrl ?? "");
-  const [videoSource, setVideoSource] = useState<"mux" | "link">(lesson?.videoUrl ? "link" : "mux");
+  const [videoFileUrl, setVideoFileUrl] = useState<string | null>(null);
+  const [videoSource, setVideoSource] = useState<"storage" | "mux" | "link">(
+    lesson?.videoStorageId ? "storage" : lesson?.videoUrl ? "link" : "mux",
+  );
   const [quiz, setQuiz] = useState<QuizQuestion[]>(() => normalizeQuiz(lesson));
   const [saving, setSaving] = useState(false);
   const [tab, setTab] = useState("details");
@@ -355,9 +360,10 @@ function LessonEditorForm({
     );
     const totalDurationSeconds = mins * 60 + secs;
 
-    // One video source per lesson: a link, or a Mux upload.
+    // One video source per lesson: a stored file, a Mux upload, or a link.
     const useLink = videoSource === "link";
-    const cleanPlaybackId = useLink ? undefined : muxPlaybackId.trim() || undefined;
+    const useMux = videoSource === "mux";
+    const cleanPlaybackId = useMux ? muxPlaybackId.trim() || undefined : undefined;
     const cleanVideoUrl = useLink ? videoUrl.trim() || null : null;
     const cleanQuiz = quiz.map((q) => ({
       id: q.id,
@@ -486,7 +492,10 @@ function LessonEditorForm({
             />
 
             <fieldset>
-              <legend className="text-sm font-medium">Duration</legend>
+              <legend className="text-sm font-medium">Time to finish</legend>
+              <p className="mt-1 text-xs text-mist">
+                How long an average adult takes to read the lesson, look at the examples, and answer the quiz.
+              </p>
               <div className="mt-1.5 grid max-w-xs grid-cols-2 gap-3">
                 <TextField
                   label="Minutes"
@@ -521,19 +530,47 @@ function LessonEditorForm({
             <SegmentedControl
               aria-label="Video source"
               value={videoSource}
-              onValueChange={(v) => setVideoSource(v as "mux" | "link")}
+              onValueChange={(v) => setVideoSource(v as "storage" | "mux" | "link")}
               className="relative inline-flex h-9 items-center rounded-full border border-line bg-subtle p-0.5"
             >
               <SegmentedControlIndicator className="absolute top-(--segmented-control-indicator-top) left-(--segmented-control-indicator-left) h-(--segmented-control-indicator-height) w-(--segmented-control-indicator-width) rounded-full bg-surface shadow-card transition-[left,width] duration-200 ease-(--ease-out) data-[activation-direction=none]:transition-none motion-reduce:transition-none" />
+              <SegmentedControlItem value="storage" className="relative z-10 inline-flex h-8 cursor-pointer items-center rounded-full px-4 text-sm font-medium text-mist transition-colors duration-150 data-checked:text-ink">
+                Upload
+              </SegmentedControlItem>
               <SegmentedControlItem value="mux" className="relative z-10 inline-flex h-8 cursor-pointer items-center rounded-full px-4 text-sm font-medium text-mist transition-colors duration-150 data-checked:text-ink">
-                Upload to Mux
+                Mux
               </SegmentedControlItem>
               <SegmentedControlItem value="link" className="relative z-10 inline-flex h-8 cursor-pointer items-center rounded-full px-4 text-sm font-medium text-mist transition-colors duration-150 data-checked:text-ink">
                 Paste a link
               </SegmentedControlItem>
             </SegmentedControl>
 
-            {videoSource === "mux" ? (
+            {videoSource === "storage" ? (
+              <StorageUploader
+                accept="video/mp4,video/webm,video/quicktime"
+                label="Upload a lesson video"
+                hint="MP4, WebM or MOV. Stored in Convex and played on the lesson page."
+                rejectMessage="That file isn’t a video. Choose an MP4, WebM or MOV."
+                currentUrl={videoFileUrl}
+                disabledReason={
+                  lesson
+                    ? undefined
+                    : "Save the lesson first, then upload its video."
+                }
+                onStored={async (storageId) => {
+                  if (!lesson) return null;
+                  const url = await setLessonVideo({
+                    lessonId: lesson._id,
+                    storageId,
+                  });
+                  setVideoFileUrl(url);
+                  setMuxPlaybackId("");
+                  setVideoUrl("");
+                  toast.success("Video saved to Convex storage.");
+                  return url;
+                }}
+              />
+            ) : videoSource === "mux" ? (
               <MuxUploader
                 playbackId={muxPlaybackId}
                 assetId={muxAssetId}

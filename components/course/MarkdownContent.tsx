@@ -1,62 +1,54 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeHighlight from "rehype-highlight";
-import { Check, Copy } from "lucide-react";
+import { CodeBlock } from "./CodeBlock";
+import { DesignPreview } from "./DesignPreview";
 
-function extractText(node: ReactNode): string {
-  if (typeof node === "string" || typeof node === "number") return String(node);
-  if (Array.isArray(node)) return node.map(extractText).join("");
-  if (node && typeof node === "object" && "props" in node) {
-    const props = (node as { props?: { children?: ReactNode } }).props;
-    return extractText(props?.children);
-  }
-  return "";
+type HastNode = {
+  type: string;
+  tagName?: string;
+  value?: string;
+  data?: { meta?: unknown };
+  properties?: { className?: string | string[] };
+  children?: HastNode[];
+};
+
+function codeElement(node: unknown): HastNode | undefined {
+  if (!node || typeof node !== "object" || !("children" in node)) return;
+  const children = (node as { children?: unknown }).children;
+  if (!Array.isArray(children)) return;
+  return children.find(
+    (child): child is HastNode =>
+      Boolean(child) &&
+      typeof child === "object" &&
+      "tagName" in child &&
+      (child as { tagName?: string }).tagName === "code",
+  );
 }
 
-function CodeBlock({
-  children,
-  language,
-}: {
-  children: ReactNode;
-  language?: string;
-}) {
-  const [copied, setCopied] = useState(false);
+function plainText(node: HastNode | undefined): string {
+  if (!node) return "";
+  if (node.type === "text" && typeof node.value === "string") return node.value;
+  return (node.children ?? []).map(plainText).join("");
+}
 
-  async function handleCopy() {
-    const text = extractText(children).replace(/\n$/, "");
-    try {
-      await navigator.clipboard.writeText(text);
-      setCopied(true);
-      window.setTimeout(() => setCopied(false), 1800);
-    } catch {
-      // Clipboard unavailable in insecure context
-    }
-  }
-
-  return (
-    <div className="night my-5 overflow-hidden rounded-xl border border-line">
-      <div className="flex items-center justify-between border-b border-line py-1 pr-1 pl-4">
-        <span className="text-xs text-mist">{language || "code"}</span>
-        <button
-          type="button"
-          onClick={handleCopy}
-          aria-label={copied ? "Copied" : "Copy code"}
-          className="btn btn-ghost btn-sm text-mist"
-        >
-          {copied ? (
-            <Check className="h-3.5 w-3.5 text-sage" aria-hidden="true" />
-          ) : (
-            <Copy className="h-3.5 w-3.5" aria-hidden="true" />
-          )}
-          {copied ? "Copied" : "Copy"}
-        </button>
-      </div>
-      <pre className="!my-0 !rounded-none !border-0">{children}</pre>
-    </div>
-  );
+function fenceInfo(node: unknown): { language?: string; meta?: string; source: string } {
+  const code = codeElement(node);
+  const className = code?.properties?.className;
+  const classes = Array.isArray(className)
+    ? className
+    : className
+      ? [className]
+      : [];
+  const match = classes.join(" ").match(/language-([\w-]+)/);
+  const meta = typeof code?.data?.meta === "string" ? code.data.meta : undefined;
+  return {
+    language: match?.[1],
+    meta,
+    source: plainText(code).replace(/\n$/, ""),
+  };
 }
 
 export function MarkdownContent({ content }: { content: string }) {
@@ -64,22 +56,14 @@ export function MarkdownContent({ content }: { content: string }) {
     <div className="lesson-prose">
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
-        rehypePlugins={[rehypeHighlight]}
+        rehypePlugins={[[rehypeHighlight, { plainText: ["preview"] }]]}
         components={{
-          pre({ children }) {
-            let language: string | undefined;
-            if (
-              children &&
-              typeof children === "object" &&
-              "props" in children
-            ) {
-              const className = (
-                children as { props?: { className?: string } }
-              ).props?.className;
-              const match = className?.match(/language-([\w-]+)/);
-              if (match) language = match[1];
+          pre({ node, children }) {
+            const fence = fenceInfo(node);
+            if (fence.language === "preview") {
+              return <DesignPreview source={fence.source} meta={fence.meta} />;
             }
-            return <CodeBlock language={language}>{children}</CodeBlock>;
+            return <CodeBlock language={fence.language}>{children}</CodeBlock>;
           },
         }}
       >

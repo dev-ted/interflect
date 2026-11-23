@@ -23,9 +23,10 @@ import { api } from "@/convex/_generated/api";
 import { TrackButton } from "@/components/dashboard/TrackButton";
 import { usePageContext } from "@/components/PageContextProvider";
 import { isAdminRole, PRO_PLAN_SLUG } from "@/lib/auth";
+import { courseLengthSeconds, formatLearningTime } from "@/lib/learning-time";
 
 function formatDuration(seconds: number): string {
-  return `${Math.max(1, Math.round(seconds / 60))} min`;
+  return formatLearningTime(seconds) || "0 min";
 }
 
 function plural(n: number, word: string) {
@@ -95,8 +96,12 @@ export function CourseDetailClient({ slug }: { slug: string }) {
       : 0;
   const freePreviewCount = allLessons.filter((l) => l.isFreePreview).length;
   const quizCount = allLessons.filter((l) => l.quizCount > 0).length;
-  const videoMinutes = Math.round(
-    allLessons.reduce((sum, l) => sum + l.durationSeconds, 0) / 60,
+  const lengthLabel = formatLearningTime(
+    courseLengthSeconds(
+      allLessons.reduce((sum, lesson) => sum + lesson.durationSeconds, 0),
+      course.estimatedHours,
+    ),
+    "long",
   );
 
   async function handleEnroll() {
@@ -155,7 +160,7 @@ export function CourseDetailClient({ slug }: { slug: string }) {
             )}
             <span className="chip capitalize">{course.level}</span>
             <span className="chip">{course.category}</span>
-            <span className="chip">{course.estimatedHours} hours</span>
+            {lengthLabel ? <span className="chip">{lengthLabel}</span> : null}
           </div>
 
           <h1 className="mt-4 text-3xl font-extrabold sm:text-4xl">
@@ -336,7 +341,7 @@ export function CourseDetailClient({ slug }: { slug: string }) {
             <h2 className="text-sm font-semibold">What&apos;s included</h2>
             <ul className="mt-3 space-y-2 text-sm text-mist">
               <li>{plural(course.totalLessons, "video lesson")}</li>
-              {videoMinutes > 0 && <li>{videoMinutes} minutes of video</li>}
+              {lengthLabel ? <li>About {lengthLabel} to finish</li> : null}
               <li>A written guide with every lesson</li>
               {quizCount > 0 && (
                 <li>

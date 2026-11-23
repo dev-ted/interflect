@@ -6,6 +6,7 @@ import ConvexClientProvider from "@/components/ConvexClientProvider";
 import { PageContextProvider } from "@/components/PageContextProvider";
 import { AppPreferences } from "@/components/brand/AppPreferences";
 import { VukoraWidget } from "@/components/vukora/VukoraWidget";
+import { TUTOR_ENABLED } from "@/convex/lib/features";
 import "./globals.css";
 
 const instrument = Instrument_Sans({
@@ -55,9 +56,11 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             <ConvexClientProvider>
               <PageContextProvider>
                 {children}
-                <Suspense fallback={null}>
-                  <VukoraWidget />
-                </Suspense>
+                {TUTOR_ENABLED && (
+                  <Suspense fallback={null}>
+                    <VukoraWidget />
+                  </Suspense>
+                )}
               </PageContextProvider>
             </ConvexClientProvider>
           </ClerkProvider>

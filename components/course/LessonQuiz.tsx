@@ -66,8 +66,6 @@ export function LessonQuiz({
           courseId,
           lessonId,
           answers: questions.map((q) => selections[q.id] ?? -1),
-          score,
-          total: questions.length,
         });
       } catch {
         toast.error("Could not save your quiz result.");

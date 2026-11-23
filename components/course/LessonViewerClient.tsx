@@ -26,6 +26,7 @@ import { useRefreshConvexAuth } from "@/components/ConvexClientProvider";
 import { usePageContext } from "@/components/PageContextProvider";
 import { isAdminRole, PRO_PLAN_ID, PRO_PLAN_SLUG } from "@/lib/auth";
 import { MuxVideoPlayer } from "./MuxVideoPlayer";
+import { LessonTranscript } from "./LessonTranscript";
 import { MarkdownContent } from "./MarkdownContent";
 import { LessonQuiz } from "./LessonQuiz";
 
@@ -56,6 +57,7 @@ export function LessonViewerClient() {
   const isTransitioning =
     liveData === undefined && sameCourseRetained !== undefined;
 
+  const videoRef = useRef<HTMLVideoElement>(null);
   const toggleComplete = useMutation(api.enrollments.toggleLessonComplete);
   const { isAuthenticated } = useConvexAuth();
   const { has } = useAuth();
@@ -206,7 +208,10 @@ export function LessonViewerClient() {
       <MuxVideoPlayer
         playbackId={data.lesson.muxPlaybackId}
         videoUrl={data.lesson.videoUrl}
+        videoFileUrl={data.lesson.videoFileUrl}
         title={data.lesson.title}
+        captions={data.lesson.transcript?.cues}
+        ref={videoRef}
       />
 
       <div className="mt-6">
@@ -259,6 +264,14 @@ export function LessonViewerClient() {
           </Link>
         )}
       </div>
+
+      {data.lesson.transcript && (
+        <LessonTranscript
+          key={data.lesson._id}
+          paragraphs={data.lesson.transcript.paragraphs}
+          videoRef={videoRef}
+        />
+      )}
 
       <section aria-labelledby="notes-heading" className="mt-8">
         <h2 id="notes-heading" className="sr-only">

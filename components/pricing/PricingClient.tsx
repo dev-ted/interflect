@@ -43,7 +43,7 @@ const PRO_FEATURES = [
 const FAQS = [
   {
     q: "How does yearly billing work?",
-    a: "Pro is $29 a month, or $290 a year. Paying yearly works out to about $24.17 a month, which is two months free.",
+    a: "Pro is R50 a month, or R500 a year. Paying yearly works out to about R41.67 a month, which is two months free.",
   },
   {
     q: "Can I try a Pro course first?",
@@ -122,7 +122,7 @@ export function PricingClient() {
           <section aria-labelledby="plan-free" className="card flex flex-col p-7">
             <h2 id="plan-free" className="text-lg font-semibold text-ink">Free</h2>
             <p className="mt-5 flex items-baseline gap-2 text-ink">
-              <Price value="$0" />
+              <Price value="R0" />
               <span className="text-mist">per month</span>
             </p>
             <p className="mt-2 text-sm text-mist">Free for as long as you like.</p>
@@ -166,11 +166,11 @@ export function PricingClient() {
           >
             <h2 id="plan-pro" className="text-lg font-semibold text-ink">Pro</h2>
             <p className="mt-5 flex items-baseline gap-2 text-ink">
-              <Price value={annual ? "$24.17" : "$29"} />
+              <Price value={annual ? "R41.67" : "R50"} />
               <span className="text-mist">per month</span>
             </p>
             <p className="mt-2 text-sm text-mist">
-              {annual ? "$290 billed yearly." : "Billed monthly."}
+              {annual ? "R500 billed yearly." : "Billed monthly."}
             </p>
 
             <div className="mt-7">
@@ -224,7 +224,7 @@ export function PricingClient() {
         </div>
 
         <p className="mt-6 text-center text-sm text-mist">
-          Prices in USD. Cancel any time from your account.
+          Prices in rands. Cancel any time from your account.
         </p>
 
         <section aria-labelledby="faq" className="mx-auto mt-24 max-w-2xl">

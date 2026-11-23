@@ -11,6 +11,7 @@ interface SeedLesson {
   slug: string;
   summary: string;
   isFreePreview: boolean;
+  /** Seconds for an average adult to finish the lesson page. See the course-creator skill. */
   durationSeconds: number;
   muxPlaybackId: string;
   markdownContent: string;
@@ -57,7 +58,7 @@ const SEED_COURSES: SeedCourse[] = [
     level: "beginner",
     tier: "free",
     featured: true,
-    estimatedHours: 2,
+    estimatedHours: 0.33,
     tags: ["Hierarchy", "Spacing", "Layout", "CSS grid"],
     modules: [
       {
@@ -71,7 +72,7 @@ const SEED_COURSES: SeedCourse[] = [
             summary:
               "Rank the content on a screen, then use size, weight, colour and position to make that ranking visible.",
             isFreePreview: true,
-            durationSeconds: 612,
+            durationSeconds: 360,
             muxPlaybackId: DEMO_MUX_PLAYBACK_ID,
             markdownContent: `# Hierarchy is a reading order
 
@@ -103,36 +104,61 @@ Use one or two levers per step down. Using all four at once usually overshoots.
 
 ## Before and after
 
-Before:
+Before, every line is the same size and colour, and the button is an unstyled control:
 
-\`\`\`html
+\`\`\`preview Before
 <div class="card">
   <p>Pro</p>
-  <p>$12 per month</p>
+  <p>R50 per month</p>
   <p>Everything in Free, plus quizzes and the tutor.</p>
-  <button>Upgrade</button>
+  <button type="button">Upgrade</button>
 </div>
+<style>
+.card {
+  max-width: 280px;
+  padding: 20px;
+  border: 1px solid #e5e5e5;
+  border-radius: 12px;
+  background: #ffffff;
+}
+.card p { margin: 0 0 8px; }
+.card button { margin-top: 8px; }
+</style>
 \`\`\`
 
-After:
+After, the price carries the card. The plan name stays small but distinct, and the description steps back:
 
-\`\`\`html
+\`\`\`preview After
 <div class="card">
   <p class="eyebrow">Pro</p>
-  <p class="price">$12 <span>per month</span></p>
+  <p class="price">R50 <span>per month</span></p>
   <p class="muted">Everything in Free, plus quizzes and the tutor.</p>
-  <button class="primary">Upgrade</button>
+  <button class="primary" type="button">Upgrade</button>
 </div>
-\`\`\`
-
-\`\`\`css
+<style>
+.card {
+  max-width: 280px;
+  padding: 20px;
+  border: 1px solid #e5e5e5;
+  border-radius: 12px;
+  background: #ffffff;
+}
+.card p { margin: 0; }
 .eyebrow { font-size: 0.875rem; font-weight: 600; color: #737373; }
-.price { font-size: 2rem; font-weight: 700; line-height: 1.1; }
+.price { margin-top: 4px; font-size: 2rem; font-weight: 700; line-height: 1.1; }
 .price span { font-size: 1rem; font-weight: 400; color: #737373; }
-.muted { color: #737373; }
+.muted { margin-top: 8px; color: #737373; }
+.primary {
+  margin-top: 16px;
+  background: #171717;
+  color: #ffffff;
+  border: 0;
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-weight: 600;
+}
+</style>
 \`\`\`
-
-The price now carries the card. The plan name is small but distinct thanks to weight and colour, and the description steps back.
 
 ## A quick test
 
@@ -193,7 +219,7 @@ Blur your eyes, or apply a heavy CSS blur in devtools, and look at the screen. T
             summary:
               "Replace ad hoc margins with a small spacing scale and use proximity to group related things.",
             isFreePreview: false,
-            durationSeconds: 708,
+            durationSeconds: 360,
             muxPlaybackId: DEMO_MUX_PLAYBACK_ID,
             markdownContent: `# Spacing on an 8 point scale
 
@@ -213,34 +239,63 @@ The value of a scale is not the number 8. It is that decisions become choices fr
 
 ## Before and after
 
-Before, a settings row collected margins over time:
+Before, a settings list collected margins over time. The heading sits tight on the text, then a large gap falls after it, and the two rows almost touch:
 
-\`\`\`css
-.row { padding: 13px 18px; }
-.row h3 { margin-bottom: 5px; }
-.row p { margin-bottom: 22px; }
+\`\`\`preview Before
+<div class="settings">
+  <div class="row">
+    <h3>Email</h3>
+    <p>Weekly notes about new lessons.</p>
+  </div>
+  <div class="row">
+    <h3>Theme</h3>
+    <p>Follow the system, or pick light or dark.</p>
+  </div>
+</div>
+<style>
+.row {
+  padding: 13px 18px;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+}
+.row h3 { margin: 0 0 5px; font-size: 1rem; }
+.row p { margin: 0 0 22px; color: #404040; }
+.settings { display: grid; }
+</style>
 \`\`\`
 
-After, the row uses the scale and the parent owns the spacing:
+After, the row uses the scale and the parent owns the spacing. The gap inside a row is 4px. The gap between rows is 24px:
 
-\`\`\`css
+\`\`\`preview After
+<div class="settings">
+  <div class="row">
+    <h3>Email</h3>
+    <p>Weekly notes about new lessons.</p>
+  </div>
+  <div class="row">
+    <h3>Theme</h3>
+    <p>Follow the system, or pick light or dark.</p>
+  </div>
+</div>
+<style>
 :root {
   --space-1: 4px;
   --space-2: 8px;
   --space-4: 16px;
   --space-6: 24px;
 }
-
 .row {
   display: grid;
   gap: var(--space-1);
   padding: var(--space-4) var(--space-6);
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
 }
-
-.settings {
-  display: grid;
-  gap: var(--space-6);
-}
+.row h3, .row p { margin: 0; }
+.row h3 { font-size: 1rem; }
+.row p { color: #404040; }
+.settings { display: grid; gap: var(--space-6); }
+</style>
 \`\`\`
 
 Using \`gap\` on the parent instead of margins on children removes a whole class of bugs: no collapsing margins, no stray space after the last item, and no need to remember which child carries the margin.
@@ -305,7 +360,7 @@ When you hand over a design or review a pull request, annotate gaps with their s
             summary:
               "Use a simple column grid and shared alignment edges so layouts look intentional at every width.",
             isFreePreview: false,
-            durationSeconds: 794,
+            durationSeconds: 480,
             muxPlaybackId: DEMO_MUX_PLAYBACK_ID,
             markdownContent: `# Grids and alignment
 
@@ -319,46 +374,111 @@ Count the distinct left edges on a screen. A dashboard with a heading, a filter 
 
 Twelve columns divide neatly into halves, thirds, quarters and sixths, which is why the number is so common. You do not need to use all twelve. Most product screens use a few spans: full width, two thirds plus one third, or three equal cards.
 
-\`\`\`css
+\`\`\`preview wide Twelve columns
+<div class="page">
+  <div class="main">Main, eight columns</div>
+  <div class="aside">Aside, four columns</div>
+</div>
+<style>
 .page {
   display: grid;
   grid-template-columns: repeat(12, minmax(0, 1fr));
   gap: 24px;
   max-width: 1200px;
   margin-inline: auto;
-  padding-inline: 16px;
 }
-
 .main { grid-column: span 8; }
 .aside { grid-column: span 4; }
-
-@media (max-width: 768px) {
-  .main,
-  .aside { grid-column: 1 / -1; }
+.main, .aside {
+  min-height: 96px;
+  padding: 16px;
+  border-radius: 8px;
+  background: #f5f5f5;
 }
+.aside { background: #e7f6f4; }
+@media (max-width: 768px) {
+  .main, .aside { grid-column: 1 / -1; }
+}
+</style>
 \`\`\`
 
-Note \`minmax(0, 1fr)\` instead of plain \`1fr\`. Without it, a long URL or code block inside a column can force that column wider than its share and break the grid.
+The tint only marks the two regions. Note \`minmax(0, 1fr)\` instead of plain \`1fr\`. Without it, a long URL or code block inside a column can force that column wider than its share and break the grid.
 
 ## Before and after
 
-Before: a profile header where the avatar, name and action button are each centred in their own flex box. Text baselines do not line up, and the button floats a few pixels lower than the name.
+Before, the avatar, the name and the button each sit in their own centred box. The name and the button do not share a baseline, and the button floats lower:
 
-After: one row with \`align-items: center\` for the avatar and a shared baseline for the name and button text.
+\`\`\`preview Before
+<header class="profile-header">
+  <div class="avatar">T</div>
+  <div class="name-wrap"><p>Teddy</p></div>
+  <div class="action-wrap"><button type="button">Edit profile</button></div>
+</header>
+<style>
+.profile-header { display: flex; gap: 16px; }
+.avatar {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 999px;
+  background: #171717;
+  color: #ffffff;
+  font-weight: 600;
+}
+.name-wrap, .action-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  border: 1px dashed #e5e5e5;
+}
+.name-wrap { min-height: 48px; }
+.action-wrap { min-height: 72px; }
+.name-wrap p { margin: 0; font-size: 1.25rem; }
+</style>
+\`\`\`
 
-\`\`\`css
+After, one row centres the avatar, and the name and the button share a baseline:
+
+\`\`\`preview After
+<header class="profile-header">
+  <div class="avatar">T</div>
+  <div class="meta">
+    <p>Teddy</p>
+    <button type="button">Edit profile</button>
+  </div>
+</header>
+<style>
 .profile-header {
   display: flex;
   align-items: center;
   gap: 16px;
 }
-
+.avatar {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 999px;
+  background: #171717;
+  color: #ffffff;
+  font-weight: 600;
+}
 .profile-header .meta {
   display: flex;
   align-items: baseline;
   gap: 8px;
   flex: 1;
 }
+.meta p { margin: 0; font-size: 1.25rem; }
+.meta button {
+  border: 0;
+  background: transparent;
+  padding: 0;
+  font-weight: 600;
+}
+</style>
 \`\`\`
 
 The name and the button label now sit on the same invisible line, which is what the eye checks first.
@@ -433,7 +553,7 @@ Sometimes mathematically aligned things look wrong. A play icon centred in a cir
     level: "beginner",
     tier: "pro",
     featured: false,
-    estimatedHours: 2,
+    estimatedHours: 0.38,
     tags: ["Typography", "Type scale", "Readability", "CSS"],
     modules: [
       {
@@ -447,7 +567,7 @@ Sometimes mathematically aligned things look wrong. A play icon centred in a cir
             summary:
               "Build a small modular scale, name its steps by role and stop inventing font sizes.",
             isFreePreview: true,
-            durationSeconds: 655,
+            durationSeconds: 480,
             muxPlaybackId: DEMO_MUX_PLAYBACK_ID,
             markdownContent: `# Choosing a type scale
 
@@ -483,9 +603,57 @@ Use rem so the scale follows the reader's browser font size setting. People who 
 
 ## Before and after
 
-Before, a modal used 15px for body, 17px for the title and 13px for helper text, chosen one at a time over several sprints.
+Before, a modal used 15px for body, 17px for the title and 13px for helper text, chosen one at a time over several sprints. The title barely clears the body:
 
-After, the modal uses three steps from the scale: \`--text-title\` for the heading, \`--text-body\` for the content and \`--text-caption\` for helper text. The title is now clearly a title, and the helper text is clearly secondary instead of almost the same.
+\`\`\`preview Before
+<div class="modal">
+  <h2>Delete this lesson?</h2>
+  <p>People enrolled in the course will lose their progress.</p>
+  <p class="help">You can undo this from the archive for 30 days.</p>
+</div>
+<style>
+.modal {
+  max-width: 360px;
+  padding: 20px;
+  border: 1px solid #e5e5e5;
+  border-radius: 12px;
+}
+.modal h2 { margin: 0 0 8px; font-size: 17px; font-weight: 600; }
+.modal p { margin: 0; font-size: 15px; }
+.modal .help { margin-top: 8px; font-size: 13px; color: #737373; }
+</style>
+\`\`\`
+
+After, the modal uses three steps from the scale: \`--text-title\` for the heading, \`--text-body\` for the content and \`--text-caption\` for helper text. The title is now clearly a title, and the helper text is clearly secondary:
+
+\`\`\`preview After
+<div class="modal">
+  <h2>Delete this lesson?</h2>
+  <p>People enrolled in the course will lose their progress.</p>
+  <p class="help">You can undo this from the archive for 30 days.</p>
+</div>
+<style>
+:root {
+  --text-caption: 0.75rem;
+  --text-body: 1rem;
+  --text-title: 1.5625rem;
+}
+.modal {
+  max-width: 360px;
+  padding: 20px;
+  border: 1px solid #e5e5e5;
+  border-radius: 12px;
+}
+.modal h2 {
+  margin: 0 0 8px;
+  font-size: var(--text-title);
+  font-weight: 700;
+  line-height: 1.15;
+}
+.modal p { margin: 0; font-size: var(--text-body); line-height: 1.5; }
+.modal .help { margin-top: 8px; font-size: var(--text-caption); color: #737373; }
+</style>
+\`\`\`
 
 ## Fluid sizes, sparingly
 
@@ -548,7 +716,7 @@ Keep body text fixed. Fluid body sizes make line length and spacing harder to re
             summary:
               "Keep lines readable with a measure of about 45 to 75 characters and line height that tightens as size grows.",
             isFreePreview: false,
-            durationSeconds: 590,
+            durationSeconds: 480,
             muxPlaybackId: DEMO_MUX_PLAYBACK_ID,
             markdownContent: `# Line length, line height and rhythm
 
@@ -570,9 +738,47 @@ CSS has a unit made for this:
 
 ## Before and after
 
-Before, a help article sat in a full-width container on a 1440px screen. Lines ran to about 180 characters and readers lost their place.
+Before, a help article sat in a full-width container. On a wide screen the lines run far past a comfortable measure, and the eye has a long way to travel back:
 
-After, the article is constrained to \`max-width: 65ch\` and centred, with the sidebar using the remaining space. Same content, noticeably easier to read, and the page looks more considered.
+\`\`\`preview wide Before
+<article class="article">
+  <p>When a help article stretches the full width of the window, each line holds far more than 75 characters. The eye has to travel a long way back to find the start of the next one, and readers lose their place even when the typeface and the size are fine. The same paragraph, set to a shorter measure, is easier to follow.</p>
+</article>
+<style>
+.article p { margin: 0; }
+</style>
+\`\`\`
+
+After, the article is constrained to \`max-width: 65ch\` and centred, with the sidebar using the remaining space. Same content, noticeably easier to read:
+
+\`\`\`preview wide After
+<div class="layout">
+  <article class="prose">
+    <p>When a help article stretches the full width of the window, each line holds far more than 75 characters. The eye has to travel a long way back to find the start of the next one, and readers lose their place even when the typeface and the size are fine. The same paragraph, set to a shorter measure, is easier to follow.</p>
+  </article>
+  <aside>In this lesson</aside>
+</div>
+<style>
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 160px;
+  gap: 32px;
+  align-items: start;
+}
+.prose { max-width: 65ch; margin-inline: auto; }
+.prose p { margin: 0; }
+aside {
+  padding: 12px;
+  border-radius: 8px;
+  background: #f5f5f5;
+  color: #737373;
+  font-size: 0.875rem;
+}
+@media (max-width: 640px) {
+  .layout { grid-template-columns: 1fr; }
+}
+</style>
+\`\`\`
 
 ## Line height scales the other way
 
@@ -650,7 +856,7 @@ Labels, buttons and table cells are single lines, so measure rarely applies. Wha
             summary:
               "Create text hierarchy with weight and neutral colours while keeping every level readable.",
             isFreePreview: false,
-            durationSeconds: 676,
+            durationSeconds: 420,
             muxPlaybackId: DEMO_MUX_PLAYBACK_ID,
             markdownContent: `# Weight, colour and contrast in text
 
@@ -678,29 +884,56 @@ On a white background, #737373 has a contrast ratio of about 4.7 to 1, which pas
 
 ## Before and after
 
-Before, a table used 14px bold for column headers, 14px regular for cells and 12px light grey (#A3A3A3) for timestamps. The timestamps were hard to read and failed contrast.
+Before, a table used 14px bold for column headers, 14px regular for cells and 12px light grey (#A3A3A3) for timestamps. The timestamps are hard to read:
 
-After:
-
-\`\`\`css
-th {
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: var(--text-muted);
-}
-
-td {
-  font-size: 0.875rem;
-  color: var(--text-strong);
-}
-
-td time {
-  color: var(--text-muted);
-  font-variant-numeric: tabular-nums;
-}
+\`\`\`preview wide Before
+<table>
+  <thead>
+    <tr><th>Lesson</th><th>Score</th><th>Completed</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Hierarchy</td><td>2 / 3</td><td><time>09:41</time></td></tr>
+    <tr><td>Spacing</td><td>3 / 3</td><td><time>11:05</time></td></tr>
+  </tbody>
+</table>
+<style>
+table { width: 100%; border-collapse: collapse; }
+th, td { padding: 8px 12px; text-align: left; border-bottom: 1px solid #e5e5e5; }
+th { font-size: 14px; font-weight: 700; }
+td { font-size: 14px; }
+td time { font-size: 12px; color: #a3a3a3; }
+</style>
 \`\`\`
 
-Headers step back through colour and gain clarity through weight. Timestamps are the same size as the cells and readable, but clearly secondary. Tabular numerals keep digits the same width so columns of numbers line up.
+After, headers step back through colour and gain clarity through weight. Timestamps are the same size as the cells and readable, but clearly secondary. Tabular numerals keep digits the same width so columns of numbers line up:
+
+\`\`\`preview wide After
+<table>
+  <thead>
+    <tr><th>Lesson</th><th>Score</th><th>Completed</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Hierarchy</td><td>2 / 3</td><td><time>09:41</time></td></tr>
+    <tr><td>Spacing</td><td>3 / 3</td><td><time>11:05</time></td></tr>
+  </tbody>
+</table>
+<style>
+:root {
+  --text-strong: #171717;
+  --text-muted: #737373;
+}
+table { width: 100%; border-collapse: collapse; }
+th, td {
+  padding: 8px 12px;
+  text-align: left;
+  border-bottom: 1px solid #e5e5e5;
+  font-size: 0.875rem;
+}
+th { font-weight: 600; color: var(--text-muted); }
+td { color: var(--text-strong); }
+td time { color: var(--text-muted); font-variant-numeric: tabular-nums; }
+</style>
+\`\`\`
 
 ## Do not rely on colour alone
 
@@ -770,7 +1003,7 @@ Small uppercase labels benefit from a little extra tracking, around 0.04em to 0.
     level: "intermediate",
     tier: "pro",
     featured: false,
-    estimatedHours: 3,
+    estimatedHours: 0.4,
     tags: ["Accessibility", "Focus", "Forms", "React"],
     modules: [
       {
@@ -784,7 +1017,7 @@ Small uppercase labels benefit from a little extra tracking, around 0.04em to 0.
             summary:
               "Design focus rings that are visible on every background and only appear when they help.",
             isFreePreview: true,
-            durationSeconds: 640,
+            durationSeconds: 480,
             muxPlaybackId: DEMO_MUX_PLAYBACK_ID,
             markdownContent: `# Focus states people can see
 
@@ -792,25 +1025,43 @@ Keyboard users move through an interface one focusable element at a time. The fo
 
 ## The classic mistake
 
-\`\`\`css
-/* Before */
-button:focus {
-  outline: none;
+\`\`\`preview Before
+<button type="button">Save changes</button>
+<style>
+button {
+  background: #171717;
+  color: #ffffff;
+  border: 0;
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-weight: 600;
 }
+button:focus { outline: none; }
+</style>
 \`\`\`
 
-This line usually arrives because a designer disliked the ring that appeared after a mouse click. It fixes that complaint and breaks keyboard navigation for everyone.
+This line usually arrives because a designer disliked the ring that appeared after a mouse click. It fixes that complaint and breaks keyboard navigation for everyone. The button above is what remains: nothing shows where keyboard focus is.
 
 ## Use focus-visible
 
-Browsers decide when focus should be shown. \`:focus-visible\` matches when the user is navigating with a keyboard, and generally not after a mouse click on a button.
+Browsers decide when focus should be shown. \`:focus-visible\` matches when the user is navigating with a keyboard, and generally not after a mouse click on a button. The picture shows that keyboard ring:
 
-\`\`\`css
-/* After */
+\`\`\`preview After
+<button class="show-focus" type="button">Save changes</button>
+<style>
+button {
+  background: #171717;
+  color: #ffffff;
+  border: 0;
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-weight: 600;
+}
 button:focus-visible {
   outline: 2px solid #14b8a6;
   outline-offset: 2px;
 }
+</style>
 \`\`\`
 
 You get a clear ring for keyboard users and no ring after a click. Text inputs still show focus on click, because people need to know where they are typing.
@@ -822,15 +1073,34 @@ A focus indicator should have at least 3 to 1 contrast against the colours aroun
 - **Offset the outline** so it sits on the page background rather than on the component.
 - **Use a double ring** for components that appear on varied backgrounds.
 
-\`\`\`css
+\`\`\`preview On a coloured control
+<div class="band">
+  <button class="button show-focus" type="button">Continue</button>
+</div>
+<style>
+.band {
+  display: inline-block;
+  padding: 24px;
+  border-radius: 12px;
+  background: #14b8a6;
+}
+.button {
+  background: #0f766e;
+  color: #ffffff;
+  border: 0;
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-weight: 600;
+}
 .button:focus-visible {
   outline: 2px solid #171717;
   outline-offset: 2px;
   box-shadow: 0 0 0 4px #ffffff;
 }
+</style>
 \`\`\`
 
-Prefer \`outline\` over \`box-shadow\` alone. Outlines remain visible in Windows high contrast mode, where box shadows are removed.
+The teal band is the varied background. The white halo keeps the dark outline visible on it. Prefer \`outline\` over \`box-shadow\` alone. Outlines remain visible in Windows high contrast mode, where box shadows are removed.
 
 ## Focus order and focus management
 
@@ -901,7 +1171,7 @@ Unplug the mouse, or simply stop touching it. Press Tab through the page. At eve
             summary:
               "Choose between button and link by what the control does, and get keyboard support for free.",
             isFreePreview: false,
-            durationSeconds: 582,
+            durationSeconds: 360,
             muxPlaybackId: DEMO_MUX_PLAYBACK_ID,
             markdownContent: `# Buttons, links and the right element
 
@@ -1008,7 +1278,7 @@ A disabled button cannot be focused, so people using a keyboard may not discover
             summary:
               "Connect labels, hints and error messages to their inputs so everyone knows what to enter and what went wrong.",
             isFreePreview: false,
-            durationSeconds: 735,
+            durationSeconds: 600,
             muxPlaybackId: DEMO_MUX_PLAYBACK_ID,
             markdownContent: `# Labelling forms and errors
 
@@ -1016,36 +1286,92 @@ Forms are where interfaces ask people for effort. Every unclear label or silent 
 
 ## Placeholders are not labels
 
-Before:
+Before, the only prompt is the placeholder. It vanishes as soon as someone starts typing, it usually has low contrast, and many screen readers do not treat it as a reliable name:
 
-\`\`\`html
+\`\`\`preview Before
 <input type="email" placeholder="Email address" />
+<style>
+input {
+  width: 100%;
+  max-width: 320px;
+  padding: 8px 12px;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+}
+</style>
 \`\`\`
 
-The placeholder vanishes as soon as someone starts typing, it usually has low contrast, and many screen readers do not treat it as a reliable name. After:
+After, a visible label stays put. Clicking it focuses the input, and assistive technology announces it:
 
-\`\`\`html
-<label for="email">Email address</label>
-<input id="email" type="email" autocomplete="email" />
+\`\`\`preview After
+<div class="field">
+  <label for="email">Email address</label>
+  <input id="email" type="email" autocomplete="email" value="ada@example.com" />
+</div>
+<style>
+.field { display: grid; gap: 6px; max-width: 320px; }
+label { font-weight: 600; font-size: 0.875rem; }
+input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+}
+</style>
 \`\`\`
 
-A visible label stays put, clicking it focuses the input, and assistive technology announces it. The \`autocomplete\` attribute lets browsers and password managers fill the field, which helps everyone and especially people with motor or memory impairments.
+The \`autocomplete\` attribute lets browsers and password managers fill the field, which helps everyone and especially people with motor or memory impairments.
 
 ## Hints
 
 Format requirements belong in a hint connected to the input, not hidden in a tooltip:
 
-\`\`\`html
-<label for="password">Password</label>
-<p id="password-hint">At least 12 characters.</p>
-<input id="password" type="password" aria-describedby="password-hint" />
+\`\`\`preview Hint
+<div class="field">
+  <label for="password">Password</label>
+  <p id="password-hint">At least 12 characters.</p>
+  <input id="password" type="password" aria-describedby="password-hint" />
+</div>
+<style>
+.field { display: grid; gap: 6px; max-width: 320px; }
+label { font-weight: 600; font-size: 0.875rem; }
+#password-hint { margin: 0; color: #737373; font-size: 0.875rem; }
+input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+}
+</style>
 \`\`\`
 
 \`aria-describedby\` makes the hint part of what is announced when the field receives focus.
 
 ## Errors that can be found
 
-A good error message says what went wrong and how to fix it, appears next to the field and is connected to it.
+A good error message says what went wrong and how to fix it, appears next to the field and is connected to it:
+
+\`\`\`preview Error
+<div class="field">
+  <label for="email">Email address</label>
+  <input id="email" type="email" autocomplete="email" aria-invalid="true" aria-describedby="email-error" />
+  <p id="email-error">Enter an email address like name@example.com</p>
+</div>
+<style>
+.field { display: grid; gap: 6px; max-width: 320px; }
+label { font-weight: 600; font-size: 0.875rem; }
+input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+}
+input[aria-invalid="true"] { border-color: #dc2626; }
+#email-error { margin: 0; color: #dc2626; font-size: 0.875rem; font-weight: 600; }
+</style>
+\`\`\`
+
+The same structure in a component:
 
 \`\`\`tsx
 function EmailField({ error }: { error?: string }) {
@@ -1143,7 +1469,7 @@ Related controls, such as a set of radio buttons, belong in a \`<fieldset>\` wit
     level: "intermediate",
     tier: "pro",
     featured: false,
-    estimatedHours: 2,
+    estimatedHours: 0.25,
     tags: ["Design tokens", "CSS custom properties", "Theming", "Design systems"],
     modules: [
       {
@@ -1157,7 +1483,7 @@ Related controls, such as a set of radio buttons, belong in a \`<fieldset>\` wit
             summary:
               "Audit the values in a codebase and consolidate them into a small set of primitive tokens.",
             isFreePreview: true,
-            durationSeconds: 702,
+            durationSeconds: 420,
             muxPlaybackId: DEMO_MUX_PLAYBACK_ID,
             markdownContent: `# From hard-coded values to tokens
 
@@ -1200,29 +1526,51 @@ Map every audited value to its nearest primitive. The three almost-identical bor
 
 ## Before and after
 
-Before:
+Before, the card hard-codes a near-miss on the radius and the padding:
 
-\`\`\`css
+\`\`\`preview Before
+<div class="card">
+  <p class="name">Pro</p>
+  <p>Quizzes and the tutor.</p>
+</div>
+<style>
 .card {
+  max-width: 280px;
   background: #fff;
   border: 1px solid #e4e4e4;
   border-radius: 7px;
   padding: 15px;
 }
+.card p { margin: 0; }
+.card .name { margin-bottom: 4px; font-weight: 600; }
+</style>
 \`\`\`
 
-After:
+After, the same card uses the primitives. It looks almost identical, but now it moves with the system. Change \`--radius-2\` and every card, input and menu that uses it follows:
 
-\`\`\`css
+\`\`\`preview After
+<div class="card">
+  <p class="name">Pro</p>
+  <p>Quizzes and the tutor.</p>
+</div>
+<style>
+:root {
+  --neutral-0: #ffffff;
+  --neutral-200: #e5e5e5;
+  --space-4: 16px;
+  --radius-2: 8px;
+}
 .card {
+  max-width: 280px;
   background: var(--neutral-0);
   border: 1px solid var(--neutral-200);
   border-radius: var(--radius-2);
   padding: var(--space-4);
 }
+.card p { margin: 0; }
+.card .name { margin-bottom: 4px; font-weight: 600; }
+</style>
 \`\`\`
-
-The card looks almost identical, but now it moves with the system. Change \`--radius-2\` and every card, input and menu that uses it follows.
 
 ## One source, many outputs
 
@@ -1269,7 +1617,7 @@ Teams often keep tokens in a JSON file and generate CSS, Tailwind configuration 
             summary:
               "Name tokens by purpose so components stay the same while themes swap the values underneath.",
             isFreePreview: false,
-            durationSeconds: 768,
+            durationSeconds: 480,
             muxPlaybackId: DEMO_MUX_PLAYBACK_ID,
             markdownContent: `# Semantic tokens and theming
 
@@ -1322,20 +1670,58 @@ The media query follows the operating system, and the \`data-theme\` attribute l
 
 ## Before and after
 
-Before, a badge hard-coded its colours and needed a separate \`.badge-dark\` class:
+Before, a badge hard-coded its colours and needed a separate \`.badge-dark\` class. The dark badge is a second component, not a theme:
 
-\`\`\`css
-.badge { background: #f5f5f5; color: #171717; }
-.dark .badge-dark { background: #262626; color: #fff; }
+\`\`\`preview Before
+<p>
+  <span class="badge">New</span>
+  <span class="badge badge-dark">New</span>
+</p>
+<style>
+.badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: #f5f5f5;
+  color: #171717;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+.badge-dark { background: #262626; color: #fff; }
+p { display: flex; gap: 8px; margin: 0; }
+</style>
 \`\`\`
 
-After, the badge has one rule and works in both themes:
+After, the badge has one rule. The light and dark surfaces swap the semantic tokens, and the component stays the same:
 
-\`\`\`css
+\`\`\`preview After
+<div class="themes">
+  <div class="light"><span class="badge">New</span></div>
+  <div class="dark"><span class="badge">New</span></div>
+</div>
+<style>
+.light {
+  --color-surface-subtle: #f5f5f5;
+  --color-text: #171717;
+}
+.dark {
+  --color-surface-subtle: #262626;
+  --color-text: #ffffff;
+  background: #171717;
+}
+.themes { display: flex; gap: 12px; }
+.light, .dark { padding: 16px; border-radius: 12px; }
+.light { border: 1px solid #e5e5e5; }
 .badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
   background: var(--color-surface-subtle);
   color: var(--color-text);
+  font-size: 0.75rem;
+  font-weight: 600;
 }
+</style>
 \`\`\`
 
 ## Naming that lasts
@@ -1472,6 +1858,82 @@ async function runSeed(ctx: MutationCtx) {
 
   return { createdCourses, createdModules, createdLessons };
 }
+
+/** Patch lesson notes for courses that were already seeded. Leaves progress alone. */
+export const syncSeededLessonMarkdown = internalMutation({
+  args: {},
+  handler: async (ctx) => {
+    let updated = 0;
+    const now = Date.now();
+    for (const courseData of SEED_COURSES) {
+      const course = await ctx.db
+        .query("courses")
+        .withIndex("by_slug", (q) => q.eq("slug", courseData.slug))
+        .unique();
+      if (!course) continue;
+      for (const mod of courseData.modules) {
+        for (const lessonData of mod.lessons) {
+          const lesson = await ctx.db
+            .query("lessons")
+            .withIndex("by_course_and_slug", (q) =>
+              q.eq("courseId", course._id).eq("slug", lessonData.slug),
+            )
+            .unique();
+          if (!lesson || lesson.markdownContent === lessonData.markdownContent) continue;
+          await ctx.db.patch(lesson._id, {
+            markdownContent: lessonData.markdownContent,
+            updatedAt: now,
+          });
+          updated++;
+        }
+      }
+    }
+    return { updated };
+  },
+});
+
+/** Patch completion times for courses that were already seeded. Leaves progress alone. */
+export const syncSeededDurations = internalMutation({
+  args: {},
+  handler: async (ctx) => {
+    let lessonsUpdated = 0;
+    let coursesUpdated = 0;
+    const now = Date.now();
+    for (const courseData of SEED_COURSES) {
+      const course = await ctx.db
+        .query("courses")
+        .withIndex("by_slug", (q) => q.eq("slug", courseData.slug))
+        .unique();
+      if (!course) continue;
+      if (course.estimatedHours !== courseData.estimatedHours) {
+        await ctx.db.patch(course._id, {
+          estimatedHours: courseData.estimatedHours,
+          updatedAt: now,
+        });
+        coursesUpdated++;
+      }
+      for (const mod of courseData.modules) {
+        for (const lessonData of mod.lessons) {
+          const lesson = await ctx.db
+            .query("lessons")
+            .withIndex("by_course_and_slug", (q) =>
+              q.eq("courseId", course._id).eq("slug", lessonData.slug),
+            )
+            .unique();
+          if (!lesson || lesson.durationSeconds === lessonData.durationSeconds) {
+            continue;
+          }
+          await ctx.db.patch(lesson._id, {
+            durationSeconds: lessonData.durationSeconds,
+            updatedAt: now,
+          });
+          lessonsUpdated++;
+        }
+      }
+    }
+    return { lessonsUpdated, coursesUpdated };
+  },
+});
 
 export const seedCourses = internalMutation({
   args: {},

@@ -10,6 +10,9 @@ import {
 import { quizQuestionValidator } from "./schema";
 import { publicCourse } from "./lib/features";
 import { parseVideoUrl, SUPPORTED_VIDEO_HINT } from "./lib/video";
+import { presentCourse, thumbnailUrlFor } from "./lib/media";
+import { clearTranscript, getTranscript } from "./lib/transcripts";
+import { canAccessLesson } from "./lib/access";
 
 export const listPublished = query({
   args: {
@@ -27,7 +30,8 @@ export const listPublished = query({
       .take(maxCourses)
       .then((rows) => rows.map(publicCourse));
 
-    const filtered = courses.filter((c) => {
+    const visible = await Promise.all(courses.map((course) => presentCourse(ctx, course)));
+    const filtered = visible.filter((c) => {
       if (args.tier && c.tier !== args.tier) return false;
       if (args.category && c.category !== args.category) return false;
       return true;
@@ -106,7 +110,8 @@ export const getCourseBySlug = query({
       .query("courses")
       .withIndex("by_slug", (q) => q.eq("slug", args.slug))
       .unique();
-    const course = stored && publicCourse(stored);
+    const course =
+      stored && (await presentCourse(ctx, publicCourse(stored)));
 
     if (!course || (!course.published && !isAdmin)) {
       return null;
@@ -157,7 +162,9 @@ export const getCourseBySlug = query({
           isFreePreview: lesson.isFreePreview,
           durationSeconds: lesson.durationSeconds,
           muxStatus: lesson.muxStatus,
-          hasVideo: Boolean(lesson.muxPlaybackId || lesson.videoUrl),
+          hasVideo: Boolean(
+            lesson.videoStorageId || lesson.muxPlaybackId || lesson.videoUrl,
+          ),
           quizCount: lesson.quiz?.length ?? 0,
           completed: completedSet.has(lesson._id),
         }));
@@ -309,6 +316,14 @@ export const getLessonBySlug = query({
 
     const canAccess =
       course.tier === "free" || lesson.isFreePreview || hasProAccess;
+    const videoFileUrl =
+      canAccess && lesson.videoStorageId
+        ? await ctx.storage.getUrl(lesson.videoStorageId)
+        : null;
+    const transcriptRow = videoFileUrl ? await getTranscript(ctx, lesson._id) : null;
+    const transcript = transcriptRow
+      ? { paragraphs: transcriptRow.paragraphs, cues: transcriptRow.cues }
+      : null;
 
     return {
       course: {
@@ -331,8 +346,11 @@ export const getLessonBySlug = query({
         durationSeconds: lesson.durationSeconds,
         muxStatus: lesson.muxStatus,
         markdownContent: canAccess ? lesson.markdownContent : "",
-        muxPlaybackId: canAccess ? (lesson.muxPlaybackId ?? null) : null,
-        videoUrl: canAccess ? (lesson.videoUrl ?? null) : null,
+        muxPlaybackId:
+          canAccess && !videoFileUrl ? (lesson.muxPlaybackId ?? null) : null,
+        videoUrl: canAccess && !videoFileUrl ? (lesson.videoUrl ?? null) : null,
+        videoFileUrl,
+        transcript,
         quiz: canAccess ? (lesson.quiz ?? []) : [],
       },
       isLocked: !canAccess,
@@ -359,16 +377,19 @@ export const getCatalogSnapshot = query({
   args: {
     courseSlug: v.optional(v.string()),
     lessonSlug: v.optional(v.string()),
+    // Skip the catalog scan when only the active lesson is needed.
+    lessonOnly: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {
-    const courses = await ctx.db
+    const identity = await getOptionalIdentity(ctx);
+    const storedCourses = await ctx.db
       .query("courses")
       .withIndex("by_published_and_order", (q) => q.eq("published", true))
       .order("asc")
-      .take(50)
-      .then((rows) => rows.map(publicCourse));
+      .take(50);
+    const courses = storedCourses.map(publicCourse);
 
-    const catalog = await Promise.all(
+    const catalog = args.lessonOnly ? [] : await Promise.all(
       courses.map(async (course) => {
         const modules = await ctx.db
           .query("modules")
@@ -420,7 +441,7 @@ export const getCatalogSnapshot = query({
     } | null = null;
 
     if (args.courseSlug && args.lessonSlug) {
-      const course = courses.find((c) => c.slug === args.courseSlug);
+      const course = storedCourses.find((c) => c.slug === args.courseSlug);
       if (course) {
         const lesson = await ctx.db
           .query("lessons")
@@ -428,7 +449,8 @@ export const getCatalogSnapshot = query({
             q.eq("courseId", course._id).eq("slug", args.lessonSlug!),
           )
           .unique();
-        if (lesson) {
+        // Lesson text is paid content: only hand it to someone who could open the lesson.
+        if (lesson && canAccessLesson(course, lesson, identity)) {
           activeLesson = {
             courseSlug: course.slug,
             courseTitle: course.title,
@@ -477,7 +499,7 @@ export const listAllAdmin = query({
           .take(500);
 
         return {
-          ...course,
+          ...(await presentCourse(ctx, course)),
           moduleCount: modules.length,
           lessonCount: lessons.length,
           freePreviewCount: lessons.filter((l) => l.isFreePreview).length,
@@ -508,6 +530,7 @@ export const getCourseAdmin = query({
 
     return {
       ...course,
+      thumbnailPreviewUrl: await thumbnailUrlFor(ctx, course),
       modules: modules.map((mod) => ({
         ...mod,
         lessons: allLessons
@@ -634,6 +657,7 @@ export const deleteCourse = mutation({
       .withIndex("by_course", (q) => q.eq("courseId", args.courseId))
       .take(500);
     for (const lesson of lessons) {
+      await clearTranscript(ctx, lesson._id);
       await ctx.db.delete("lessons", lesson._id);
     }
     const modules = await ctx.db
@@ -708,6 +732,7 @@ export const deleteModule = mutation({
       .withIndex("by_module_and_order", (q) => q.eq("moduleId", args.moduleId))
       .take(200);
     for (const lesson of lessons) {
+      await clearTranscript(ctx, lesson._id);
       await ctx.db.delete("lessons", lesson._id);
     }
     await ctx.db.delete("modules", args.moduleId);
@@ -816,12 +841,22 @@ export const updateLesson = mutation({
     await requireAdmin(ctx);
     const { lessonId, videoUrl, ...fields } = args;
     const link = videoUrl === undefined ? undefined : checkVideoUrl(videoUrl);
+    if (link || fields.muxPlaybackId) await clearTranscript(ctx, lessonId);
     await ctx.db.patch("lessons", lessonId, {
       ...fields,
       // One video source per lesson: a link replaces the Mux upload, and a Mux upload replaces the link.
       ...(videoUrl !== undefined && { videoUrl: link }),
-      ...(link && { muxPlaybackId: undefined, muxAssetId: undefined, muxUploadId: undefined, muxStatus: "idle" as const }),
-      ...(fields.muxPlaybackId && videoUrl === undefined && { videoUrl: undefined }),
+      ...(link && {
+        muxPlaybackId: undefined,
+        muxAssetId: undefined,
+        muxUploadId: undefined,
+        muxStatus: "idle" as const,
+        videoStorageId: undefined,
+      }),
+      ...(fields.muxPlaybackId && {
+        videoUrl: undefined,
+        videoStorageId: undefined,
+      }),
       updatedAt: Date.now(),
     });
     return null;
@@ -832,6 +867,7 @@ export const deleteLesson = mutation({
   args: { lessonId: v.id("lessons") },
   handler: async (ctx, args) => {
     await requireAdmin(ctx);
+    await clearTranscript(ctx, args.lessonId);
     await ctx.db.delete("lessons", args.lessonId);
     return null;
   },
