@@ -2,3 +2,5 @@ allowBuilds:
   esbuild: true
   sharp: false
   unrs-resolver: false
+patchedDependencies:
+  '@clerk/nextjs@7.10.4': patches/@clerk__nextjs@7.10.4.patch

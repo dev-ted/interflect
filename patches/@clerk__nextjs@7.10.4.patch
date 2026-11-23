@@ -1,0 +1,24 @@
+diff --git a/dist/cjs/pages/ClerkProvider.js b/dist/cjs/pages/ClerkProvider.js
+index 2631ff03a4b4988fb42385567e70d971973ea29c..c4f1138ac0427672ada9a7d0e01b4209b768681f 100644
+--- a/dist/cjs/pages/ClerkProvider.js
++++ b/dist/cjs/pages/ClerkProvider.js
+@@ -43,7 +43,6 @@ var import_router_telemetry = require("../utils/router-telemetry");
+ var import_ClerkScripts = require("./ClerkScripts");
+ (0, import_internal.setErrorThrowerOptions)({ packageName: "@clerk/nextjs" });
+ (0, import_internal.setClerkJSLoadingErrorPackageName)("@clerk/nextjs");
+-import_internal.InternalClerkProvider.displayName = "ReactClerkProvider";
+ function ClerkProvider({ children, ...props }) {
+   var _a;
+   const { __internal_invokeMiddlewareOnAuthStateChange = true } = props;
+diff --git a/dist/esm/pages/ClerkProvider.js b/dist/esm/pages/ClerkProvider.js
+index 12bdaa1eddbde4802971ec7c321ce84bde28fc28..b46e0b2e6f30c95908df4289404fd5f89c82c3c9 100644
+--- a/dist/esm/pages/ClerkProvider.js
++++ b/dist/esm/pages/ClerkProvider.js
+@@ -15,7 +15,6 @@ import { RouterTelemetry } from "../utils/router-telemetry";
+ import { ClerkScripts } from "./ClerkScripts";
+ setErrorThrowerOptions({ packageName: "@clerk/nextjs" });
+ setClerkJSLoadingErrorPackageName("@clerk/nextjs");
+-ReactClerkProvider.displayName = "ReactClerkProvider";
+ function ClerkProvider({ children, ...props }) {
+   var _a;
+   const { __internal_invokeMiddlewareOnAuthStateChange = true } = props;
