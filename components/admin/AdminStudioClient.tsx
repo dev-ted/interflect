@@ -430,12 +430,15 @@ function CourseForm({
 function VideoChip({
   status,
   hasPlaybackId,
+  hasLink = false,
 }: {
   status: "idle" | "waiting" | "ready" | "errored";
   hasPlaybackId: boolean;
+  hasLink?: boolean;
 }) {
-  const [dot, label] =
-    status === "errored"
+  const [dot, label] = hasLink
+    ? ["bg-success", "Video link"]
+    : status === "errored"
       ? ["bg-danger", "Video error"]
       : hasPlaybackId
         ? ["bg-success", "Video ready"]
@@ -1044,6 +1047,7 @@ function AdminStudioAuthenticated() {
                                     <VideoChip
                                       status={lesson.muxStatus}
                                       hasPlaybackId={Boolean(lesson.muxPlaybackId)}
+                                      hasLink={Boolean(lesson.videoUrl)}
                                     />
                                     <span className="chip">
                                       {plural(lesson.quiz?.length ?? 0, "question")}

@@ -205,6 +205,7 @@ export function LessonViewerClient() {
     <>
       <MuxVideoPlayer
         playbackId={data.lesson.muxPlaybackId}
+        videoUrl={data.lesson.videoUrl}
         title={data.lesson.title}
       />
 
