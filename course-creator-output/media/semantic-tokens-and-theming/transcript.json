@@ -1,0 +1,190 @@
+{
+ "paragraphs": [
+  {
+   "start": 0.0,
+   "text": "Primitive tokens tell you what a value is. Semantic tokens tell you what it is for. That second layer is what makes theming, rebrands, and dark mode manageable. You will keep components on role names, and swap only the mapping when the theme changes."
+  },
+  {
+   "start": 17.25,
+   "text": "If a button uses teal-500 directly, dark mode means finding every component that uses teal and deciding, one by one, what it should become. The component knows too much about the palette. A semantic token describes the role instead: surface, border, text, accent, focus. Components use only semantic tokens. Primitives are referenced only inside the token layer."
+  },
+  {
+   "start": 45.58,
+   "text": "Dark mode becomes a new mapping, not a new set of components. The media query follows the operating system. The data-theme attribute lets a person override it. The selector skips the dark mapping when someone has pinned light. The accent shifts to a lighter teal in dark mode so it keeps enough contrast against a dark surface. A colour that works on white can be too dark on near-black."
+  },
+  {
+   "start": 72.65,
+   "text": "Before, the badge hard-coded its colours and needed a separate dark class. After, it has one rule and works in both themes, because surface-subtle and text point somewhere else when the theme changes."
+  },
+  {
+   "start": 86.38,
+   "text": "Good semantic names describe role and, when needed, state. Text muted. Border strong. Accent hover. Avoid names that describe appearance, like light grey, because the name stops making sense the moment the theme changes. Keep the layer small. If you find yourself creating a token for the settings page card border, a variable inside that component is a better home."
+  },
+  {
+   "start": 113.92,
+   "text": "Components consume semantic tokens. Only the token layer touches primitives. Themes are alternate mappings from semantic names to primitive values. Name by role and state, not by appearance, and keep the layer small."
+  }
+ ],
+ "cues": [
+  {
+   "start": 0.0,
+   "end": 3.02,
+   "text": "Primitive tokens tell you what a value is."
+  },
+  {
+   "start": 3.08,
+   "end": 5.94,
+   "text": "Semantic tokens tell you what it is for."
+  },
+  {
+   "start": 6.22,
+   "end": 9.22,
+   "text": "That second layer is what\nmakes theming, rebrands,"
+  },
+  {
+   "start": 9.22,
+   "end": 11.12,
+   "text": "and dark mode manageable."
+  },
+  {
+   "start": 11.52,
+   "end": 16.74,
+   "text": "You will keep components on role names, and\nswap only the mapping when the theme changes."
+  },
+  {
+   "start": 17.25,
+   "end": 20.4,
+   "text": "If a button uses teal-500 directly,"
+  },
+  {
+   "start": 20.54,
+   "end": 24.98,
+   "text": "dark mode means finding every\ncomponent that uses teal and deciding,"
+  },
+  {
+   "start": 24.98,
+   "end": 27.48,
+   "text": "one by one, what it should become."
+  },
+  {
+   "start": 27.8,
+   "end": 30.54,
+   "text": "The component knows too\nmuch about the palette."
+  },
+  {
+   "start": 31.02,
+   "end": 35.04,
+   "text": "A semantic token describes\nthe role instead: surface,"
+  },
+  {
+   "start": 35.13,
+   "end": 38.08,
+   "text": "border, text, accent, focus."
+  },
+  {
+   "start": 38.45,
+   "end": 41.38,
+   "text": "Components use only semantic tokens."
+  },
+  {
+   "start": 41.62,
+   "end": 45.24,
+   "text": "Primitives are referenced\nonly inside the token layer."
+  },
+  {
+   "start": 45.58,
+   "end": 49.58,
+   "text": "Dark mode becomes a new mapping,\nnot a new set of components."
+  },
+  {
+   "start": 50.17,
+   "end": 53.02,
+   "text": "The media query follows\nthe operating system."
+  },
+  {
+   "start": 53.28,
+   "end": 56.98,
+   "text": "The data-theme attribute\nlets a person override it."
+  },
+  {
+   "start": 57.12,
+   "end": 60.96,
+   "text": "The selector skips the dark mapping\nwhen someone has pinned light."
+  },
+  {
+   "start": 61.42,
+   "end": 66.58,
+   "text": "The accent shifts to a lighter teal in dark\nmode so it keeps enough contrast against"
+  },
+  {
+   "start": 66.58,
+   "end": 72.65,
+   "text": "a dark surface. A colour that works on\nwhite can be too dark on near-black."
+  },
+  {
+   "start": 72.65,
+   "end": 77.36,
+   "text": "Before, the badge hard-coded its colours\nand needed a separate dark class."
+  },
+  {
+   "start": 77.64,
+   "end": 81.16,
+   "text": "After, it has one rule\nand works in both themes,"
+  },
+  {
+   "start": 81.23,
+   "end": 85.98,
+   "text": "because surface-subtle and text point\nsomewhere else when the theme changes."
+  },
+  {
+   "start": 86.38,
+   "end": 90.12,
+   "text": "Good semantic names describe\nrole and, when needed,"
+  },
+  {
+   "start": 90.36,
+   "end": 93.88,
+   "text": "state. Text muted. Border strong."
+  },
+  {
+   "start": 94.22,
+   "end": 98.16,
+   "text": "Accent hover. Avoid names\nthat describe appearance,"
+  },
+  {
+   "start": 98.2,
+   "end": 103.72,
+   "text": "like light grey, because the name stops\nmaking sense the moment the theme changes."
+  },
+  {
+   "start": 104.16,
+   "end": 108.96,
+   "text": "Keep the layer small. If you find yourself\ncreating a token for the settings page"
+  },
+  {
+   "start": 108.96,
+   "end": 113.62,
+   "text": "card border, a variable inside\nthat component is a better home."
+  },
+  {
+   "start": 113.92,
+   "end": 116.56,
+   "text": "Components consume semantic tokens."
+  },
+  {
+   "start": 116.86,
+   "end": 119.52,
+   "text": "Only the token layer touches primitives."
+  },
+  {
+   "start": 119.91,
+   "end": 124.58,
+   "text": "Themes are alternate mappings from\nsemantic names to primitive values."
+  },
+  {
+   "start": 124.91,
+   "end": 130.02,
+   "text": "Name by role and state, not by\nappearance, and keep the layer small."
+  }
+ ]
+}

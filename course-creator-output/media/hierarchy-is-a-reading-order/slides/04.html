@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<title>slide</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; width: 1920px; height: 1080px; background: #f3f0e8; color: #171717; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .frame { width: 1920px; height: 1080px; padding: 72px 112px 80px; display: flex; flex-direction: column; }
+  .kicker { font-size: 22px; font-weight: 650; letter-spacing: 0.14em; text-transform: uppercase; color: #737373; }
+  h1 { font-size: 64px; line-height: 1.05; letter-spacing: -0.035em; font-weight: 650; margin: 18px 0 0; }
+  .stage { flex: 1; display: flex; align-items: center; justify-content: center; gap: 72px; }
+  .card { width: 640px; background: #fff; border: 1px solid #e4e0d6; border-radius: 28px; padding: 48px 44px 40px; box-shadow: 0 18px 50px rgba(23,23,23,0.06); }
+  .flat p, .flat button { margin: 0 0 22px; font-size: 28px; line-height: 1.35; font-weight: 400; color: #404040; font-family: inherit; background: none; border: 0; padding: 0; text-align: left; display: block; }
+  .flat button { margin-bottom: 0; }
+  .rank { width: 520px; }
+  .rank ol { list-style: none; margin: 0; padding: 0; }
+  .rank li { display: flex; gap: 22px; align-items: baseline; font-size: 40px; letter-spacing: -0.03em; padding: 18px 0; border-bottom: 1px solid #e4e0d6; }
+  .rank li span { color: #0f766e; font-weight: 650; width: 36px; }
+  .levers { width: 1280px; display: grid; grid-template-columns: 1fr 1fr; gap: 28px 48px; }
+  .lever { background: #fff; border: 1px solid #e4e0d6; border-radius: 22px; padding: 32px 36px; }
+  .lever h2 { margin: 0 0 14px; font-size: 28px; letter-spacing: -0.02em; }
+  .row { display: flex; align-items: baseline; gap: 28px; }
+  .big { font-size: 64px; font-weight: 700; letter-spacing: -0.04em; }
+  .small { font-size: 28px; color: #737373; }
+  .semi { font-size: 36px; font-weight: 650; }
+  .reg { font-size: 36px; font-weight: 400; }
+  .strong { font-size: 36px; color: #171717; }
+  .muted { font-size: 36px; color: #737373; }
+  .note { margin-top: 28px; font-size: 28px; color: #404040; }
+  pre { margin: 0; width: 1100px; background: #171717; color: #f5f5f4; border-radius: 24px; padding: 48px 52px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 30px; line-height: 1.55; }
+  .tag { color: #5eead4; }
+  .styled .eyebrow { margin: 0; font-size: 26px; font-weight: 650; color: #737373; }
+  .styled .price { margin: 10px 0 0; font-size: 92px; font-weight: 700; letter-spacing: -0.045em; line-height: 1; }
+  .styled .price span { font-size: 32px; font-weight: 400; color: #737373; letter-spacing: 0; margin-left: 8px; }
+  .styled .desc { margin: 22px 0 0; font-size: 28px; color: #737373; line-height: 1.4; }
+  .styled .go { margin-top: 32px; display: inline-block; background: #171717; color: #fff; border-radius: 14px; padding: 16px 28px; font-size: 26px; font-weight: 600; }
+  .blurred { filter: blur(14px); }
+  .caption { position: absolute; left: 112px; right: 112px; bottom: 72px; font-size: 36px; letter-spacing: -0.03em; }
+  .takes { width: 1200px; }
+  .takes p { margin: 0; padding: 28px 0; border-bottom: 1px solid #e4e0d6; font-size: 52px; letter-spacing: -0.035em; font-weight: 600; }
+  .takes p span { color: #0f766e; margin-right: 18px; }
+</style>
+<body>
+<div class="frame">
+      <div class="kicker">Before</div>
+      <h1>No classes, one voice</h1>
+      <div class="stage"><pre><span class="tag">&lt;div class="card"&gt;</span>
+  &lt;p&gt;Pro&lt;/p&gt;
+  &lt;p&gt;R50 per month&lt;/p&gt;
+  &lt;p&gt;Everything in Free, plus quizzes and the tutor.&lt;/p&gt;
+  &lt;button&gt;Upgrade&lt;/button&gt;
+<span class="tag">&lt;/div&gt;</span></pre></div>
+    </div>
+</body>
+</html>

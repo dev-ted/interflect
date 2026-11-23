@@ -1,0 +1,275 @@
+{
+ "paragraphs": [
+  {
+   "start": 0.0,
+   "text": "Spacing is the quietest part of a layout and the easiest to get wrong. Most messy interfaces are not badly coloured or badly typeset. They have twenty slightly different gaps that nobody chose. In this lesson you will group with proximity, pick an 8 point scale, and let the parent own the gaps."
+  },
+  {
+   "start": 21.18,
+   "text": "People assume that things close together belong together. The space between groups must be clearly larger than the space within a group. A form label that sits 16 pixels above its input and 16 pixels below the previous input is ambiguous. Which field does it belong to?"
+  },
+  {
+   "start": 40.48,
+   "text": "A reliable rule: the gap between groups should be at least twice the gap inside a group."
+  },
+  {
+   "start": 46.72,
+   "text": "An 8 point scale gives you a short menu: 4, 8, 12, 16, 24, 32, 48, 64. The 4 is for tight details, like the gap between an icon and its label. Everything else steps up in a way that is easy to see."
+  },
+  {
+   "start": 66.1,
+   "text": "The value of a scale is not the number 8. It is that decisions become choices from a list rather than guesses, and that two people working on the same screen end up with the same answer."
+  },
+  {
+   "start": 78.78,
+   "text": "This settings row collected margins over time. Thirteen, eighteen, five, twenty-two. None of those numbers were a decision you could defend. They are leftovers."
+  },
+  {
+   "start": 90.67,
+   "text": "The row uses the scale, and the parent owns the spacing. Inside the row, a 4 pixel gap keeps the title and description together. The settings list uses a 24 pixel gap between rows, which is more than twice the gap inside a row, so each row reads as its own group. Padding is 16 and 24, both on the scale."
+  },
+  {
+   "start": 114.68,
+   "text": "Using gap on the parent, instead of margins on the children, removes a whole class of bugs. No collapsing margins. No stray space after the last item. No need to remember which child carries the margin."
+  },
+  {
+   "start": 129.4,
+   "text": "Separate spacing into two kinds. Inside a component: padding and the gap between its own parts. The component owns this. Between components: the layout around it. The parent owns this. Components that set their own outer margins are hard to reuse, because every new context needs a different margin."
+  },
+  {
+   "start": 152.62,
+   "text": "When you hand over a design or review a pull request, annotate gaps with their scale values: 8, 16, 24. If a number does not appear on the scale, it is either a bug or a sign the scale needs a new step. Both are worth a conversation."
+  },
+  {
+   "start": 170.34,
+   "text": "Space between groups should be clearly larger than space within them. Choose values from a short scale rather than inventing new ones. Let parents own the gaps between children, using gap. Next we stop counting gaps and start counting edges: a simple column grid, and alignment that still holds when the words change length."
+  }
+ ],
+ "cues": [
+  {
+   "start": 0.0,
+   "end": 4.72,
+   "text": "Spacing is the quietest part of a\nlayout and the easiest to get wrong."
+  },
+  {
+   "start": 5.02,
+   "end": 9.42,
+   "text": "Most messy interfaces are not\nbadly coloured or badly typeset."
+  },
+  {
+   "start": 9.52,
+   "end": 13.4,
+   "text": "They have twenty slightly\ndifferent gaps that nobody chose."
+  },
+  {
+   "start": 13.94,
+   "end": 18.34,
+   "text": "In this lesson you will group with\nproximity, pick an 8 point scale,"
+  },
+  {
+   "start": 18.43,
+   "end": 20.72,
+   "text": "and let the parent own the gaps."
+  },
+  {
+   "start": 21.18,
+   "end": 24.62,
+   "text": "People assume that things close\ntogether belong together."
+  },
+  {
+   "start": 24.99,
+   "end": 29.6,
+   "text": "The space between groups must be clearly\nlarger than the space within a group."
+  },
+  {
+   "start": 29.93,
+   "end": 35.84,
+   "text": "A form label that sits 16 pixels above its\ninput and 16 pixels below the previous"
+  },
+  {
+   "start": 35.84,
+   "end": 40.22,
+   "text": "input is ambiguous. Which\nfield does it belong to?"
+  },
+  {
+   "start": 40.48,
+   "end": 46.3,
+   "text": "A reliable rule: the gap between groups should\nbe at least twice the gap inside a group."
+  },
+  {
+   "start": 46.72,
+   "end": 51.54,
+   "text": "An 8 point scale gives you\na short menu: 4, 8, 12,"
+  },
+  {
+   "start": 51.61,
+   "end": 57.84,
+   "text": "16, 24, 32, 48, 64. The 4 is for"
+  },
+  {
+   "start": 57.84,
+   "end": 61.88,
+   "text": "tight details, like the gap\nbetween an icon and its label."
+  },
+  {
+   "start": 62.29,
+   "end": 65.78,
+   "text": "Everything else steps up in\na way that is easy to see."
+  },
+  {
+   "start": 66.1,
+   "end": 68.98,
+   "text": "The value of a scale is not the number 8."
+  },
+  {
+   "start": 69.28,
+   "end": 73.38,
+   "text": "It is that decisions become choices\nfrom a list rather than guesses,"
+  },
+  {
+   "start": 73.8,
+   "end": 78.4,
+   "text": "and that two people working on the same\nscreen end up with the same answer."
+  },
+  {
+   "start": 78.78,
+   "end": 81.84,
+   "text": "This settings row collected\nmargins over time."
+  },
+  {
+   "start": 82.08,
+   "end": 85.52,
+   "text": "Thirteen, eighteen, five, twenty-two."
+  },
+  {
+   "start": 85.52,
+   "end": 88.66,
+   "text": "None of those numbers were a\ndecision you could defend."
+  },
+  {
+   "start": 88.92,
+   "end": 90.2,
+   "text": "They are leftovers."
+  },
+  {
+   "start": 90.67,
+   "end": 94.56,
+   "text": "The row uses the scale, and\nthe parent owns the spacing."
+  },
+  {
+   "start": 95.02,
+   "end": 99.86,
+   "text": "Inside the row, a 4 pixel gap keeps\nthe title and description together."
+  },
+  {
+   "start": 100.24,
+   "end": 104.16,
+   "text": "The settings list uses a\n24 pixel gap between rows,"
+  },
+  {
+   "start": 104.35,
+   "end": 109.92,
+   "text": "which is more than twice the gap inside a\nrow, so each row reads as its own group."
+  },
+  {
+   "start": 110.3,
+   "end": 114.28,
+   "text": "Padding is 16 and 24, both on the scale."
+  },
+  {
+   "start": 114.68,
+   "end": 118.62,
+   "text": "Using gap on the parent, instead\nof margins on the children,"
+  },
+  {
+   "start": 118.65,
+   "end": 120.92,
+   "text": "removes a whole class of bugs."
+  },
+  {
+   "start": 121.21,
+   "end": 125.62,
+   "text": "No collapsing margins. No stray\nspace after the last item."
+  },
+  {
+   "start": 125.86,
+   "end": 128.98,
+   "text": "No need to remember which\nchild carries the margin."
+  },
+  {
+   "start": 129.4,
+   "end": 132.06,
+   "text": "Separate spacing into two kinds."
+  },
+  {
+   "start": 132.41,
+   "end": 137.0,
+   "text": "Inside a component: padding and\nthe gap between its own parts."
+  },
+  {
+   "start": 137.19,
+   "end": 142.44,
+   "text": "The component owns this. Between\ncomponents: the layout around it."
+  },
+  {
+   "start": 142.55,
+   "end": 148.64,
+   "text": "The parent owns this. Components that set\ntheir own outer margins are hard to reuse,"
+  },
+  {
+   "start": 148.83,
+   "end": 152.18,
+   "text": "because every new context\nneeds a different margin."
+  },
+  {
+   "start": 152.62,
+   "end": 155.9,
+   "text": "When you hand over a design\nor review a pull request,"
+  },
+  {
+   "start": 156.01,
+   "end": 161.18,
+   "text": "annotate gaps with their\nscale values: 8, 16, 24."
+  },
+  {
+   "start": 161.63,
+   "end": 163.86,
+   "text": "If a number does not appear on the scale,"
+  },
+  {
+   "start": 163.89,
+   "end": 167.72,
+   "text": "it is either a bug or a sign\nthe scale needs a new step."
+  },
+  {
+   "start": 167.97,
+   "end": 169.84,
+   "text": "Both are worth a conversation."
+  },
+  {
+   "start": 170.34,
+   "end": 174.64,
+   "text": "Space between groups should be clearly\nlarger than space within them."
+  },
+  {
+   "start": 174.8,
+   "end": 178.9,
+   "text": "Choose values from a short scale\nrather than inventing new ones."
+  },
+  {
+   "start": 179.02,
+   "end": 182.88,
+   "text": "Let parents own the gaps\nbetween children, using gap."
+  },
+  {
+   "start": 183.39,
+   "end": 187.24,
+   "text": "Next we stop counting gaps\nand start counting edges:"
+  },
+  {
+   "start": 187.44,
+   "end": 192.46,
+   "text": "a simple column grid, and alignment that\nstill holds when the words change length."
+  }
+ ]
+}

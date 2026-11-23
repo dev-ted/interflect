@@ -1,0 +1,248 @@
+{
+ "paragraphs": [
+  {
+   "start": 0.0,
+   "text": "A good font at a good size can still be tiring to read. The usual culprits are lines that run too long, and line height that does not match the size of the text. You will cap running text with the ch unit, tighten line height as type gets larger, and attach headings to the content they introduce."
+  },
+  {
+   "start": 20.46,
+   "text": "The measure is the length of a line. For running text, 45 to 75 characters per line is comfortable, with about 65 as a sweet spot. Shorter lines feel choppy. Longer lines make it hard to find the start of the next one."
+  },
+  {
+   "start": 36.47,
+   "text": "CSS has a unit made for this. ch is the width of the zero character in the current font, so 65ch tracks the typeface rather than a pixel guess."
+  },
+  {
+   "start": 48.69,
+   "text": "Before, a help article sat in a full-width container on a 1440 pixel screen. Lines ran to about 180 characters and readers lost their place. After, the article is constrained to 65ch and centred, with the sidebar using the remaining space. Same content, noticeably easier to read, and the page looks more considered."
+  },
+  {
+   "start": 74.49,
+   "text": "Small text needs generous line height. Large text needs less. A single line-height of 1.5 on everything makes headings look loose and disconnected. Use unitless values so line height scales with the element’s own font size, instead of inheriting a fixed pixel value from a parent."
+  },
+  {
+   "start": 94.82,
+   "text": "Vertical rhythm is the spacing between paragraphs, headings, and lists. Two rules cover most cases. Put more space above a heading than below it, so the heading attaches to the content it introduces. Keep paragraph spacing roughly equal to one line of body text. The star plus star selector adds space only between siblings, so there is no stray margin at the top of the container."
+  },
+  {
+   "start": 121.24,
+   "text": "Interface text is different. Labels, buttons, and table cells are single lines, so measure rarely applies. What matters there is a consistent line height so text and icons align. A common approach is a fixed line height per step. For example, 16 pixel text on a 24 pixel line, which also lands on an 8 point grid."
+  },
+  {
+   "start": 146.5,
+   "text": "Cap running text at about 65ch. Tighten line height as text gets larger, and use unitless values. Space above headings should be larger than space below. Next, once the scale and the measure are set, most of the remaining hierarchy comes from weight and colour, not from another font size."
+  }
+ ],
+ "cues": [
+  {
+   "start": 0.0,
+   "end": 4.02,
+   "text": "A good font at a good size\ncan still be tiring to read."
+  },
+  {
+   "start": 4.22,
+   "end": 7.0,
+   "text": "The usual culprits are\nlines that run too long,"
+  },
+  {
+   "start": 7.0,
+   "end": 10.66,
+   "text": "and line height that does not\nmatch the size of the text."
+  },
+  {
+   "start": 10.75,
+   "end": 16.7,
+   "text": "You will cap running text with the ch unit,\ntighten line height as type gets larger,"
+  },
+  {
+   "start": 16.7,
+   "end": 19.94,
+   "text": "and attach headings to the\ncontent they introduce."
+  },
+  {
+   "start": 20.46,
+   "end": 22.52,
+   "text": "The measure is the length of a line."
+  },
+  {
+   "start": 22.74,
+   "end": 27.72,
+   "text": "For running text, 45 to 75\ncharacters per line is comfortable,"
+  },
+  {
+   "start": 27.99,
+   "end": 30.6,
+   "text": "with about 65 as a sweet spot."
+  },
+  {
+   "start": 30.83,
+   "end": 32.68,
+   "text": "Shorter lines feel choppy."
+  },
+  {
+   "start": 32.81,
+   "end": 36.14,
+   "text": "Longer lines make it hard to\nfind the start of the next one."
+  },
+  {
+   "start": 36.47,
+   "end": 38.82,
+   "text": "CSS has a unit made for this."
+  },
+  {
+   "start": 39.06,
+   "end": 43.16,
+   "text": "ch is the width of the zero\ncharacter in the current font,"
+  },
+  {
+   "start": 43.19,
+   "end": 48.28,
+   "text": "so 65ch tracks the typeface\nrather than a pixel guess."
+  },
+  {
+   "start": 48.69,
+   "end": 55.56,
+   "text": "Before, a help article sat in a full-width\ncontainer on a 1440 pixel screen."
+  },
+  {
+   "start": 55.78,
+   "end": 60.82,
+   "text": "Lines ran to about 180 characters\nand readers lost their place."
+  },
+  {
+   "start": 61.21,
+   "end": 65.8,
+   "text": "After, the article is\nconstrained to 65ch and centred,"
+  },
+  {
+   "start": 65.8,
+   "end": 68.4,
+   "text": "with the sidebar using\nthe remaining space."
+  },
+  {
+   "start": 68.75,
+   "end": 74.02,
+   "text": "Same content, noticeably easier to read,\nand the page looks more considered."
+  },
+  {
+   "start": 74.49,
+   "end": 77.1,
+   "text": "Small text needs generous line height."
+  },
+  {
+   "start": 77.19,
+   "end": 83.18,
+   "text": "Large text needs less. A single line-height\nof 1.5 on everything makes headings"
+  },
+  {
+   "start": 83.18,
+   "end": 85.06,
+   "text": "look loose and disconnected."
+  },
+  {
+   "start": 85.55,
+   "end": 90.58,
+   "text": "Use unitless values so line height\nscales with the element’s own font size,"
+  },
+  {
+   "start": 90.78,
+   "end": 94.32,
+   "text": "instead of inheriting a fixed\npixel value from a parent."
+  },
+  {
+   "start": 94.82,
+   "end": 97.94,
+   "text": "Vertical rhythm is the\nspacing between paragraphs,"
+  },
+  {
+   "start": 98.08,
+   "end": 101.94,
+   "text": "headings, and lists. Two\nrules cover most cases."
+  },
+  {
+   "start": 102.27,
+   "end": 105.06,
+   "text": "Put more space above a\nheading than below it,"
+  },
+  {
+   "start": 105.06,
+   "end": 108.1,
+   "text": "so the heading attaches to\nthe content it introduces."
+  },
+  {
+   "start": 108.65,
+   "end": 113.02,
+   "text": "Keep paragraph spacing roughly\nequal to one line of body text."
+  },
+  {
+   "start": 113.3,
+   "end": 117.38,
+   "text": "The star plus star selector adds\nspace only between siblings,"
+  },
+  {
+   "start": 117.62,
+   "end": 120.8,
+   "text": "so there is no stray margin\nat the top of the container."
+  },
+  {
+   "start": 121.24,
+   "end": 123.3,
+   "text": "Interface text is different."
+  },
+  {
+   "start": 123.54,
+   "end": 127.32,
+   "text": "Labels, buttons, and table\ncells are single lines,"
+  },
+  {
+   "start": 127.48,
+   "end": 129.34,
+   "text": "so measure rarely applies."
+  },
+  {
+   "start": 129.78,
+   "end": 134.94,
+   "text": "What matters there is a consistent\nline height so text and icons align."
+  },
+  {
+   "start": 135.36,
+   "end": 138.7,
+   "text": "A common approach is a\nfixed line height per step."
+  },
+  {
+   "start": 138.85,
+   "end": 146.14,
+   "text": "For example, 16 pixel text on a 24 pixel\nline, which also lands on an 8 point grid."
+  },
+  {
+   "start": 146.5,
+   "end": 150.11,
+   "text": "Cap running text at about 65ch."
+  },
+  {
+   "start": 150.11,
+   "end": 154.98,
+   "text": "Tighten line height as text gets\nlarger, and use unitless values."
+  },
+  {
+   "start": 155.31,
+   "end": 158.74,
+   "text": "Space above headings should\nbe larger than space below."
+  },
+  {
+   "start": 159.15,
+   "end": 162.36,
+   "text": "Next, once the scale and\nthe measure are set,"
+  },
+  {
+   "start": 162.4,
+   "end": 165.9,
+   "text": "most of the remaining hierarchy\ncomes from weight and colour,"
+  },
+  {
+   "start": 165.96,
+   "end": 167.84,
+   "text": "not from another font size."
+  }
+ ]
+}

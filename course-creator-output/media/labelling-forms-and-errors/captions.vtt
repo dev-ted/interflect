@@ -1,0 +1,122 @@
+WEBVTT
+
+00:00:00.000 --> 00:00:03.400
+Forms are where interfaces
+ask people for effort.
+
+00:00:03.580 --> 00:00:07.380
+Every unclear label or silent
+error costs them time,
+
+00:00:07.460 --> 00:00:11.940
+and for screen reader users an
+unlabelled field can be a dead end.
+
+00:00:12.260 --> 00:00:15.060
+You will replace placeholders
+with real labels,
+
+00:00:15.170 --> 00:00:21.020
+connect hints and errors to the input, and put
+a summary at the top when several fields fail.
+
+00:00:21.380 --> 00:00:24.900
+The placeholder vanishes as
+soon as someone starts typing.
+
+00:00:25.150 --> 00:00:27.160
+It usually has low contrast.
+
+00:00:27.270 --> 00:00:31.000
+Many screen readers do not
+treat it as a reliable name.
+
+00:00:31.290 --> 00:00:33.320
+A visible label stays put.
+
+00:00:33.500 --> 00:00:38.160
+Clicking it focuses the input, and
+assistive technology announces it.
+
+00:00:38.330 --> 00:00:43.340
+The autocomplete attribute lets browsers
+and password managers fill the field,
+
+00:00:43.380 --> 00:00:48.320
+which helps everyone, and especially
+people with motor or memory impairments.
+
+00:00:48.530 --> 00:00:52.280
+Format requirements belong in
+a hint connected to the input,
+
+00:00:52.310 --> 00:00:58.200
+not hidden in a tooltip. aria-describedby
+makes the hint part of what is announced
+
+00:00:58.200 --> 00:01:00.280
+when the field receives focus.
+
+00:01:00.760 --> 00:01:04.270
+A good error says what went
+wrong and how to fix it,
+
+00:01:04.270 --> 00:01:07.500
+appears next to the field,
+and is connected to it.
+
+00:01:07.640 --> 00:01:12.400
+aria-invalid tells assistive
+technology the field has a problem,
+
+00:01:12.580 --> 00:01:15.700
+and aria-describedby reads the message.
+
+00:01:16.020 --> 00:01:18.100
+Write the message as an instruction.
+
+00:01:18.460 --> 00:01:25.180
+“Enter an email address like name@example.com”
+is more useful than “Invalid input”.
+
+00:01:25.590 --> 00:01:28.080
+When a form with several
+errors is submitted,
+
+00:01:28.130 --> 00:01:33.380
+move focus to a summary at the top that
+lists each error as a link to its field.
+
+00:01:33.590 --> 00:01:37.640
+People using a screen reader hear that
+something went wrong straight away,
+
+00:01:37.720 --> 00:01:41.220
+and everyone gets a quick
+way to jump to each problem.
+
+00:01:41.570 --> 00:01:44.820
+Related controls, such as
+a set of radio buttons,
+
+00:01:44.870 --> 00:01:47.100
+belong in a fieldset with a legend.
+
+00:01:47.510 --> 00:01:51.440
+The legend is announced with
+each option, so “Delivery speed,
+
+00:01:51.440 --> 00:01:53.780
+Standard” makes sense on its own.
+
+00:01:54.140 --> 00:01:58.140
+Every input needs a visible,
+programmatically connected label.
+
+00:01:58.410 --> 00:02:04.720
+Use aria-describedby for hints and
+errors, and aria-invalid when a field
+
+00:02:04.720 --> 00:02:10.920
+fails. Write errors as instructions, and
+give multi-error forms a focused summary.

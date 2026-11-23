@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<title>slide 01</title>
+<style>
+* { box-sizing: border-box; }
+html, body { margin: 0; width: 1920px; height: 1080px; overflow: hidden; background: #f3f0e8; color: #171717; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+.frame { position: relative; width: 1920px; height: 1080px; padding: 72px 112px 80px; display: flex; flex-direction: column; }
+.kicker { font-size: 22px; font-weight: 650; letter-spacing: 0.14em; text-transform: uppercase; color: #737373; }
+h1 { font-size: 64px; line-height: 1.05; letter-spacing: -0.035em; font-weight: 650; margin: 18px 0 0; }
+.stage { flex: 1; display: flex; align-items: center; justify-content: center; gap: 72px; }
+.card { background: #fff; border: 1px solid #e4e0d6; border-radius: 28px; padding: 48px 44px 40px; box-shadow: 0 18px 50px rgba(23,23,23,0.06); }
+.label { font-size: 22px; font-weight: 650; letter-spacing: 0.1em; text-transform: uppercase; color: #737373; margin: 0 0 18px; }
+.accent { color: #0f766e; }
+.bad { color: #b91c1c; }
+.note { font-size: 30px; line-height: 1.4; color: #404040; margin: 0; }
+pre { margin: 0; background: #171717; color: #f5f5f4; border-radius: 24px; padding: 44px 52px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 30px; line-height: 1.55; }
+pre .tag { color: #5eead4; } pre .val { color: #fcd34d; } pre .dim { color: #a3a3a3; } pre .hl { background: rgba(94,234,212,0.18); border-radius: 6px; padding: 0 6px; margin: 0 -6px; }
+.callout { position: absolute; font: 600 24px/1 ui-monospace, SFMono-Regular, Menlo, monospace; color: #fff; background: #b91c1c; border-radius: 10px; padding: 8px 12px; }
+.callout.ok { background: #0f766e; }
+.takes { width: 1300px; }
+.takes p { margin: 0; padding: 30px 0; border-bottom: 1px solid #e4e0d6; font-size: 52px; letter-spacing: -0.035em; font-weight: 600; }
+.takes p span { color: #0f766e; margin-right: 18px; }
+.takes code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.9em; background: #e8e3d6; border-radius: 10px; padding: 2px 12px; }
+
+
+.tbl { background: #fff; border: 1px solid #e4e0d6; border-radius: 22px; padding: 12px 28px; box-shadow: 0 18px 50px rgba(23,23,23,.06); }
+.tbl table { border-collapse: collapse; width: 100%; }
+.tbl th, .tbl td { text-align: left; padding: 0 28px 0 0; height: 64px; border-bottom: 1px solid #ece8de; white-space: nowrap; }
+.tbl tr:last-child td { border-bottom: 0; }
+.lbl2 { font-size: 22px; font-weight: 650; text-transform: uppercase; letter-spacing: .1em; margin-bottom: 14px; }
+.badge { display: inline-block; font: 600 20px ui-monospace, Menlo, monospace; border-radius: 8px; padding: 4px 10px; margin-left: 10px; vertical-align: middle; }
+.badge.f { background: #fef2f2; color: #b91c1c; } .badge.p { background: #ecfdf5; color: #0f766e; }
+.stage { gap: 56px; }
+</style>
+<body>
+<div class="frame">
+  <div class="kicker">Typography · Lesson 3</div>
+  <h1>Not every distinction needs a new size</h1>
+  <div class="stage">
+<div><div class="lbl2 bad">Bigger header · rows blow out</div><div class="tbl" style="width:760px"><table><tr><th style="font-size:40px;font-weight:700;height:110px">Learner</th><th style="font-size:40px;font-weight:700;height:110px">Lesson</th><th style="font-size:40px;font-weight:700;height:110px">Finished</th></tr><tr><td style="font-size:28px">Thandi Mokoena</td><td style="font-size:28px">Grids and alignment</td><td><time style="font-size:28px">09:41</time></td></tr><tr><td style="font-size:28px">Sipho Dlamini</td><td style="font-size:28px">Choosing a type scale</td><td><time style="font-size:28px">11:07</time></td></tr></table></div></div>
+<div><div class="lbl2 accent">Same size · weight and colour</div><div class="tbl" style="width:760px"><table><tr><th style="font-size:28px;font-weight:600;color:#737373">Learner</th><th style="font-size:28px;font-weight:600;color:#737373">Lesson</th><th style="font-size:28px;font-weight:600;color:#737373">Finished</th></tr><tr><td style="font-size:28px;color:#171717">Thandi Mokoena</td><td style="font-size:28px;color:#171717">Grids and alignment</td><td><time style="font-size:28px;color:#737373">09:41</time></td></tr><tr><td style="font-size:28px;color:#171717">Sipho Dlamini</td><td style="font-size:28px;color:#171717">Choosing a type scale</td><td><time style="font-size:28px;color:#737373">11:07</time></td></tr></table></div></div>
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,18 @@
+ffconcat version 1.0
+file '01.png'
+duration 20.887
+file '02.png'
+duration 25.543
+file '03.png'
+duration 32.076
+file '04.png'
+duration 11.913
+file '05.png'
+duration 38.701
+file '06.png'
+duration 23.216
+file '07.png'
+duration 17.739
+file '08.png'
+duration 22.526
+file '08.png'

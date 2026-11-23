@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<title>slide 03</title>
+<style>
+* { box-sizing: border-box; }
+html, body { margin: 0; width: 1920px; height: 1080px; overflow: hidden; background: #f3f0e8; color: #171717; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+.frame { position: relative; width: 1920px; height: 1080px; padding: 72px 112px 80px; display: flex; flex-direction: column; }
+.kicker { font-size: 22px; font-weight: 650; letter-spacing: 0.14em; text-transform: uppercase; color: #737373; }
+h1 { font-size: 64px; line-height: 1.05; letter-spacing: -0.035em; font-weight: 650; margin: 18px 0 0; }
+.stage { flex: 1; display: flex; align-items: center; justify-content: center; gap: 72px; }
+.card { background: #fff; border: 1px solid #e4e0d6; border-radius: 28px; padding: 48px 44px 40px; box-shadow: 0 18px 50px rgba(23,23,23,0.06); }
+.label { font-size: 22px; font-weight: 650; letter-spacing: 0.1em; text-transform: uppercase; color: #737373; margin: 0 0 18px; }
+.accent { color: #0f766e; }
+.bad { color: #b91c1c; }
+.note { font-size: 30px; line-height: 1.4; color: #404040; margin: 0; }
+pre { margin: 0; background: #171717; color: #f5f5f4; border-radius: 24px; padding: 44px 52px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 30px; line-height: 1.55; }
+pre .tag { color: #5eead4; } pre .val { color: #fcd34d; } pre .dim { color: #a3a3a3; } pre .hl { background: rgba(94,234,212,0.18); border-radius: 6px; padding: 0 6px; margin: 0 -6px; }
+.callout { position: absolute; font: 600 24px/1 ui-monospace, SFMono-Regular, Menlo, monospace; color: #fff; background: #b91c1c; border-radius: 10px; padding: 8px 12px; }
+.callout.ok { background: #0f766e; }
+.takes { width: 1300px; }
+.takes p { margin: 0; padding: 30px 0; border-bottom: 1px solid #e4e0d6; font-size: 52px; letter-spacing: -0.035em; font-weight: 600; }
+.takes p span { color: #0f766e; margin-right: 18px; }
+.takes code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.9em; background: #e8e3d6; border-radius: 10px; padding: 2px 12px; }
+
+
+.lbl2 { font-size: 22px; font-weight: 650; text-transform: uppercase; letter-spacing: .1em; margin-bottom: 14px; }
+.chip { width: 300px; height: 300px; border-radius: 28px; border: 1px solid #d4cfc3; display: flex; align-items: flex-end; padding: 24px; font: 600 30px ui-monospace, Menlo, monospace; }
+
+.map { display: grid; grid-template-columns: auto 120px auto; align-items: center; }
+.from { display: grid; gap: 50px; } .from code, .to code { font: 600 28px ui-monospace, Menlo, monospace; background: #fff; border: 1px solid #e4e0d6; border-radius: 12px; padding: 12px 18px; }
+.to { display: flex; align-items: center; gap: 14px; } .tchip { width: 56px; height: 56px; border-radius: 12px; border: 1px solid #d4cfc3; }
+
+</style>
+<body>
+<div class="frame">
+  <div class="kicker">Design systems · Lesson 1</div>
+  <h1>Primitives: raw values, neutral names</h1>
+  <div class="stage">
+<pre style="width:640px;font-size:25px;line-height:1.5"><span class="tag">:root</span> {
+  --neutral-0:   <span class="val">#ffffff</span>;
+  --neutral-100: <span class="val">#f5f5f5</span>;
+  <span class="hl">--neutral-200: <span class="val">#e5e5e5</span>;</span>
+  --neutral-500: <span class="val">#737373</span>;
+  --neutral-900: <span class="val">#171717</span>;
+  --teal-500:    <span class="val">#14b8a6</span>;
+  --teal-400:    <span class="val">#2dd4bf</span>;
+  --space-2: <span class="val">8px</span>;  --space-4: <span class="val">16px</span>;
+  --space-6: <span class="val">24px</span>; --radius-2: <span class="val">8px</span>;
+}</pre>
+<div class="map">
+  <div class="from"><code>#e4e4e4</code><code>#e5e5e5</code><code>#e6e6e6</code></div>
+  <svg width="120" height="260" viewBox="0 0 120 260"><path d="M0 40 C 60 40, 60 130, 112 130 M0 130 L112 130 M0 220 C 60 220, 60 130, 112 130" fill="none" stroke="#0f766e" stroke-width="4"/></svg>
+  <div class="to"><span class="tchip" style="background:#e5e5e5"></span><code>--neutral-200</code></div>
+  <p class="note" style="grid-column:1/-1;margin-top:20px">No sensible home? Ask: real need, or accident?</p>
+</div>
+</div>
+</div>
+</body>
+</html>

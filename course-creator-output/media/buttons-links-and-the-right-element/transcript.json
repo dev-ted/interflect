@@ -1,0 +1,237 @@
+{
+ "paragraphs": [
+  {
+   "start": 0.0,
+   "text": "Most accessibility bugs in components come from using the wrong element and then trying to patch the difference with attributes. Start with the right element and much of the work disappears. You will sort links from buttons by behaviour, set button types inside forms, and name icon-only controls."
+  },
+  {
+   "start": 19.6,
+   "text": "A link goes somewhere. It changes the URL, opens a new page, or jumps to a section. Use an anchor with an href. A button does something. It submits, opens, toggles, deletes, or saves. Use a button. Styling is a separate question. A button can look like a link, and a link can look like a button. What matters is what happens when it is activated."
+  },
+  {
+   "start": 47.09,
+   "text": "This looks fine with a mouse. With a keyboard it cannot be reached by Tab, it does not respond to Enter or Space, and a screen reader announces it as plain text."
+  },
+  {
+   "start": 58.3,
+   "text": "One element change gives you focusability, Enter and Space activation, the button role, and correct behaviour in forms. Adding role button and tabIndex 0 to the div would still leave you writing key handlers by hand, and it is easy to get subtly wrong."
+  },
+  {
+   "start": 76.74,
+   "text": "A button inside a form defaults to type submit. A Cancel or Add another button without type button will submit the form unexpectedly. Set the type explicitly on every button that is not the submit action."
+  },
+  {
+   "start": 91.9,
+   "text": "A button that contains only an icon has no accessible name unless you give it one. Hide the icon from assistive technology with aria-hidden so it is not announced twice, or as a meaningless graphic."
+  },
+  {
+   "start": 105.62,
+   "text": "Screen reader users often pull up a list of all links on a page. A list of five Read more links is useless. Write link text that describes the destination, such as “Read the typography lesson”, or add visually hidden text that completes it."
+  },
+  {
+   "start": 122.73,
+   "text": "A disabled button cannot be focused, so people using a keyboard may not discover it or learn why it is unavailable. When the reason matters, keep the button enabled and show a clear message on activation, or use aria-disabled true with explanatory text nearby."
+  },
+  {
+   "start": 141.95,
+   "text": "Links navigate, buttons act. Pick the element by behaviour, not appearance. Set type button on non-submit buttons in forms. Give icon-only buttons an accessible name, and write link text that stands alone. Next, the same idea inside a form: every field needs a name that stays visible, and every error needs to be announced with the field it belongs to."
+  }
+ ],
+ "cues": [
+  {
+   "start": 0.0,
+   "end": 4.49,
+   "text": "Most accessibility bugs in components come\nfrom using the wrong element and then"
+  },
+  {
+   "start": 4.49,
+   "end": 7.28,
+   "text": "trying to patch the\ndifference with attributes."
+  },
+  {
+   "start": 7.6,
+   "end": 11.22,
+   "text": "Start with the right element and\nmuch of the work disappears."
+  },
+  {
+   "start": 11.67,
+   "end": 16.78,
+   "text": "You will sort links from buttons by\nbehaviour, set button types inside forms,"
+  },
+  {
+   "start": 16.83,
+   "end": 19.08,
+   "text": "and name icon-only controls."
+  },
+  {
+   "start": 19.6,
+   "end": 24.34,
+   "text": "A link goes somewhere. It changes\nthe URL, opens a new page,"
+  },
+  {
+   "start": 24.35,
+   "end": 29.31,
+   "text": "or jumps to a section. Use\nan anchor with an href."
+  },
+  {
+   "start": 29.31,
+   "end": 33.62,
+   "text": "A button does something. It\nsubmits, opens, toggles,"
+  },
+  {
+   "start": 33.7,
+   "end": 36.78,
+   "text": "deletes, or saves. Use a button."
+  },
+  {
+   "start": 37.04,
+   "end": 39.26,
+   "text": "Styling is a separate question."
+  },
+  {
+   "start": 39.52,
+   "end": 43.3,
+   "text": "A button can look like a link, and\na link can look like a button."
+  },
+  {
+   "start": 43.31,
+   "end": 46.62,
+   "text": "What matters is what happens\nwhen it is activated."
+  },
+  {
+   "start": 47.09,
+   "end": 48.8,
+   "text": "This looks fine with a mouse."
+  },
+  {
+   "start": 49.0,
+   "end": 54.5,
+   "text": "With a keyboard it cannot be reached by\nTab, it does not respond to Enter or Space,"
+  },
+  {
+   "start": 54.76,
+   "end": 58.0,
+   "text": "and a screen reader\nannounces it as plain text."
+  },
+  {
+   "start": 58.3,
+   "end": 63.36,
+   "text": "One element change gives you\nfocusability, Enter and Space activation,"
+  },
+  {
+   "start": 63.49,
+   "end": 66.94,
+   "text": "the button role, and\ncorrect behaviour in forms."
+  },
+  {
+   "start": 67.18,
+   "end": 72.52,
+   "text": "Adding role button and tabIndex 0 to the\ndiv would still leave you writing key"
+  },
+  {
+   "start": 72.52,
+   "end": 76.52,
+   "text": "handlers by hand, and it is\neasy to get subtly wrong."
+  },
+  {
+   "start": 76.74,
+   "end": 80.0,
+   "text": "A button inside a form\ndefaults to type submit."
+  },
+  {
+   "start": 80.34,
+   "end": 85.1,
+   "text": "A Cancel or Add another button without\ntype button will submit the form"
+  },
+  {
+   "start": 85.1,
+   "end": 91.64,
+   "text": "unexpectedly. Set the type explicitly on\nevery button that is not the submit action."
+  },
+  {
+   "start": 91.9,
+   "end": 97.42,
+   "text": "A button that contains only an icon has no\naccessible name unless you give it one."
+  },
+  {
+   "start": 97.57,
+   "end": 102.58,
+   "text": "Hide the icon from assistive technology\nwith aria-hidden so it is not announced"
+  },
+  {
+   "start": 102.58,
+   "end": 105.28,
+   "text": "twice, or as a meaningless graphic."
+  },
+  {
+   "start": 105.62,
+   "end": 109.76,
+   "text": "Screen reader users often pull up\na list of all links on a page."
+  },
+  {
+   "start": 109.93,
+   "end": 113.18,
+   "text": "A list of five Read more links is useless."
+  },
+  {
+   "start": 113.52,
+   "end": 116.08,
+   "text": "Write link text that\ndescribes the destination,"
+  },
+  {
+   "start": 116.08,
+   "end": 122.58,
+   "text": "such as “Read the typography lesson”, or\nadd visually hidden text that completes it."
+  },
+  {
+   "start": 122.73,
+   "end": 125.24,
+   "text": "A disabled button cannot be focused,"
+  },
+  {
+   "start": 125.35,
+   "end": 130.24,
+   "text": "so people using a keyboard may not discover\nit or learn why it is unavailable."
+  },
+  {
+   "start": 130.71,
+   "end": 135.26,
+   "text": "When the reason matters, keep the button\nenabled and show a clear message on"
+  },
+  {
+   "start": 135.26,
+   "end": 141.62,
+   "text": "activation, or use aria-disabled\ntrue with explanatory text nearby."
+  },
+  {
+   "start": 141.95,
+   "end": 144.7,
+   "text": "Links navigate, buttons act."
+  },
+  {
+   "start": 144.95,
+   "end": 148.04,
+   "text": "Pick the element by\nbehaviour, not appearance."
+  },
+  {
+   "start": 148.31,
+   "end": 152.14,
+   "text": "Set type button on\nnon-submit buttons in forms."
+  },
+  {
+   "start": 152.41,
+   "end": 158.2,
+   "text": "Give icon-only buttons an accessible name,\nand write link text that stands alone."
+  },
+  {
+   "start": 158.54,
+   "end": 164.12,
+   "text": "Next, the same idea inside a form: every\nfield needs a name that stays visible,"
+  },
+  {
+   "start": 164.12,
+   "end": 168.2,
+   "text": "and every error needs to be announced\nwith the field it belongs to."
+  }
+ ]
+}

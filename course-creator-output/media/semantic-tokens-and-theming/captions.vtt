@@ -1,0 +1,119 @@
+WEBVTT
+
+00:00:00.000 --> 00:00:03.020
+Primitive tokens tell you what a value is.
+
+00:00:03.080 --> 00:00:05.940
+Semantic tokens tell you what it is for.
+
+00:00:06.220 --> 00:00:09.220
+That second layer is what
+makes theming, rebrands,
+
+00:00:09.220 --> 00:00:11.120
+and dark mode manageable.
+
+00:00:11.520 --> 00:00:16.740
+You will keep components on role names, and
+swap only the mapping when the theme changes.
+
+00:00:17.250 --> 00:00:20.400
+If a button uses teal-500 directly,
+
+00:00:20.540 --> 00:00:24.980
+dark mode means finding every
+component that uses teal and deciding,
+
+00:00:24.980 --> 00:00:27.480
+one by one, what it should become.
+
+00:00:27.800 --> 00:00:30.540
+The component knows too
+much about the palette.
+
+00:00:31.020 --> 00:00:35.040
+A semantic token describes
+the role instead: surface,
+
+00:00:35.130 --> 00:00:38.080
+border, text, accent, focus.
+
+00:00:38.450 --> 00:00:41.380
+Components use only semantic tokens.
+
+00:00:41.620 --> 00:00:45.240
+Primitives are referenced
+only inside the token layer.
+
+00:00:45.580 --> 00:00:49.580
+Dark mode becomes a new mapping,
+not a new set of components.
+
+00:00:50.170 --> 00:00:53.020
+The media query follows
+the operating system.
+
+00:00:53.280 --> 00:00:56.980
+The data-theme attribute
+lets a person override it.
+
+00:00:57.120 --> 00:01:00.960
+The selector skips the dark mapping
+when someone has pinned light.
+
+00:01:01.420 --> 00:01:06.580
+The accent shifts to a lighter teal in dark
+mode so it keeps enough contrast against
+
+00:01:06.580 --> 00:01:12.650
+a dark surface. A colour that works on
+white can be too dark on near-black.
+
+00:01:12.650 --> 00:01:17.360
+Before, the badge hard-coded its colours
+and needed a separate dark class.
+
+00:01:17.640 --> 00:01:21.160
+After, it has one rule
+and works in both themes,
+
+00:01:21.230 --> 00:01:25.980
+because surface-subtle and text point
+somewhere else when the theme changes.
+
+00:01:26.380 --> 00:01:30.120
+Good semantic names describe
+role and, when needed,
+
+00:01:30.360 --> 00:01:33.880
+state. Text muted. Border strong.
+
+00:01:34.220 --> 00:01:38.160
+Accent hover. Avoid names
+that describe appearance,
+
+00:01:38.200 --> 00:01:43.720
+like light grey, because the name stops
+making sense the moment the theme changes.
+
+00:01:44.160 --> 00:01:48.960
+Keep the layer small. If you find yourself
+creating a token for the settings page
+
+00:01:48.960 --> 00:01:53.620
+card border, a variable inside
+that component is a better home.
+
+00:01:53.920 --> 00:01:56.560
+Components consume semantic tokens.
+
+00:01:56.860 --> 00:01:59.520
+Only the token layer touches primitives.
+
+00:01:59.910 --> 00:02:04.580
+Themes are alternate mappings from
+semantic names to primitive values.
+
+00:02:04.910 --> 00:02:10.020
+Name by role and state, not by
+appearance, and keep the layer small.

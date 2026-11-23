@@ -1,0 +1,172 @@
+WEBVTT
+
+00:00:00.000 --> 00:00:04.220
+Every screen is read in some order,
+whether you planned it or not.
+
+00:00:04.440 --> 00:00:07.880
+Visual hierarchy is choosing
+that order on purpose.
+
+00:00:08.260 --> 00:00:12.440
+Before you touch a font size, write
+down what someone should notice first,
+
+00:00:12.540 --> 00:00:17.660
+second, and third. By the end of this
+lesson you will rank a pricing card,
+
+00:00:17.690 --> 00:00:20.860
+style that ranking with one
+or two levers at a time,
+
+00:00:20.910 --> 00:00:22.520
+and check it with a blur.
+
+00:00:23.030 --> 00:00:28.360
+Take a pricing card. A typical first
+draft gives everything equal weight.
+
+00:00:28.580 --> 00:00:34.260
+Plan name, price, description, feature
+list, and button all sit at 16
+
+00:00:34.260 --> 00:00:36.160
+pixels in the same colour.
+
+00:00:36.400 --> 00:00:40.320
+The eye has nowhere to land,
+so people read top to bottom,
+
+00:00:40.380 --> 00:00:41.840
+or they give up.
+
+00:00:42.120 --> 00:00:45.020
+Rank it instead. The price comes first,
+
+00:00:45.020 --> 00:00:48.200
+because it answers the
+question the person came with.
+
+00:00:48.420 --> 00:00:52.100
+The plan name comes second, so
+they know what the price buys.
+
+00:00:52.500 --> 00:00:54.400
+The call to action is third.
+
+00:00:54.600 --> 00:00:56.300
+Everything else is fourth.
+
+00:00:56.740 --> 00:00:58.900
+Now you have a brief for the styling.
+
+00:00:59.220 --> 00:01:02.100
+You only need a few tools
+to express a ranking.
+
+00:01:02.540 --> 00:01:05.280
+Size. Larger reads first.
+
+00:01:05.500 --> 00:01:10.340
+Keep the jumps clear. Sixteen
+pixels next to seventeen is noise.
+
+00:01:10.730 --> 00:01:13.700
+Sixteen next to thirty-two is a decision.
+
+00:01:14.240 --> 00:01:20.820
+Weight. A semibold label beside regular text
+creates hierarchy without changing size.
+
+00:01:21.350 --> 00:01:25.850
+Colour and contrast. Secondary
+text in a softer neutral,
+
+00:01:25.850 --> 00:01:32.460
+for example #737373 on white,
+steps back while staying readable.
+
+00:01:33.020 --> 00:01:37.860
+Position and space. In a left-to-right
+language, things at the top left,
+
+00:01:37.860 --> 00:01:41.640
+and things with more room around
+them, get noticed sooner.
+
+00:01:41.850 --> 00:01:44.620
+Use one or two levers per step down.
+
+00:01:44.760 --> 00:01:47.860
+Using all four at once usually overshoots.
+
+00:01:48.490 --> 00:01:53.220
+Here is the before. Four paragraphs
+and a button, no classes,
+
+00:01:53.310 --> 00:01:55.560
+so the browser gives them the same voice.
+
+00:01:55.970 --> 00:01:58.160
+The price now carries the card.
+
+00:01:58.420 --> 00:02:04.260
+Two rem, weight 700. “Per month” drops
+back to one rem and the muted colour,
+
+00:02:04.260 --> 00:02:06.580
+so the number stays the hero.
+
+00:02:06.890 --> 00:02:10.580
+The plan name is small, but weight
+and colour keep it distinct.
+
+00:02:10.980 --> 00:02:15.120
+The description steps back to the
+same neutral, without a size change,
+
+00:02:15.160 --> 00:02:17.220
+because it is further down the ranking.
+
+00:02:17.460 --> 00:02:19.800
+One or two levers per step.
+
+00:02:20.220 --> 00:02:25.060
+A quick test. Blur your eyes, or
+apply a heavy blur in devtools,
+
+00:02:25.120 --> 00:02:29.960
+and look at the screen. The shapes that
+still stand out are your real hierarchy.
+
+00:02:30.350 --> 00:02:34.620
+If they are not the ones on your list,
+adjust the levers until they are.
+
+00:02:34.860 --> 00:02:37.940
+The blur removes the words
+and leaves size, weight,
+
+00:02:37.940 --> 00:02:39.280
+and contrast.
+
+00:02:39.800 --> 00:02:42.840
+Write the ranking down
+before you style anything.
+
+00:02:43.140 --> 00:02:46.900
+Each step down the ranking should
+change one or two properties,
+
+00:02:46.940 --> 00:02:51.240
+clearly. Test with a blur, not
+with your memory of the content.
+
+00:02:51.290 --> 00:02:56.200
+Next, those gaps you used to separate the
+price from the description get a system of
+
+00:02:56.200 --> 00:03:01.460
+their own: an 8 point spacing scale,
+and a rule for what belongs together.
