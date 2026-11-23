@@ -2,9 +2,9 @@
 
 import type { ReactNode } from "react";
 import { Preferences } from "@ui-sdk/react/preferences";
-import { colorScheme } from "@/lib/color-scheme";
+import { colorScheme, sidebarState } from "@/lib/color-scheme";
 
-// Applies the saved color scheme to <html> before first paint (no flash).
+// Applies the saved color scheme and sidebar state to <html> before first paint (no flash).
 export function AppPreferences({ children }: { children: ReactNode }) {
-  return <Preferences preferences={[colorScheme]}>{children}</Preferences>;
+  return <Preferences preferences={[colorScheme, sidebarState]}>{children}</Preferences>;
 }

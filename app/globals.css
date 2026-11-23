@@ -14,6 +14,9 @@
   }
 }
 
+/* Styles for the collapsed desktop sidebar rail (data-sidebar on <html>, data-rail on the aside). */
+@custom-variant rail-collapsed (&:where([data-sidebar="collapsed"] [data-rail], [data-sidebar="collapsed"] [data-rail] *));
+
 /* ── Interflect tokens: light ─────────────────────────────────────────
    Neutral base (shadcn neutrals) + teal "reflection" accent + rare coral. */
 :root {

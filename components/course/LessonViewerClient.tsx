@@ -193,7 +193,7 @@ export function LessonViewerClient() {
   );
 
   const unlockedContent = data.isLocked ? (
-    <div className="night flex aspect-video w-full flex-col items-center justify-center rounded-xl p-8 text-center">
+    <div className="flex aspect-video w-full flex-col items-center justify-center rounded-xl border border-line bg-subtle p-8 text-center text-ink">
       <Loader2
         className="h-6 w-6 animate-spin text-sun motion-reduce:animate-none"
         aria-hidden="true"

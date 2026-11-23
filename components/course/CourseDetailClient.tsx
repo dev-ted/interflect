@@ -141,7 +141,7 @@ export function CourseDetailClient({ slug }: { slug: string }) {
         </ol>
       </nav>
 
-      <header className="night grid gap-8 rounded-3xl p-6 sm:p-8 lg:grid-cols-[minmax(0,1fr)_20rem] lg:items-center">
+      <header className="relative grid gap-8 overflow-hidden rounded-[20px] border border-line bg-subtle p-6 sm:p-8 lg:grid-cols-[minmax(0,1fr)_20rem] lg:items-center">
         <div className="min-w-0">
           <div className="flex flex-wrap gap-2">
             {isPro ? (
