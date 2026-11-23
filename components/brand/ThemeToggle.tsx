@@ -15,7 +15,13 @@ const options = [
   { value: "system", label: "System", Icon: Monitor },
 ] as const;
 
-export function ThemeToggle({ className = "" }: { className?: string }) {
+export function ThemeToggle({
+  className = "",
+  vertical = false,
+}: {
+  className?: string;
+  vertical?: boolean;
+}) {
   const { value } = usePreference(colorScheme);
 
   return (
@@ -23,9 +29,10 @@ export function ThemeToggle({ className = "" }: { className?: string }) {
       aria-label="Color theme"
       value={value}
       onValueChange={(next) => colorScheme.set(next as typeof value)}
-      className={`relative inline-flex h-8 items-center rounded-full border border-line bg-subtle p-0.5 ${className}`}
+      orientation={vertical ? "vertical" : "horizontal"}
+      className={`relative inline-flex items-center rounded-full border border-line bg-subtle p-0.5 ${vertical ? "w-8 flex-col" : "h-8"} ${className}`}
     >
-      <SegmentedControlIndicator className="absolute top-(--segmented-control-indicator-top) left-(--segmented-control-indicator-left) h-(--segmented-control-indicator-height) w-(--segmented-control-indicator-width) rounded-full bg-surface shadow-card transition-[left,width] duration-200 ease-out data-[activation-direction=none]:transition-none motion-reduce:transition-none" />
+      <SegmentedControlIndicator className="absolute top-(--segmented-control-indicator-top) left-(--segmented-control-indicator-left) h-(--segmented-control-indicator-height) w-(--segmented-control-indicator-width) rounded-full bg-surface shadow-card transition-[left,top,width,height] duration-200 ease-out data-[activation-direction=none]:transition-none motion-reduce:transition-none" />
       {options.map(({ value: v, label, Icon }) => (
         <SegmentedControlItem
           key={v}

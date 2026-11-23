@@ -36,7 +36,7 @@ export default async function AdminPage() {
           </p>
 
           <h2 className="mt-6 text-sm font-semibold">With the Clerk CLI</h2>
-          <pre className="night mt-2 overflow-x-auto rounded-md border border-line p-4 font-mono text-xs leading-relaxed select-all">
+          <pre className="mt-2 overflow-x-auto rounded-[10px] border border-line bg-subtle p-4 text-ink font-mono text-xs leading-relaxed select-all">
             <code>{cliCommand}</code>
           </pre>
 

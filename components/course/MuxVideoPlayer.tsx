@@ -14,7 +14,7 @@ interface MuxVideoPlayerProps {
 export function MuxVideoPlayer({ playbackId }: MuxVideoPlayerProps) {
   if (!playbackId) {
     return (
-      <div className="night flex aspect-video w-full flex-col items-center justify-center rounded-xl p-6 text-center">
+      <div className="flex aspect-video w-full flex-col items-center justify-center rounded-xl border border-line bg-subtle p-6 text-center text-ink">
         <Film className="h-6 w-6 text-mist" aria-hidden="true" />
         <p className="mt-3 font-semibold">Video coming soon</p>
         <p className="mt-1 max-w-sm text-sm text-mist">
