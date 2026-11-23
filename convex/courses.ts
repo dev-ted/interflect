@@ -9,6 +9,7 @@ import {
 } from "./lib/auth";
 import { quizQuestionValidator } from "./schema";
 import { publicCourse } from "./lib/features";
+import { parseVideoUrl, SUPPORTED_VIDEO_HINT } from "./lib/video";
 
 export const listPublished = query({
   args: {
@@ -156,7 +157,7 @@ export const getCourseBySlug = query({
           isFreePreview: lesson.isFreePreview,
           durationSeconds: lesson.durationSeconds,
           muxStatus: lesson.muxStatus,
-          hasVideo: Boolean(lesson.muxPlaybackId),
+          hasVideo: Boolean(lesson.muxPlaybackId || lesson.videoUrl),
           quizCount: lesson.quiz?.length ?? 0,
           completed: completedSet.has(lesson._id),
         }));
@@ -331,6 +332,7 @@ export const getLessonBySlug = query({
         muxStatus: lesson.muxStatus,
         markdownContent: canAccess ? lesson.markdownContent : "",
         muxPlaybackId: canAccess ? (lesson.muxPlaybackId ?? null) : null,
+        videoUrl: canAccess ? (lesson.videoUrl ?? null) : null,
         quiz: canAccess ? (lesson.quiz ?? []) : [],
       },
       isLocked: !canAccess,
@@ -713,6 +715,13 @@ export const deleteModule = mutation({
   },
 });
 
+/** A pasted link must be one we know how to play; store the trimmed original. */
+function checkVideoUrl(raw: string | null | undefined): string | undefined {
+  if (!raw || !raw.trim()) return undefined;
+  if (!parseVideoUrl(raw)) throw new Error(`That video link isn't supported. ${SUPPORTED_VIDEO_HINT}`);
+  return raw.trim();
+}
+
 export const createLesson = mutation({
   args: {
     courseId: v.id("courses"),
@@ -726,6 +735,7 @@ export const createLesson = mutation({
     muxAssetId: v.optional(v.string()),
     muxPlaybackId: v.optional(v.string()),
     muxUploadId: v.optional(v.string()),
+    videoUrl: v.optional(v.union(v.string(), v.null())),
     muxStatus: v.optional(
       v.union(
         v.literal("idle"),
@@ -738,6 +748,7 @@ export const createLesson = mutation({
   },
   handler: async (ctx, args) => {
     await requireAdmin(ctx);
+    const videoUrl = checkVideoUrl(args.videoUrl);
     const conflict = await ctx.db
       .query("lessons")
       .withIndex("by_course_and_slug", (q) =>
@@ -764,10 +775,12 @@ export const createLesson = mutation({
       isFreePreview: args.isFreePreview,
       durationSeconds: args.durationSeconds,
       markdownContent: args.markdownContent,
-      muxAssetId: args.muxAssetId,
-      muxPlaybackId: args.muxPlaybackId,
-      muxUploadId: args.muxUploadId,
-      muxStatus: args.muxStatus ?? (args.muxPlaybackId ? "ready" : "idle"),
+      // One video source per lesson: a link wins over any Mux fields sent with it.
+      muxAssetId: videoUrl ? undefined : args.muxAssetId,
+      muxPlaybackId: videoUrl ? undefined : args.muxPlaybackId,
+      muxUploadId: videoUrl ? undefined : args.muxUploadId,
+      muxStatus: videoUrl ? "idle" : (args.muxStatus ?? (args.muxPlaybackId ? "ready" : "idle")),
+      videoUrl,
       quiz: args.quiz ?? [],
       createdAt: now,
       updatedAt: now,
@@ -788,6 +801,7 @@ export const updateLesson = mutation({
     muxAssetId: v.optional(v.string()),
     muxPlaybackId: v.optional(v.string()),
     muxUploadId: v.optional(v.string()),
+    videoUrl: v.optional(v.union(v.string(), v.null())),
     muxStatus: v.optional(
       v.union(
         v.literal("idle"),
@@ -800,9 +814,14 @@ export const updateLesson = mutation({
   },
   handler: async (ctx, args) => {
     await requireAdmin(ctx);
-    const { lessonId, ...fields } = args;
+    const { lessonId, videoUrl, ...fields } = args;
+    const link = videoUrl === undefined ? undefined : checkVideoUrl(videoUrl);
     await ctx.db.patch("lessons", lessonId, {
       ...fields,
+      // One video source per lesson: a link replaces the Mux upload, and a Mux upload replaces the link.
+      ...(videoUrl !== undefined && { videoUrl: link }),
+      ...(link && { muxPlaybackId: undefined, muxAssetId: undefined, muxUploadId: undefined, muxStatus: "idle" as const }),
+      ...(fields.muxPlaybackId && videoUrl === undefined && { videoUrl: undefined }),
       updatedAt: Date.now(),
     });
     return null;

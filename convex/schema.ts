@@ -58,6 +58,8 @@ export default defineSchema({
     markdownContent: v.string(),
     muxAssetId: v.optional(v.string()),
     muxPlaybackId: v.optional(v.string()),
+    // A pasted YouTube, Vimeo, Loom or file link, used instead of a Mux upload.
+    videoUrl: v.optional(v.string()),
     muxUploadId: v.optional(v.string()),
     muxStatus: v.union(
       v.literal("idle"),

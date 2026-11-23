@@ -12,6 +12,11 @@ import {
 } from "@ui-sdk/react/dialog";
 import { Switch, SwitchThumb } from "@ui-sdk/react/switch";
 import { Tabs, TabsList, TabsPanel, TabsTab } from "@ui-sdk/react/tabs";
+import {
+  SegmentedControl,
+  SegmentedControlIndicator,
+  SegmentedControlItem,
+} from "@ui-sdk/react/segmented-control";
 import { toast } from "@ui-sdk/react/toast";
 import { Check, Loader2, Plus, Trash2, X } from "lucide-react";
 import { api } from "@/convex/_generated/api";
@@ -19,6 +24,8 @@ import type { Doc, Id } from "@/convex/_generated/dataModel";
 import type { QuizQuestion } from "@/lib/types";
 import { MarkdownContent } from "@/components/course/MarkdownContent";
 import { MuxUploader, type MuxUploadResult } from "./MuxUploader";
+import { MuxVideoPlayer } from "@/components/course/MuxVideoPlayer";
+import { parseVideoUrl, SUPPORTED_VIDEO_HINT } from "@/convex/lib/video";
 
 /* ── Shared studio pieces (also used by AdminStudioClient) ──────────── */
 
@@ -30,9 +37,11 @@ export function slugify(input: string): string {
     .replace(/^-+|-+$/g, "");
 }
 
-export const TAB_LIST_CLASS = "flex gap-5 overflow-x-auto border-b border-line px-5";
+// The divider is an inset shadow, so the selected tab's 2px underline sits on it instead of doubling up.
+export const TAB_LIST_CLASS =
+  "flex shrink-0 gap-5 overflow-x-auto overflow-y-hidden px-5 shadow-[inset_0_-1px_0_var(--line)]";
 export const TAB_CLASS =
-  "-mb-px inline-flex h-11 shrink-0 cursor-pointer items-center gap-1.5 border-b-2 border-transparent text-sm font-medium text-mist transition-colors duration-150 hover:text-ink data-selected:border-primary data-selected:text-ink";
+  "inline-flex h-11 shrink-0 cursor-pointer items-center gap-1.5 rounded-t-md border-b-2 border-transparent text-sm font-medium text-mist transition-colors duration-150 hover:text-ink focus-visible:outline-offset-[-2px] data-selected:border-ink data-selected:text-ink";
 export const DIALOG_FOOTER_CLASS =
   "flex items-center justify-end gap-2 border-t border-line px-5 py-4";
 
@@ -160,7 +169,7 @@ export function StudioDialog({
       <DialogContent
         className={`fixed top-1/2 left-1/2 z-50 flex max-h-[90dvh] w-[calc(100vw-2rem)] -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-xl border border-line bg-surface text-ink shadow-card transition-[opacity,scale] duration-200 ease-(--ease-out) data-starting-style:scale-96 data-starting-style:opacity-0 data-ending-style:scale-96 data-ending-style:opacity-0 motion-reduce:transition-opacity motion-reduce:data-starting-style:scale-100 motion-reduce:data-ending-style:scale-100 ${className}`}
       >
-        <div className="flex items-start justify-between gap-4 border-b border-line px-5 py-4">
+        <div className="flex shrink-0 items-start justify-between gap-4 px-5 pt-5 pb-3">
           <div className="min-w-0">
             <DialogTitle className="text-lg font-bold">{title}</DialogTitle>
             {description && (
@@ -259,6 +268,8 @@ function LessonEditorForm({
   const [muxStatus, setMuxStatus] = useState<
     "idle" | "waiting" | "ready" | "errored"
   >(lesson?.muxStatus ?? "idle");
+  const [videoUrl, setVideoUrl] = useState(lesson?.videoUrl ?? "");
+  const [videoSource, setVideoSource] = useState<"mux" | "link">(lesson?.videoUrl ? "link" : "mux");
   const [quiz, setQuiz] = useState<QuizQuestion[]>(() => normalizeQuiz(lesson));
   const [saving, setSaving] = useState(false);
   const [tab, setTab] = useState("details");
@@ -322,6 +333,9 @@ function LessonEditorForm({
     const nextErrors: Record<string, string> = {};
     if (!cleanTitle) nextErrors.title = "Add a lesson title.";
     if (!cleanSlug) nextErrors.slug = "Use letters or numbers in the slug.";
+    if (videoSource === "link" && videoUrl.trim() && !parseVideoUrl(videoUrl)) {
+      nextErrors.videoUrl = `That link can’t be played. ${SUPPORTED_VIDEO_HINT}`;
+    }
     for (const q of quiz) {
       if (!q.question.trim()) nextErrors[q.id] = "Add a prompt for this question.";
       else if (q.options.some((opt) => !opt.trim()))
@@ -329,7 +343,7 @@ function LessonEditorForm({
     }
     if (Object.keys(nextErrors).length > 0) {
       setErrors(nextErrors);
-      setTab(nextErrors.title || nextErrors.slug ? "details" : "quiz");
+      setTab(nextErrors.title || nextErrors.slug ? "details" : nextErrors.videoUrl ? "video" : "quiz");
       return;
     }
     setErrors({});
@@ -341,7 +355,10 @@ function LessonEditorForm({
     );
     const totalDurationSeconds = mins * 60 + secs;
 
-    const cleanPlaybackId = muxPlaybackId.trim() || undefined;
+    // One video source per lesson: a link, or a Mux upload.
+    const useLink = videoSource === "link";
+    const cleanPlaybackId = useLink ? undefined : muxPlaybackId.trim() || undefined;
+    const cleanVideoUrl = useLink ? videoUrl.trim() || null : null;
     const cleanQuiz = quiz.map((q) => ({
       id: q.id,
       question: q.question.trim(),
@@ -365,6 +382,7 @@ function LessonEditorForm({
           muxPlaybackId: cleanPlaybackId,
           muxUploadId,
           muxStatus: cleanPlaybackId ? "ready" : muxStatus,
+          videoUrl: cleanVideoUrl,
           quiz: cleanQuiz,
         });
         toast.success(`Saved "${cleanTitle}".`);
@@ -386,6 +404,7 @@ function LessonEditorForm({
           muxPlaybackId: cleanPlaybackId,
           muxUploadId,
           muxStatus: cleanPlaybackId ? "ready" : "idle",
+          videoUrl: cleanVideoUrl,
           quiz: cleanQuiz,
         });
         toast.success(`Created "${cleanTitle}".`);
@@ -417,7 +436,7 @@ function LessonEditorForm({
           </TabsTab>
           <TabsTab value="video" className={TAB_CLASS}>
             Video
-            {muxPlaybackId.trim() && (
+            {(videoSource === "link" ? Boolean(parseVideoUrl(videoUrl)) : Boolean(muxPlaybackId.trim())) && (
               <span className="size-1.5 rounded-full bg-success" aria-hidden="true" />
             )}
           </TabsTab>
@@ -498,15 +517,66 @@ function LessonEditorForm({
             />
           </TabsPanel>
 
-          <TabsPanel value="video" keepMounted>
-            <MuxUploader
-              playbackId={muxPlaybackId}
-              assetId={muxAssetId}
-              muxStatus={muxStatus}
-              onPlaybackIdChange={handlePlaybackIdChange}
-              onUploaded={handleMuxUploaded}
-              onClear={handleClearVideo}
-            />
+          <TabsPanel value="video" keepMounted className="space-y-5">
+            <SegmentedControl
+              aria-label="Video source"
+              value={videoSource}
+              onValueChange={(v) => setVideoSource(v as "mux" | "link")}
+              className="relative inline-flex h-9 items-center rounded-full border border-line bg-subtle p-0.5"
+            >
+              <SegmentedControlIndicator className="absolute top-(--segmented-control-indicator-top) left-(--segmented-control-indicator-left) h-(--segmented-control-indicator-height) w-(--segmented-control-indicator-width) rounded-full bg-surface shadow-card transition-[left,width] duration-200 ease-(--ease-out) data-[activation-direction=none]:transition-none motion-reduce:transition-none" />
+              <SegmentedControlItem value="mux" className="relative z-10 inline-flex h-8 cursor-pointer items-center rounded-full px-4 text-sm font-medium text-mist transition-colors duration-150 data-checked:text-ink">
+                Upload to Mux
+              </SegmentedControlItem>
+              <SegmentedControlItem value="link" className="relative z-10 inline-flex h-8 cursor-pointer items-center rounded-full px-4 text-sm font-medium text-mist transition-colors duration-150 data-checked:text-ink">
+                Paste a link
+              </SegmentedControlItem>
+            </SegmentedControl>
+
+            {videoSource === "mux" ? (
+              <MuxUploader
+                playbackId={muxPlaybackId}
+                assetId={muxAssetId}
+                muxStatus={muxStatus}
+                onPlaybackIdChange={handlePlaybackIdChange}
+                onUploaded={handleMuxUploaded}
+                onClear={handleClearVideo}
+              />
+            ) : (
+              <div className="space-y-4">
+                <label className="block">
+                  <span className="text-sm font-medium text-ink">Video link</span>
+                  <input
+                    type="url"
+                    inputMode="url"
+                    value={videoUrl}
+                    onChange={(e) => {
+                      setVideoUrl(e.target.value);
+                      clearError("videoUrl");
+                    }}
+                    placeholder="https://www.youtube.com/watch?v=…"
+                    aria-invalid={Boolean(errors.videoUrl)}
+                    aria-describedby="video-url-hint"
+                    className="field mt-1.5"
+                  />
+                  <span id="video-url-hint" className={`mt-1.5 block text-xs ${errors.videoUrl ? "text-danger" : "text-mist"}`}>
+                    {errors.videoUrl ?? SUPPORTED_VIDEO_HINT}
+                  </span>
+                </label>
+                {parseVideoUrl(videoUrl) ? (
+                  <MuxVideoPlayer playbackId={null} videoUrl={videoUrl} title={title || "Lesson video"} />
+                ) : (
+                  videoUrl.trim() && (
+                    <p className="rounded-[10px] border border-dashed border-line px-4 py-6 text-center text-sm text-mist">
+                      Paste a full link starting with https:// to see a preview.
+                    </p>
+                  )
+                )}
+                {lesson?.muxPlaybackId && (
+                  <p className="text-xs text-mist">Saving a link replaces this lesson’s Mux video.</p>
+                )}
+              </div>
+            )}
           </TabsPanel>
 
           <TabsPanel value="markdown" keepMounted>
