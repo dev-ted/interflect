@@ -2103,3 +2103,26 @@ export const seedDemoActivity = internalMutation({
     return { learners: 15, courses: courses.length };
   },
 });
+
+const LEARNER_TABLES = ["enrollments", "lessonProgress", "quizAttempts", "trackedCourses", "learnerSettings"] as const;
+
+/**
+ * Wipe one learner's activity (enrolments, completions, quiz attempts, tracked courses, settings)
+ * so they can start fresh. Content and other learners are untouched. Pass dryRun to only count.
+ * Run: npx convex run seed:resetLearnerActivity '{"userId":"<tokenIdentifier>","dryRun":true}'
+ */
+export const resetLearnerActivity = internalMutation({
+  args: { userId: v.string(), dryRun: v.optional(v.boolean()) },
+  handler: async (ctx, { userId, dryRun }) => {
+    const counts: Record<string, number> = {};
+    for (const table of LEARNER_TABLES) {
+      const rows = await ctx.db
+        .query(table)
+        .withIndex("by_user", (q) => q.eq("userId", userId))
+        .take(1000);
+      counts[table] = rows.length;
+      if (!dryRun) for (const row of rows) await ctx.db.delete(table, row._id);
+    }
+    return { dryRun: Boolean(dryRun), deleted: counts };
+  },
+});
