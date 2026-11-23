@@ -4,6 +4,8 @@
 
 It ships with four complete sample courses (11 lessons) on visual hierarchy, typography, accessible components and design systems.
 
+![Interflect landing page: "Think better. Design better." with a before-and-after design comparison](docs/images/hero.png)
+
 ---
 
 ## Features
