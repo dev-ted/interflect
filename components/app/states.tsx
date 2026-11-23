@@ -1,6 +1,6 @@
 "use client";
 
-import { Component, useState, type ReactNode } from "react";
+import { Component, useEffect, useState, type ReactNode } from "react";
 import Link from "next/link";
 import { AlertCircle, RotateCw } from "lucide-react";
 
@@ -108,4 +108,20 @@ export function WidgetBoundary({
       {className ? <div className={`flex flex-col [&>*]:flex-1 ${className}`}>{children}</div> : children}
     </Boundary>
   );
+}
+
+/**
+ * Current time (rounded to the minute) and timezone offset for insight queries,
+ * which can't read the clock themselves. Refreshes every five minutes; null until mounted.
+ */
+export function useClock() {
+  const [clock, setClock] = useState<{ now: number; tz: number } | null>(null);
+  useEffect(() => {
+    const tick = () =>
+      setClock({ now: Math.floor(Date.now() / 60_000) * 60_000, tz: -new Date().getTimezoneOffset() });
+    tick();
+    const id = setInterval(tick, 5 * 60_000);
+    return () => clearInterval(id);
+  }, []);
+  return clock;
 }

@@ -3,7 +3,10 @@ import Link from "next/link";
 import { auth } from "@clerk/nextjs/server";
 import { ShieldAlert } from "lucide-react";
 import { getServerAuthContext } from "@/lib/server-auth";
-import { AdminStudioClient } from "@/components/admin/AdminStudioClient";
+import { Suspense } from "react";
+import { AdminStudioClient, AdminSkeleton } from "@/components/admin/AdminStudioClient";
+import { AdminOverview } from "@/components/admin/AdminOverview";
+import { AdminTabs } from "@/components/admin/AdminTabs";
 
 export const metadata: Metadata = {
   title: "Admin studio",
@@ -71,7 +74,12 @@ export default async function AdminPage() {
 
   return (
     <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-10">
-      <AdminStudioClient />
+      <h1 className="text-[2rem] leading-tight font-semibold tracking-[-0.035em] text-ink">Admin studio</h1>
+      <div className="mt-6">
+        <Suspense fallback={<AdminSkeleton />}>
+          <AdminTabs overview={<AdminOverview />} courses={<AdminStudioClient />} />
+        </Suspense>
+      </div>
     </main>
   );
 }
