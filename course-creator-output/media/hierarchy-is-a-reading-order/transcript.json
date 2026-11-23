@@ -1,0 +1,293 @@
+{
+ "paragraphs": [
+  {
+   "start": 0.0,
+   "text": "Every screen is read in some order, whether you planned it or not. Visual hierarchy is choosing that order on purpose. Before you touch a font size, write down what someone should notice first, second, and third. By the end of this lesson you will rank a pricing card, style that ranking with one or two levers at a time, and check it with a blur."
+  },
+  {
+   "start": 23.03,
+   "text": "Take a pricing card. A typical first draft gives everything equal weight. Plan name, price, description, feature list, and button all sit at 16 pixels in the same colour. The eye has nowhere to land, so people read top to bottom, or they give up."
+  },
+  {
+   "start": 42.12,
+   "text": "Rank it instead. The price comes first, because it answers the question the person came with. The plan name comes second, so they know what the price buys. The call to action is third. Everything else is fourth. Now you have a brief for the styling."
+  },
+  {
+   "start": 59.22,
+   "text": "You only need a few tools to express a ranking."
+  },
+  {
+   "start": 62.54,
+   "text": "Size. Larger reads first. Keep the jumps clear. Sixteen pixels next to seventeen is noise. Sixteen next to thirty-two is a decision."
+  },
+  {
+   "start": 74.24,
+   "text": "Weight. A semibold label beside regular text creates hierarchy without changing size."
+  },
+  {
+   "start": 81.35,
+   "text": "Colour and contrast. Secondary text in a softer neutral, for example #737373 on white, steps back while staying readable."
+  },
+  {
+   "start": 93.02,
+   "text": "Position and space. In a left-to-right language, things at the top left, and things with more room around them, get noticed sooner."
+  },
+  {
+   "start": 101.85,
+   "text": "Use one or two levers per step down. Using all four at once usually overshoots."
+  },
+  {
+   "start": 108.49,
+   "text": "Here is the before. Four paragraphs and a button, no classes, so the browser gives them the same voice."
+  },
+  {
+   "start": 115.97,
+   "text": "The price now carries the card. Two rem, weight 700. “Per month” drops back to one rem and the muted colour, so the number stays the hero. The plan name is small, but weight and colour keep it distinct. The description steps back to the same neutral, without a size change, because it is further down the ranking. One or two levers per step."
+  },
+  {
+   "start": 140.22,
+   "text": "A quick test. Blur your eyes, or apply a heavy blur in devtools, and look at the screen. The shapes that still stand out are your real hierarchy. If they are not the ones on your list, adjust the levers until they are. The blur removes the words and leaves size, weight, and contrast."
+  },
+  {
+   "start": 159.8,
+   "text": "Write the ranking down before you style anything. Each step down the ranking should change one or two properties, clearly. Test with a blur, not with your memory of the content. Next, those gaps you used to separate the price from the description get a system of their own: an 8 point spacing scale, and a rule for what belongs together."
+  }
+ ],
+ "cues": [
+  {
+   "start": 0.0,
+   "end": 4.22,
+   "text": "Every screen is read in some order,\nwhether you planned it or not."
+  },
+  {
+   "start": 4.44,
+   "end": 7.88,
+   "text": "Visual hierarchy is choosing\nthat order on purpose."
+  },
+  {
+   "start": 8.26,
+   "end": 12.44,
+   "text": "Before you touch a font size, write\ndown what someone should notice first,"
+  },
+  {
+   "start": 12.54,
+   "end": 17.66,
+   "text": "second, and third. By the end of this\nlesson you will rank a pricing card,"
+  },
+  {
+   "start": 17.69,
+   "end": 20.86,
+   "text": "style that ranking with one\nor two levers at a time,"
+  },
+  {
+   "start": 20.91,
+   "end": 22.52,
+   "text": "and check it with a blur."
+  },
+  {
+   "start": 23.03,
+   "end": 28.36,
+   "text": "Take a pricing card. A typical first\ndraft gives everything equal weight."
+  },
+  {
+   "start": 28.58,
+   "end": 34.26,
+   "text": "Plan name, price, description, feature\nlist, and button all sit at 16"
+  },
+  {
+   "start": 34.26,
+   "end": 36.16,
+   "text": "pixels in the same colour."
+  },
+  {
+   "start": 36.4,
+   "end": 40.32,
+   "text": "The eye has nowhere to land,\nso people read top to bottom,"
+  },
+  {
+   "start": 40.38,
+   "end": 41.84,
+   "text": "or they give up."
+  },
+  {
+   "start": 42.12,
+   "end": 45.02,
+   "text": "Rank it instead. The price comes first,"
+  },
+  {
+   "start": 45.02,
+   "end": 48.2,
+   "text": "because it answers the\nquestion the person came with."
+  },
+  {
+   "start": 48.42,
+   "end": 52.1,
+   "text": "The plan name comes second, so\nthey know what the price buys."
+  },
+  {
+   "start": 52.5,
+   "end": 54.4,
+   "text": "The call to action is third."
+  },
+  {
+   "start": 54.6,
+   "end": 56.3,
+   "text": "Everything else is fourth."
+  },
+  {
+   "start": 56.74,
+   "end": 58.9,
+   "text": "Now you have a brief for the styling."
+  },
+  {
+   "start": 59.22,
+   "end": 62.1,
+   "text": "You only need a few tools\nto express a ranking."
+  },
+  {
+   "start": 62.54,
+   "end": 65.28,
+   "text": "Size. Larger reads first."
+  },
+  {
+   "start": 65.5,
+   "end": 70.34,
+   "text": "Keep the jumps clear. Sixteen\npixels next to seventeen is noise."
+  },
+  {
+   "start": 70.73,
+   "end": 73.7,
+   "text": "Sixteen next to thirty-two is a decision."
+  },
+  {
+   "start": 74.24,
+   "end": 80.82,
+   "text": "Weight. A semibold label beside regular text\ncreates hierarchy without changing size."
+  },
+  {
+   "start": 81.35,
+   "end": 85.85,
+   "text": "Colour and contrast. Secondary\ntext in a softer neutral,"
+  },
+  {
+   "start": 85.85,
+   "end": 92.46,
+   "text": "for example #737373 on white,\nsteps back while staying readable."
+  },
+  {
+   "start": 93.02,
+   "end": 97.86,
+   "text": "Position and space. In a left-to-right\nlanguage, things at the top left,"
+  },
+  {
+   "start": 97.86,
+   "end": 101.64,
+   "text": "and things with more room around\nthem, get noticed sooner."
+  },
+  {
+   "start": 101.85,
+   "end": 104.62,
+   "text": "Use one or two levers per step down."
+  },
+  {
+   "start": 104.76,
+   "end": 107.86,
+   "text": "Using all four at once usually overshoots."
+  },
+  {
+   "start": 108.49,
+   "end": 113.22,
+   "text": "Here is the before. Four paragraphs\nand a button, no classes,"
+  },
+  {
+   "start": 113.31,
+   "end": 115.56,
+   "text": "so the browser gives them the same voice."
+  },
+  {
+   "start": 115.97,
+   "end": 118.16,
+   "text": "The price now carries the card."
+  },
+  {
+   "start": 118.42,
+   "end": 124.26,
+   "text": "Two rem, weight 700. “Per month” drops\nback to one rem and the muted colour,"
+  },
+  {
+   "start": 124.26,
+   "end": 126.58,
+   "text": "so the number stays the hero."
+  },
+  {
+   "start": 126.89,
+   "end": 130.58,
+   "text": "The plan name is small, but weight\nand colour keep it distinct."
+  },
+  {
+   "start": 130.98,
+   "end": 135.12,
+   "text": "The description steps back to the\nsame neutral, without a size change,"
+  },
+  {
+   "start": 135.16,
+   "end": 137.22,
+   "text": "because it is further down the ranking."
+  },
+  {
+   "start": 137.46,
+   "end": 139.8,
+   "text": "One or two levers per step."
+  },
+  {
+   "start": 140.22,
+   "end": 145.06,
+   "text": "A quick test. Blur your eyes, or\napply a heavy blur in devtools,"
+  },
+  {
+   "start": 145.12,
+   "end": 149.96,
+   "text": "and look at the screen. The shapes that\nstill stand out are your real hierarchy."
+  },
+  {
+   "start": 150.35,
+   "end": 154.62,
+   "text": "If they are not the ones on your list,\nadjust the levers until they are."
+  },
+  {
+   "start": 154.86,
+   "end": 157.94,
+   "text": "The blur removes the words\nand leaves size, weight,"
+  },
+  {
+   "start": 157.94,
+   "end": 159.28,
+   "text": "and contrast."
+  },
+  {
+   "start": 159.8,
+   "end": 162.84,
+   "text": "Write the ranking down\nbefore you style anything."
+  },
+  {
+   "start": 163.14,
+   "end": 166.9,
+   "text": "Each step down the ranking should\nchange one or two properties,"
+  },
+  {
+   "start": 166.94,
+   "end": 171.24,
+   "text": "clearly. Test with a blur, not\nwith your memory of the content."
+  },
+  {
+   "start": 171.29,
+   "end": 176.2,
+   "text": "Next, those gaps you used to separate the\nprice from the description get a system of"
+  },
+  {
+   "start": 176.2,
+   "end": 181.46,
+   "text": "their own: an 8 point spacing scale,\nand a rule for what belongs together."
+  }
+ ]
+}

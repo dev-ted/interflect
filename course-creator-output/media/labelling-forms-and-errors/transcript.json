@@ -1,0 +1,198 @@
+{
+ "paragraphs": [
+  {
+   "start": 0.0,
+   "text": "Forms are where interfaces ask people for effort. Every unclear label or silent error costs them time, and for screen reader users an unlabelled field can be a dead end. You will replace placeholders with real labels, connect hints and errors to the input, and put a summary at the top when several fields fail."
+  },
+  {
+   "start": 21.38,
+   "text": "The placeholder vanishes as soon as someone starts typing. It usually has low contrast. Many screen readers do not treat it as a reliable name."
+  },
+  {
+   "start": 31.29,
+   "text": "A visible label stays put. Clicking it focuses the input, and assistive technology announces it. The autocomplete attribute lets browsers and password managers fill the field, which helps everyone, and especially people with motor or memory impairments."
+  },
+  {
+   "start": 48.53,
+   "text": "Format requirements belong in a hint connected to the input, not hidden in a tooltip. aria-describedby makes the hint part of what is announced when the field receives focus."
+  },
+  {
+   "start": 60.76,
+   "text": "A good error says what went wrong and how to fix it, appears next to the field, and is connected to it. aria-invalid tells assistive technology the field has a problem, and aria-describedby reads the message. Write the message as an instruction. “Enter an email address like name@example.com” is more useful than “Invalid input”."
+  },
+  {
+   "start": 85.59,
+   "text": "When a form with several errors is submitted, move focus to a summary at the top that lists each error as a link to its field. People using a screen reader hear that something went wrong straight away, and everyone gets a quick way to jump to each problem."
+  },
+  {
+   "start": 101.57,
+   "text": "Related controls, such as a set of radio buttons, belong in a fieldset with a legend. The legend is announced with each option, so “Delivery speed, Standard” makes sense on its own."
+  },
+  {
+   "start": 114.14,
+   "text": "Every input needs a visible, programmatically connected label. Use aria-describedby for hints and errors, and aria-invalid when a field fails. Write errors as instructions, and give multi-error forms a focused summary."
+  }
+ ],
+ "cues": [
+  {
+   "start": 0.0,
+   "end": 3.4,
+   "text": "Forms are where interfaces\nask people for effort."
+  },
+  {
+   "start": 3.58,
+   "end": 7.38,
+   "text": "Every unclear label or silent\nerror costs them time,"
+  },
+  {
+   "start": 7.46,
+   "end": 11.94,
+   "text": "and for screen reader users an\nunlabelled field can be a dead end."
+  },
+  {
+   "start": 12.26,
+   "end": 15.06,
+   "text": "You will replace placeholders\nwith real labels,"
+  },
+  {
+   "start": 15.17,
+   "end": 21.02,
+   "text": "connect hints and errors to the input, and put\na summary at the top when several fields fail."
+  },
+  {
+   "start": 21.38,
+   "end": 24.9,
+   "text": "The placeholder vanishes as\nsoon as someone starts typing."
+  },
+  {
+   "start": 25.15,
+   "end": 27.16,
+   "text": "It usually has low contrast."
+  },
+  {
+   "start": 27.27,
+   "end": 31.0,
+   "text": "Many screen readers do not\ntreat it as a reliable name."
+  },
+  {
+   "start": 31.29,
+   "end": 33.32,
+   "text": "A visible label stays put."
+  },
+  {
+   "start": 33.5,
+   "end": 38.16,
+   "text": "Clicking it focuses the input, and\nassistive technology announces it."
+  },
+  {
+   "start": 38.33,
+   "end": 43.34,
+   "text": "The autocomplete attribute lets browsers\nand password managers fill the field,"
+  },
+  {
+   "start": 43.38,
+   "end": 48.32,
+   "text": "which helps everyone, and especially\npeople with motor or memory impairments."
+  },
+  {
+   "start": 48.53,
+   "end": 52.28,
+   "text": "Format requirements belong in\na hint connected to the input,"
+  },
+  {
+   "start": 52.31,
+   "end": 58.2,
+   "text": "not hidden in a tooltip. aria-describedby\nmakes the hint part of what is announced"
+  },
+  {
+   "start": 58.2,
+   "end": 60.28,
+   "text": "when the field receives focus."
+  },
+  {
+   "start": 60.76,
+   "end": 64.27,
+   "text": "A good error says what went\nwrong and how to fix it,"
+  },
+  {
+   "start": 64.27,
+   "end": 67.5,
+   "text": "appears next to the field,\nand is connected to it."
+  },
+  {
+   "start": 67.64,
+   "end": 72.4,
+   "text": "aria-invalid tells assistive\ntechnology the field has a problem,"
+  },
+  {
+   "start": 72.58,
+   "end": 75.7,
+   "text": "and aria-describedby reads the message."
+  },
+  {
+   "start": 76.02,
+   "end": 78.1,
+   "text": "Write the message as an instruction."
+  },
+  {
+   "start": 78.46,
+   "end": 85.18,
+   "text": "“Enter an email address like name@example.com”\nis more useful than “Invalid input”."
+  },
+  {
+   "start": 85.59,
+   "end": 88.08,
+   "text": "When a form with several\nerrors is submitted,"
+  },
+  {
+   "start": 88.13,
+   "end": 93.38,
+   "text": "move focus to a summary at the top that\nlists each error as a link to its field."
+  },
+  {
+   "start": 93.59,
+   "end": 97.64,
+   "text": "People using a screen reader hear that\nsomething went wrong straight away,"
+  },
+  {
+   "start": 97.72,
+   "end": 101.22,
+   "text": "and everyone gets a quick\nway to jump to each problem."
+  },
+  {
+   "start": 101.57,
+   "end": 104.82,
+   "text": "Related controls, such as\na set of radio buttons,"
+  },
+  {
+   "start": 104.87,
+   "end": 107.1,
+   "text": "belong in a fieldset with a legend."
+  },
+  {
+   "start": 107.51,
+   "end": 111.44,
+   "text": "The legend is announced with\neach option, so “Delivery speed,"
+  },
+  {
+   "start": 111.44,
+   "end": 113.78,
+   "text": "Standard” makes sense on its own."
+  },
+  {
+   "start": 114.14,
+   "end": 118.14,
+   "text": "Every input needs a visible,\nprogrammatically connected label."
+  },
+  {
+   "start": 118.41,
+   "end": 124.72,
+   "text": "Use aria-describedby for hints and\nerrors, and aria-invalid when a field"
+  },
+  {
+   "start": 124.72,
+   "end": 130.92,
+   "text": "fails. Write errors as instructions, and\ngive multi-error forms a focused summary."
+  }
+ ]
+}

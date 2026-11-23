@@ -1,0 +1,171 @@
+WEBVTT
+
+00:00:00.000 --> 00:00:04.720
+Spacing is the quietest part of a
+layout and the easiest to get wrong.
+
+00:00:05.020 --> 00:00:09.420
+Most messy interfaces are not
+badly coloured or badly typeset.
+
+00:00:09.520 --> 00:00:13.400
+They have twenty slightly
+different gaps that nobody chose.
+
+00:00:13.940 --> 00:00:18.340
+In this lesson you will group with
+proximity, pick an 8 point scale,
+
+00:00:18.430 --> 00:00:20.720
+and let the parent own the gaps.
+
+00:00:21.180 --> 00:00:24.620
+People assume that things close
+together belong together.
+
+00:00:24.990 --> 00:00:29.600
+The space between groups must be clearly
+larger than the space within a group.
+
+00:00:29.930 --> 00:00:35.840
+A form label that sits 16 pixels above its
+input and 16 pixels below the previous
+
+00:00:35.840 --> 00:00:40.220
+input is ambiguous. Which
+field does it belong to?
+
+00:00:40.480 --> 00:00:46.300
+A reliable rule: the gap between groups should
+be at least twice the gap inside a group.
+
+00:00:46.720 --> 00:00:51.540
+An 8 point scale gives you
+a short menu: 4, 8, 12,
+
+00:00:51.610 --> 00:00:57.840
+16, 24, 32, 48, 64. The 4 is for
+
+00:00:57.840 --> 00:01:01.880
+tight details, like the gap
+between an icon and its label.
+
+00:01:02.290 --> 00:01:05.780
+Everything else steps up in
+a way that is easy to see.
+
+00:01:06.100 --> 00:01:08.980
+The value of a scale is not the number 8.
+
+00:01:09.280 --> 00:01:13.380
+It is that decisions become choices
+from a list rather than guesses,
+
+00:01:13.800 --> 00:01:18.400
+and that two people working on the same
+screen end up with the same answer.
+
+00:01:18.780 --> 00:01:21.840
+This settings row collected
+margins over time.
+
+00:01:22.080 --> 00:01:25.520
+Thirteen, eighteen, five, twenty-two.
+
+00:01:25.520 --> 00:01:28.660
+None of those numbers were a
+decision you could defend.
+
+00:01:28.920 --> 00:01:30.200
+They are leftovers.
+
+00:01:30.670 --> 00:01:34.560
+The row uses the scale, and
+the parent owns the spacing.
+
+00:01:35.020 --> 00:01:39.860
+Inside the row, a 4 pixel gap keeps
+the title and description together.
+
+00:01:40.240 --> 00:01:44.160
+The settings list uses a
+24 pixel gap between rows,
+
+00:01:44.350 --> 00:01:49.920
+which is more than twice the gap inside a
+row, so each row reads as its own group.
+
+00:01:50.300 --> 00:01:54.280
+Padding is 16 and 24, both on the scale.
+
+00:01:54.680 --> 00:01:58.620
+Using gap on the parent, instead
+of margins on the children,
+
+00:01:58.650 --> 00:02:00.920
+removes a whole class of bugs.
+
+00:02:01.210 --> 00:02:05.620
+No collapsing margins. No stray
+space after the last item.
+
+00:02:05.860 --> 00:02:08.980
+No need to remember which
+child carries the margin.
+
+00:02:09.400 --> 00:02:12.060
+Separate spacing into two kinds.
+
+00:02:12.410 --> 00:02:17.000
+Inside a component: padding and
+the gap between its own parts.
+
+00:02:17.190 --> 00:02:22.440
+The component owns this. Between
+components: the layout around it.
+
+00:02:22.550 --> 00:02:28.640
+The parent owns this. Components that set
+their own outer margins are hard to reuse,
+
+00:02:28.830 --> 00:02:32.180
+because every new context
+needs a different margin.
+
+00:02:32.620 --> 00:02:35.900
+When you hand over a design
+or review a pull request,
+
+00:02:36.010 --> 00:02:41.180
+annotate gaps with their
+scale values: 8, 16, 24.
+
+00:02:41.630 --> 00:02:43.860
+If a number does not appear on the scale,
+
+00:02:43.890 --> 00:02:47.720
+it is either a bug or a sign
+the scale needs a new step.
+
+00:02:47.970 --> 00:02:49.840
+Both are worth a conversation.
+
+00:02:50.340 --> 00:02:54.640
+Space between groups should be clearly
+larger than space within them.
+
+00:02:54.800 --> 00:02:58.900
+Choose values from a short scale
+rather than inventing new ones.
+
+00:02:59.020 --> 00:03:02.880
+Let parents own the gaps
+between children, using gap.
+
+00:03:03.390 --> 00:03:07.240
+Next we stop counting gaps
+and start counting edges:
+
+00:03:07.440 --> 00:03:12.460
+a simple column grid, and alignment that
+still holds when the words change length.

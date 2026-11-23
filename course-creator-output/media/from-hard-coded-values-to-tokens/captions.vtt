@@ -1,0 +1,117 @@
+WEBVTT
+
+00:00:00.000 --> 00:00:03.800
+A design token is a named
+design decision: a colour,
+
+00:00:03.840 --> 00:00:06.940
+a spacing step, a radius, a duration.
+
+00:00:07.820 --> 00:00:12.270
+Tokens let designers and engineers refer
+to the same decision by the same name,
+
+00:00:12.270 --> 00:00:15.600
+so changing it in one place
+changes it everywhere.
+
+00:00:16.100 --> 00:00:18.860
+You will audit what is
+actually in the code,
+
+00:00:18.900 --> 00:00:23.840
+collapse near-duplicates into primitives,
+and point a card at those names.
+
+00:00:24.400 --> 00:00:28.140
+Before naming anything, find
+out what is actually in use.
+
+00:00:28.430 --> 00:00:33.390
+A quick search of a stylesheet or component
+folder for hex codes and pixel values is
+
+00:00:33.390 --> 00:00:39.100
+usually revealing. It is common to find
+a dozen greys where three were intended,
+
+00:00:39.390 --> 00:00:46.040
+and borders in #E4E4E4, #E5E5E5,
+
+00:00:46.170 --> 00:00:51.000
+and #E6E6E6 that nobody can tell apart.
+
+00:00:51.420 --> 00:00:56.020
+Each near-duplicate is a decision
+someone made without a shared reference.
+
+00:00:56.540 --> 00:01:00.380
+Primitive tokens describe raw
+values with neutral names.
+
+00:01:00.640 --> 00:01:02.820
+They form your palette and scales.
+
+00:01:03.300 --> 00:01:06.680
+Map every audited value
+to its nearest primitive.
+
+00:01:07.070 --> 00:01:12.060
+The three almost-identical
+borders all become neutral-200.
+
+00:01:12.060 --> 00:01:17.400
+If a value has no sensible home, ask
+whether it is a real need or an accident.
+
+00:01:17.950 --> 00:01:22.560
+The card looks almost identical,
+but now it moves with the system.
+
+00:01:22.910 --> 00:01:28.700
+Change radius-2 and every card,
+input, and menu that uses it follows.
+
+00:01:29.250 --> 00:01:34.280
+The 7 pixel radius and the 15 pixel
+padding were not a different design.
+
+00:01:34.380 --> 00:01:37.840
+They were drift. They map to 8 and 16.
+
+00:01:38.500 --> 00:01:42.860
+Teams often keep tokens in a
+JSON file and generate CSS,
+
+00:01:43.100 --> 00:01:47.080
+Tailwind configuration, and
+design-tool variables from it.
+
+00:01:47.390 --> 00:01:51.500
+That is worth doing once more than
+one platform consumes the tokens.
+
+00:01:52.020 --> 00:01:57.940
+For a single web app, CSS custom properties
+in one file are a fine source of truth.
+
+00:01:58.250 --> 00:02:01.780
+Audit what is in use before
+you design a token set.
+
+00:02:02.090 --> 00:02:04.720
+Primitive tokens name raw values.
+
+00:02:04.910 --> 00:02:07.400
+Map every existing value to one.
+
+00:02:07.730 --> 00:02:12.760
+Keep a single source of truth, and generate
+other formats only when you need them.
+
+00:02:13.050 --> 00:02:16.260
+Next, primitives tell you what a value is.
+
+00:02:16.510 --> 00:02:21.540
+Semantic tokens tell you what it is for,
+which is what makes a theme possible.

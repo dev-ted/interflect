@@ -1,0 +1,149 @@
+WEBVTT
+
+00:00:00.000 --> 00:00:04.490
+Most accessibility bugs in components come
+from using the wrong element and then
+
+00:00:04.490 --> 00:00:07.280
+trying to patch the
+difference with attributes.
+
+00:00:07.600 --> 00:00:11.220
+Start with the right element and
+much of the work disappears.
+
+00:00:11.670 --> 00:00:16.780
+You will sort links from buttons by
+behaviour, set button types inside forms,
+
+00:00:16.830 --> 00:00:19.080
+and name icon-only controls.
+
+00:00:19.600 --> 00:00:24.340
+A link goes somewhere. It changes
+the URL, opens a new page,
+
+00:00:24.350 --> 00:00:29.310
+or jumps to a section. Use
+an anchor with an href.
+
+00:00:29.310 --> 00:00:33.620
+A button does something. It
+submits, opens, toggles,
+
+00:00:33.700 --> 00:00:36.780
+deletes, or saves. Use a button.
+
+00:00:37.040 --> 00:00:39.260
+Styling is a separate question.
+
+00:00:39.520 --> 00:00:43.300
+A button can look like a link, and
+a link can look like a button.
+
+00:00:43.310 --> 00:00:46.620
+What matters is what happens
+when it is activated.
+
+00:00:47.090 --> 00:00:48.800
+This looks fine with a mouse.
+
+00:00:49.000 --> 00:00:54.500
+With a keyboard it cannot be reached by
+Tab, it does not respond to Enter or Space,
+
+00:00:54.760 --> 00:00:58.000
+and a screen reader
+announces it as plain text.
+
+00:00:58.300 --> 00:01:03.360
+One element change gives you
+focusability, Enter and Space activation,
+
+00:01:03.490 --> 00:01:06.940
+the button role, and
+correct behaviour in forms.
+
+00:01:07.180 --> 00:01:12.520
+Adding role button and tabIndex 0 to the
+div would still leave you writing key
+
+00:01:12.520 --> 00:01:16.520
+handlers by hand, and it is
+easy to get subtly wrong.
+
+00:01:16.740 --> 00:01:20.000
+A button inside a form
+defaults to type submit.
+
+00:01:20.340 --> 00:01:25.100
+A Cancel or Add another button without
+type button will submit the form
+
+00:01:25.100 --> 00:01:31.640
+unexpectedly. Set the type explicitly on
+every button that is not the submit action.
+
+00:01:31.900 --> 00:01:37.420
+A button that contains only an icon has no
+accessible name unless you give it one.
+
+00:01:37.570 --> 00:01:42.580
+Hide the icon from assistive technology
+with aria-hidden so it is not announced
+
+00:01:42.580 --> 00:01:45.280
+twice, or as a meaningless graphic.
+
+00:01:45.620 --> 00:01:49.760
+Screen reader users often pull up
+a list of all links on a page.
+
+00:01:49.930 --> 00:01:53.180
+A list of five Read more links is useless.
+
+00:01:53.520 --> 00:01:56.080
+Write link text that
+describes the destination,
+
+00:01:56.080 --> 00:02:02.580
+such as “Read the typography lesson”, or
+add visually hidden text that completes it.
+
+00:02:02.730 --> 00:02:05.240
+A disabled button cannot be focused,
+
+00:02:05.350 --> 00:02:10.240
+so people using a keyboard may not discover
+it or learn why it is unavailable.
+
+00:02:10.710 --> 00:02:15.260
+When the reason matters, keep the button
+enabled and show a clear message on
+
+00:02:15.260 --> 00:02:21.620
+activation, or use aria-disabled
+true with explanatory text nearby.
+
+00:02:21.950 --> 00:02:24.700
+Links navigate, buttons act.
+
+00:02:24.950 --> 00:02:28.040
+Pick the element by
+behaviour, not appearance.
+
+00:02:28.310 --> 00:02:32.140
+Set type button on
+non-submit buttons in forms.
+
+00:02:32.410 --> 00:02:38.200
+Give icon-only buttons an accessible name,
+and write link text that stands alone.
+
+00:02:38.540 --> 00:02:44.120
+Next, the same idea inside a form: every
+field needs a name that stays visible,
+
+00:02:44.120 --> 00:02:48.200
+and every error needs to be announced
+with the field it belongs to.

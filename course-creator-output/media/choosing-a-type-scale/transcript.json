@@ -1,0 +1,228 @@
+{
+ "paragraphs": [
+  {
+   "start": 0.0,
+   "text": "Most interfaces need far fewer font sizes than they use. An audit of a mature product often finds fifteen or more sizes, many of them a pixel apart. A type scale replaces that drift with a short, deliberate list. You will pick a base and a ratio, name the steps by role, and apply three of them to a modal."
+  },
+  {
+   "start": 21.54,
+   "text": "A modular scale multiplies a base size by a ratio. With a 16 pixel base and a ratio of 1.25 you get roughly 12.8, 16, 20, 25, 31, and 39. Round those to whole pixels and you have a scale."
+  },
+  {
+   "start": 40.21,
+   "text": "The ratio guides the feel. From 1.125 to 1.2 is compact, good for dense dashboards and tools. 1.25 is a balanced default for most products. 1.333 and up is dramatic, better suited to marketing pages with big headlines. You can use a tighter ratio inside the app and a larger one for marketing, as long as they share the same base."
+  },
+  {
+   "start": 67.71,
+   "text": "Name steps by role, not by size. Names like text-20 invite people to add text-21. Role names keep the list closed."
+  },
+  {
+   "start": 78.43,
+   "text": "Five steps: caption, body, lead, title, display. Use rem so the scale follows the reader’s browser font size. People who set a larger default are often the ones who need it most. If someone sets their root to 20 pixels, every step grows with them."
+  },
+  {
+   "start": 97.5,
+   "text": "Before, a modal used 15 pixels for body, 17 for the title, and 13 for helper text, chosen one at a time over several sprints. Nothing reads as a decision. After, the modal uses three steps from the scale. Title, body, caption. The title is clearly a title. The helper is clearly secondary, instead of almost the same size as the body."
+  },
+  {
+   "start": 123.73,
+   "text": "For large display text you can let the size grow with the viewport. Clamp between 2 rem and 3 rem. Keep body text fixed. Fluid body sizes make line length and spacing harder to reason about, and the gain is small."
+  },
+  {
+   "start": 139.67,
+   "text": "Pick a base and a ratio, round the results, and commit to five or six steps. Name steps by role so the list stays short. Use rem, and reserve fluid sizing for display text. Next: a good size can still be tiring to read if the line is too long or the line height does not match."
+  }
+ ],
+ "cues": [
+  {
+   "start": 0.0,
+   "end": 3.98,
+   "text": "Most interfaces need far fewer\nfont sizes than they use."
+  },
+  {
+   "start": 4.2,
+   "end": 8.4,
+   "text": "An audit of a mature product often\nfinds fifteen or more sizes,"
+  },
+  {
+   "start": 8.48,
+   "end": 10.48,
+   "text": "many of them a pixel apart."
+  },
+  {
+   "start": 10.89,
+   "end": 15.06,
+   "text": "A type scale replaces that drift\nwith a short, deliberate list."
+  },
+  {
+   "start": 15.32,
+   "end": 19.16,
+   "text": "You will pick a base and a\nratio, name the steps by role,"
+  },
+  {
+   "start": 19.16,
+   "end": 21.3,
+   "text": "and apply three of them to a modal."
+  },
+  {
+   "start": 21.54,
+   "end": 25.2,
+   "text": "A modular scale multiplies\na base size by a ratio."
+  },
+  {
+   "start": 25.46,
+   "end": 31.7,
+   "text": "With a 16 pixel base and a ratio\nof 1.25 you get roughly 12.8,"
+  },
+  {
+   "start": 31.7,
+   "end": 37.82,
+   "text": "16, 20, 25, 31, and 39.\nRound those to whole"
+  },
+  {
+   "start": 37.82,
+   "end": 39.84,
+   "text": "pixels and you have a scale."
+  },
+  {
+   "start": 40.21,
+   "end": 42.14,
+   "text": "The ratio guides the feel."
+  },
+  {
+   "start": 42.41,
+   "end": 48.9,
+   "text": "From 1.125 to 1.2 is compact, good\nfor dense dashboards and tools."
+  },
+  {
+   "start": 49.24,
+   "end": 53.06,
+   "text": "1.25 is a balanced default\nfor most products."
+  },
+  {
+   "start": 53.36,
+   "end": 58.98,
+   "text": "1.333 and up is dramatic, better\nsuited to marketing pages with"
+  },
+  {
+   "start": 58.98,
+   "end": 64.36,
+   "text": "big headlines. You can use a tighter\nratio inside the app and a larger one for"
+  },
+  {
+   "start": 64.36,
+   "end": 67.42,
+   "text": "marketing, as long as\nthey share the same base."
+  },
+  {
+   "start": 67.71,
+   "end": 70.6,
+   "text": "Name steps by role, not by size."
+  },
+  {
+   "start": 70.96,
+   "end": 75.43,
+   "text": "Names like text-20 invite\npeople to add text-21."
+  },
+  {
+   "start": 75.87,
+   "end": 78.24,
+   "text": "Role names keep the list closed."
+  },
+  {
+   "start": 78.43,
+   "end": 83.32,
+   "text": "Five steps: caption, body,\nlead, title, display."
+  },
+  {
+   "start": 83.72,
+   "end": 87.84,
+   "text": "Use rem so the scale follows\nthe reader’s browser font size."
+  },
+  {
+   "start": 88.13,
+   "end": 92.06,
+   "text": "People who set a larger default are\noften the ones who need it most."
+  },
+  {
+   "start": 92.43,
+   "end": 97.24,
+   "text": "If someone sets their root to 20\npixels, every step grows with them."
+  },
+  {
+   "start": 97.5,
+   "end": 102.56,
+   "text": "Before, a modal used 15 pixels\nfor body, 17 for the title,"
+  },
+  {
+   "start": 102.6,
+   "end": 107.84,
+   "text": "and 13 for helper text, chosen one\nat a time over several sprints."
+  },
+  {
+   "start": 107.87,
+   "end": 109.66,
+   "text": "Nothing reads as a decision."
+  },
+  {
+   "start": 110.04,
+   "end": 113.4,
+   "text": "After, the modal uses three\nsteps from the scale."
+  },
+  {
+   "start": 114.08,
+   "end": 118.32,
+   "text": "Title, body, caption. The\ntitle is clearly a title."
+  },
+  {
+   "start": 118.56,
+   "end": 123.44,
+   "text": "The helper is clearly secondary, instead\nof almost the same size as the body."
+  },
+  {
+   "start": 123.73,
+   "end": 127.76,
+   "text": "For large display text you can let\nthe size grow with the viewport."
+  },
+  {
+   "start": 128.09,
+   "end": 130.94,
+   "text": "Clamp between 2 rem and 3 rem."
+  },
+  {
+   "start": 131.09,
+   "end": 137.08,
+   "text": "Keep body text fixed. Fluid body sizes make\nline length and spacing harder to reason"
+  },
+  {
+   "start": 137.08,
+   "end": 139.38,
+   "text": "about, and the gain is small."
+  },
+  {
+   "start": 139.67,
+   "end": 145.12,
+   "text": "Pick a base and a ratio, round the\nresults, and commit to five or six steps."
+  },
+  {
+   "start": 145.43,
+   "end": 148.7,
+   "text": "Name steps by role so\nthe list stays short."
+  },
+  {
+   "start": 149.0,
+   "end": 152.84,
+   "text": "Use rem, and reserve fluid\nsizing for display text."
+  },
+  {
+   "start": 153.13,
+   "end": 158.25,
+   "text": "Next: a good size can still be tiring to\nread if the line is too long or the line"
+  },
+  {
+   "start": 158.25,
+   "end": 160.14,
+   "text": "height does not match."
+  }
+ ]
+}

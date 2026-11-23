@@ -1,0 +1,149 @@
+WEBVTT
+
+00:00:00.000 --> 00:00:04.820
+Keyboard users move through an interface
+one focusable element at a time.
+
+00:00:04.830 --> 00:00:07.320
+The focus indicator is their cursor.
+
+00:00:07.740 --> 00:00:12.600
+Removing it, or making it too faint to
+see, is like hiding the mouse pointer.
+
+00:00:13.070 --> 00:00:16.540
+You will replace a removed
+outline with focus-visible,
+
+00:00:16.540 --> 00:00:21.620
+keep that ring visible on every background,
+and check the page with Tab alone.
+
+00:00:22.070 --> 00:00:26.340
+This line usually arrives because someone
+disliked the ring that appeared after a
+
+00:00:26.340 --> 00:00:32.060
+mouse click. It fixes that complaint and
+breaks keyboard navigation for everyone.
+
+00:00:32.450 --> 00:00:35.200
+Browsers decide when
+focus should be shown.
+
+00:00:35.490 --> 00:00:39.280
+focus-visible matches when the user
+is navigating with a keyboard,
+
+00:00:39.280 --> 00:00:42.700
+and generally not after a
+mouse click on a button.
+
+00:00:43.080 --> 00:00:47.480
+You get a clear ring for keyboard
+users and no ring after a click.
+
+00:00:47.910 --> 00:00:53.280
+Text inputs still show focus on click, because
+people need to know where they are typing.
+
+00:00:53.710 --> 00:00:58.360
+A focus indicator should have at least 3
+to 1 contrast against the colours around
+
+00:00:58.360 --> 00:01:03.780
+it. A teal ring that works on white
+may disappear on a teal button.
+
+00:01:04.090 --> 00:01:08.900
+Offset the outline so it sits on the page
+background rather than on the component.
+
+00:01:09.470 --> 00:01:13.740
+For components that appear on varied
+backgrounds, use a double ring.
+
+00:01:14.050 --> 00:01:16.960
+Prefer outline over box-shadow alone.
+
+00:01:17.280 --> 00:01:20.900
+Outlines remain visible in
+Windows high contrast mode,
+
+00:01:20.910 --> 00:01:22.860
+where box shadows are removed.
+
+00:01:23.150 --> 00:01:26.120
+A shadow-only ring can vanish completely.
+
+00:01:26.490 --> 00:01:29.920
+Focus should move in the same
+order as the visual layout.
+
+00:01:30.350 --> 00:01:34.460
+If you reorder items with CSS
+grid or the order property,
+
+00:01:34.600 --> 00:01:38.940
+the DOM order still controls
+tabbing, so the two can drift apart.
+
+00:01:39.390 --> 00:01:45.920
+Fix the source order. Do not ask CSS to invent
+a reading order the keyboard cannot follow.
+
+00:01:46.300 --> 00:01:49.620
+When content changes,
+move focus deliberately.
+
+00:01:50.110 --> 00:01:52.920
+Opening a dialog moves focus into it.
+
+00:01:53.020 --> 00:01:56.540
+Closing it returns focus to
+the control that opened it,
+
+00:01:56.540 --> 00:01:58.560
+so the person keeps their place.
+
+00:01:58.980 --> 00:02:03.680
+Deleting a row moves focus to a sensible
+neighbour rather than dropping it on the
+
+00:02:03.680 --> 00:02:08.320
+page body. A well-built dialog
+component handles this for you,
+
+00:02:08.320 --> 00:02:12.840
+which is one reason to use a tested
+primitive rather than building your own.
+
+00:02:13.180 --> 00:02:16.440
+Unplug the mouse, or
+simply stop touching it.
+
+00:02:16.750 --> 00:02:18.680
+Press Tab through the page.
+
+00:02:18.850 --> 00:02:24.760
+At every stop, ask: can I see where I
+am, and is this where I expected to be?
+
+00:02:25.010 --> 00:02:28.230
+Never remove focus styles
+without replacing them.
+
+00:02:28.230 --> 00:02:32.020
+Use focus-visible, an
+outline, and an offset.
+
+00:02:32.490 --> 00:02:38.160
+Keep focus order aligned with visual order,
+and manage focus when content changes.
+
+00:02:38.660 --> 00:02:44.520
+Next: a lot of missing focus starts earlier,
+with a div pretending to be a button.
+
+00:02:44.910 --> 00:02:47.900
+Links go somewhere. Buttons do something.

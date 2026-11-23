@@ -1,0 +1,228 @@
+{
+ "paragraphs": [
+  {
+   "start": 0.0,
+   "text": "Once you have a type scale, the temptation is to use size for every distinction. In interfaces, where space is tight, weight and colour are often the better tools. You will limit yourself to two or three weights, check neutral colours against real backgrounds, and stop using colour as the only signal."
+  },
+  {
+   "start": 19.48,
+   "text": "Most products need regular, 400, for body. Medium or semibold, 500 to 600, for labels and emphasis. Bold, 700, for a few headings. Loading five weights costs bandwidth and invites inconsistency. If you use a variable font you can pick any weight on its axis, but the same discipline applies: name a few and use them."
+  },
+  {
+   "start": 45.65,
+   "text": "A short set of neutral text colours gives you hierarchy without any change in size. On a white background, #737373 has a contrast ratio of about 4.7 to 1, which passes the WCAG AA requirement of 4.5 to 1 for normal text. Lighter greys often look elegant in a mockup and fail in practice. Check every text colour against its real background, including hover and disabled states that people still need to read."
+  },
+  {
+   "start": 78.72,
+   "text": "Before, a table used 14 pixel bold for column headers, 14 regular for cells, and 12 pixel light grey, #A3A3A3, for timestamps. The timestamps were hard to read and failed contrast."
+  },
+  {
+   "start": 95.08,
+   "text": "Headers step back through colour and gain clarity through weight. Timestamps are the same size as the cells, so they stay readable, but they are clearly secondary. Tabular numerals keep each digit the same width, so columns of numbers line up. Proportional digits vary in width. Tabular figures make numbers easy to compare."
+  },
+  {
+   "start": 117.4,
+   "text": "If the only difference between an error and normal text is that it is red, some people will not see the difference. Pair colour with an icon, a label such as “Error”, or a change in weight."
+  },
+  {
+   "start": 130.31,
+   "text": "Small uppercase labels benefit from a little extra tracking, around 0.04em to 0.08em. Large headings often look better with slightly negative tracking, around -0.01em to -0.02em. Body text should usually be left alone."
+  },
+  {
+   "start": 151.96,
+   "text": "Use two or three weights and a few neutral text colours. Check every text colour for contrast against its real background. Never let colour be the only signal of meaning. The next course stays with that last rule and takes it into components: focus, the right element, and labels people can actually use."
+  }
+ ],
+ "cues": [
+  {
+   "start": 0.0,
+   "end": 4.66,
+   "text": "Once you have a type scale, the temptation\nis to use size for every distinction."
+  },
+  {
+   "start": 5.01,
+   "end": 10.44,
+   "text": "In interfaces, where space is tight, weight\nand colour are often the better tools."
+  },
+  {
+   "start": 10.68,
+   "end": 13.34,
+   "text": "You will limit yourself\nto two or three weights,"
+  },
+  {
+   "start": 13.45,
+   "end": 19.14,
+   "text": "check neutral colours against real backgrounds,\nand stop using colour as the only signal."
+  },
+  {
+   "start": 19.48,
+   "end": 22.98,
+   "text": "Most products need regular, 400, for body."
+  },
+  {
+   "start": 23.07,
+   "end": 28.56,
+   "text": "Medium or semibold, 500 to\n600, for labels and emphasis."
+  },
+  {
+   "start": 29.04,
+   "end": 31.9,
+   "text": "Bold, 700, for a few headings."
+  },
+  {
+   "start": 32.2,
+   "end": 36.38,
+   "text": "Loading five weights costs bandwidth\nand invites inconsistency."
+  },
+  {
+   "start": 37.0,
+   "end": 41.0,
+   "text": "If you use a variable font you\ncan pick any weight on its axis,"
+  },
+  {
+   "start": 41.28,
+   "end": 45.4,
+   "text": "but the same discipline applies:\nname a few and use them."
+  },
+  {
+   "start": 45.65,
+   "end": 50.88,
+   "text": "A short set of neutral text colours gives\nyou hierarchy without any change in size."
+  },
+  {
+   "start": 51.26,
+   "end": 57.16,
+   "text": "On a white background, #737373\nhas a contrast ratio of"
+  },
+  {
+   "start": 57.16,
+   "end": 63.72,
+   "text": "about 4.7 to 1, which passes\nthe WCAG AA requirement of 4.5"
+  },
+  {
+   "start": 63.72,
+   "end": 69.52,
+   "text": "to 1 for normal text. Lighter greys often\nlook elegant in a mockup and fail in"
+  },
+  {
+   "start": 69.52,
+   "end": 73.9,
+   "text": "practice. Check every text colour\nagainst its real background,"
+  },
+  {
+   "start": 74.04,
+   "end": 78.3,
+   "text": "including hover and disabled states\nthat people still need to read."
+  },
+  {
+   "start": 78.72,
+   "end": 82.76,
+   "text": "Before, a table used 14 pixel\nbold for column headers,"
+  },
+  {
+   "start": 82.98,
+   "end": 89.64,
+   "text": "14 regular for cells, and 12\npixel light grey, #A3A3A3,"
+  },
+  {
+   "start": 89.64,
+   "end": 94.68,
+   "text": "for timestamps. The timestamps were\nhard to read and failed contrast."
+  },
+  {
+   "start": 95.08,
+   "end": 98.96,
+   "text": "Headers step back through colour\nand gain clarity through weight."
+  },
+  {
+   "start": 99.34,
+   "end": 103.36,
+   "text": "Timestamps are the same size as\nthe cells, so they stay readable,"
+  },
+  {
+   "start": 103.51,
+   "end": 105.22,
+   "text": "but they are clearly secondary."
+  },
+  {
+   "start": 105.67,
+   "end": 111.08,
+   "text": "Tabular numerals keep each digit the same\nwidth, so columns of numbers line up."
+  },
+  {
+   "start": 111.26,
+   "end": 113.74,
+   "text": "Proportional digits vary in width."
+  },
+  {
+   "start": 114.06,
+   "end": 117.04,
+   "text": "Tabular figures make\nnumbers easy to compare."
+  },
+  {
+   "start": 117.4,
+   "end": 121.94,
+   "text": "If the only difference between an error\nand normal text is that it is red,"
+  },
+  {
+   "start": 122.07,
+   "end": 124.4,
+   "text": "some people will not see the difference."
+  },
+  {
+   "start": 124.71,
+   "end": 128.36,
+   "text": "Pair colour with an icon,\na label such as “Error”,"
+  },
+  {
+   "start": 128.44,
+   "end": 129.82,
+   "text": "or a change in weight."
+  },
+  {
+   "start": 130.31,
+   "end": 134.2,
+   "text": "Small uppercase labels benefit\nfrom a little extra tracking,"
+  },
+  {
+   "start": 134.36,
+   "end": 140.5,
+   "text": "around 0.04em to 0.08em.\nLarge headings often"
+  },
+  {
+   "start": 140.5,
+   "end": 149.04,
+   "text": "look better with slightly negative\ntracking, around -0.01em to -0.02em."
+  },
+  {
+   "start": 149.04,
+   "end": 151.62,
+   "text": "Body text should usually be left alone."
+  },
+  {
+   "start": 151.96,
+   "end": 155.54,
+   "text": "Use two or three weights and\na few neutral text colours."
+  },
+  {
+   "start": 155.98,
+   "end": 160.0,
+   "text": "Check every text colour for contrast\nagainst its real background."
+  },
+  {
+   "start": 160.37,
+   "end": 163.28,
+   "text": "Never let colour be the\nonly signal of meaning."
+  },
+  {
+   "start": 163.74,
+   "end": 168.02,
+   "text": "The next course stays with that last\nrule and takes it into components:"
+  },
+  {
+   "start": 168.45,
+   "end": 173.08,
+   "text": "focus, the right element, and\nlabels people can actually use."
+  }
+ ]
+}

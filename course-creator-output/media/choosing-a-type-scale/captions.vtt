@@ -1,0 +1,143 @@
+WEBVTT
+
+00:00:00.000 --> 00:00:03.980
+Most interfaces need far fewer
+font sizes than they use.
+
+00:00:04.200 --> 00:00:08.400
+An audit of a mature product often
+finds fifteen or more sizes,
+
+00:00:08.480 --> 00:00:10.480
+many of them a pixel apart.
+
+00:00:10.890 --> 00:00:15.060
+A type scale replaces that drift
+with a short, deliberate list.
+
+00:00:15.320 --> 00:00:19.160
+You will pick a base and a
+ratio, name the steps by role,
+
+00:00:19.160 --> 00:00:21.300
+and apply three of them to a modal.
+
+00:00:21.540 --> 00:00:25.200
+A modular scale multiplies
+a base size by a ratio.
+
+00:00:25.460 --> 00:00:31.700
+With a 16 pixel base and a ratio
+of 1.25 you get roughly 12.8,
+
+00:00:31.700 --> 00:00:37.820
+16, 20, 25, 31, and 39.
+Round those to whole
+
+00:00:37.820 --> 00:00:39.840
+pixels and you have a scale.
+
+00:00:40.210 --> 00:00:42.140
+The ratio guides the feel.
+
+00:00:42.410 --> 00:00:48.900
+From 1.125 to 1.2 is compact, good
+for dense dashboards and tools.
+
+00:00:49.240 --> 00:00:53.060
+1.25 is a balanced default
+for most products.
+
+00:00:53.360 --> 00:00:58.980
+1.333 and up is dramatic, better
+suited to marketing pages with
+
+00:00:58.980 --> 00:01:04.360
+big headlines. You can use a tighter
+ratio inside the app and a larger one for
+
+00:01:04.360 --> 00:01:07.420
+marketing, as long as
+they share the same base.
+
+00:01:07.710 --> 00:01:10.600
+Name steps by role, not by size.
+
+00:01:10.960 --> 00:01:15.430
+Names like text-20 invite
+people to add text-21.
+
+00:01:15.870 --> 00:01:18.240
+Role names keep the list closed.
+
+00:01:18.430 --> 00:01:23.320
+Five steps: caption, body,
+lead, title, display.
+
+00:01:23.720 --> 00:01:27.840
+Use rem so the scale follows
+the reader’s browser font size.
+
+00:01:28.130 --> 00:01:32.060
+People who set a larger default are
+often the ones who need it most.
+
+00:01:32.430 --> 00:01:37.240
+If someone sets their root to 20
+pixels, every step grows with them.
+
+00:01:37.500 --> 00:01:42.560
+Before, a modal used 15 pixels
+for body, 17 for the title,
+
+00:01:42.600 --> 00:01:47.840
+and 13 for helper text, chosen one
+at a time over several sprints.
+
+00:01:47.870 --> 00:01:49.660
+Nothing reads as a decision.
+
+00:01:50.040 --> 00:01:53.400
+After, the modal uses three
+steps from the scale.
+
+00:01:54.080 --> 00:01:58.320
+Title, body, caption. The
+title is clearly a title.
+
+00:01:58.560 --> 00:02:03.440
+The helper is clearly secondary, instead
+of almost the same size as the body.
+
+00:02:03.730 --> 00:02:07.760
+For large display text you can let
+the size grow with the viewport.
+
+00:02:08.090 --> 00:02:10.940
+Clamp between 2 rem and 3 rem.
+
+00:02:11.090 --> 00:02:17.080
+Keep body text fixed. Fluid body sizes make
+line length and spacing harder to reason
+
+00:02:17.080 --> 00:02:19.380
+about, and the gain is small.
+
+00:02:19.670 --> 00:02:25.120
+Pick a base and a ratio, round the
+results, and commit to five or six steps.
+
+00:02:25.430 --> 00:02:28.700
+Name steps by role so
+the list stays short.
+
+00:02:29.000 --> 00:02:32.840
+Use rem, and reserve fluid
+sizing for display text.
+
+00:02:33.130 --> 00:02:38.250
+Next: a good size can still be tiring to
+read if the line is too long or the line
+
+00:02:38.250 --> 00:02:40.140
+height does not match.

@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<title>slide 05</title>
+<style>
+* { box-sizing: border-box; }
+html, body { margin: 0; width: 1920px; height: 1080px; overflow: hidden; background: #f3f0e8; color: #171717; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+.frame { position: relative; width: 1920px; height: 1080px; padding: 72px 112px 80px; display: flex; flex-direction: column; }
+.kicker { font-size: 22px; font-weight: 650; letter-spacing: 0.14em; text-transform: uppercase; color: #737373; }
+h1 { font-size: 64px; line-height: 1.05; letter-spacing: -0.035em; font-weight: 650; margin: 18px 0 0; }
+.stage { flex: 1; display: flex; align-items: center; justify-content: center; gap: 72px; }
+.card { background: #fff; border: 1px solid #e4e0d6; border-radius: 28px; padding: 48px 44px 40px; box-shadow: 0 18px 50px rgba(23,23,23,0.06); }
+.label { font-size: 22px; font-weight: 650; letter-spacing: 0.1em; text-transform: uppercase; color: #737373; margin: 0 0 18px; }
+.accent { color: #0f766e; }
+.bad { color: #b91c1c; }
+.note { font-size: 30px; line-height: 1.4; color: #404040; margin: 0; }
+pre { margin: 0; background: #171717; color: #f5f5f4; border-radius: 24px; padding: 44px 52px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 30px; line-height: 1.55; }
+pre .tag { color: #5eead4; } pre .val { color: #fcd34d; } pre .dim { color: #a3a3a3; } pre .hl { background: rgba(94,234,212,0.18); border-radius: 6px; padding: 0 6px; margin: 0 -6px; }
+.callout { position: absolute; font: 600 24px/1 ui-monospace, SFMono-Regular, Menlo, monospace; color: #fff; background: #b91c1c; border-radius: 10px; padding: 8px 12px; }
+.callout.ok { background: #0f766e; }
+.takes { width: 1300px; }
+.takes p { margin: 0; padding: 30px 0; border-bottom: 1px solid #e4e0d6; font-size: 52px; letter-spacing: -0.035em; font-weight: 600; }
+.takes p span { color: #0f766e; margin-right: 18px; }
+.takes code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.9em; background: #e8e3d6; border-radius: 10px; padding: 2px 12px; }
+
+.sm { background: #fff; border: 1px solid #e4e0d6; border-radius: 20px; padding: 24px 28px; } .tag2 { font: 600 18px ui-monospace, Menlo, monospace; color: #737373; margin-bottom: 12px; } .stage { align-items: flex-start; padding-top: 24px; } .tag2.bad { color: #b91c1c; } .tag2.accent { color: #0f766e; }
+</style>
+<body>
+<div class="frame">
+  <div class="kicker">Typography · Lesson 2</div>
+  <h1>Tighter line height as size grows</h1>
+  <div class="stage">
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:28px 64px;width:1450px">
+<div class="sm"><div class="tag2 bad">Heading · line-height 1.5</div><div style="font-size:52px;line-height:1.5;font-weight:700;letter-spacing:-0.03em;max-width:620px;color:#171717">Pick up where you stopped last time</div></div>
+<div class="sm"><div class="tag2 accent">Heading · line-height 1.15</div><div style="font-size:52px;line-height:1.15;font-weight:700;letter-spacing:-0.03em;max-width:620px;color:#171717">Pick up where you stopped last time</div></div>
+<div class="sm"><div class="tag2 ">Body · line-height 1.5</div><div style="font-size:22px;line-height:1.5;font-weight:400;letter-spacing:0;max-width:620px;color:#171717">Your progress saves automatically after every lesson. If you switch devices, sign in with the same account and pick up where you stopped.</div></div>
+<div class="sm"><div class="tag2 ">Caption · line-height 1.4</div><div style="font-size:16px;line-height:1.4;font-weight:400;letter-spacing:0;max-width:620px;color:#737373">Quiz results stay with the lesson, so you can retake a quiz at any time without losing your earlier score. Streaks count any day with at least ten minutes of learning.</div></div>
+</div>
+<pre style="position:absolute;right:112px;bottom:64px;font-size:24px;padding:24px 32px">body { line-height: <span class="val">1.5</span>; }
+h1, h2 { line-height: <span class="val">1.15</span>; }
+.caption { line-height: <span class="val">1.4</span>; }</pre>
+</div>
+</div>
+</body>
+</html>

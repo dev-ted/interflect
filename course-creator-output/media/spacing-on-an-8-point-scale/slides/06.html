@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<title>slide 06</title>
+<style>
+* { box-sizing: border-box; }
+html, body { margin: 0; width: 1920px; height: 1080px; overflow: hidden; background: #f3f0e8; color: #171717; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+.frame { position: relative; width: 1920px; height: 1080px; padding: 72px 112px 80px; display: flex; flex-direction: column; }
+.kicker { font-size: 22px; font-weight: 650; letter-spacing: 0.14em; text-transform: uppercase; color: #737373; }
+h1 { font-size: 64px; line-height: 1.05; letter-spacing: -0.035em; font-weight: 650; margin: 18px 0 0; }
+.stage { flex: 1; display: flex; align-items: center; justify-content: center; gap: 72px; }
+.card { background: #fff; border: 1px solid #e4e0d6; border-radius: 28px; padding: 48px 44px 40px; box-shadow: 0 18px 50px rgba(23,23,23,0.06); }
+.label { font-size: 22px; font-weight: 650; letter-spacing: 0.1em; text-transform: uppercase; color: #737373; margin: 0 0 18px; }
+.accent { color: #0f766e; }
+.bad { color: #b91c1c; }
+.note { font-size: 30px; line-height: 1.4; color: #404040; margin: 0; }
+pre { margin: 0; background: #171717; color: #f5f5f4; border-radius: 24px; padding: 44px 52px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 30px; line-height: 1.55; }
+pre .tag { color: #5eead4; } pre .val { color: #fcd34d; } pre .dim { color: #a3a3a3; } pre .hl { background: rgba(94,234,212,0.18); border-radius: 6px; padding: 0 6px; margin: 0 -6px; }
+.callout { position: absolute; font: 600 24px/1 ui-monospace, SFMono-Regular, Menlo, monospace; color: #fff; background: #b91c1c; border-radius: 10px; padding: 8px 12px; }
+.callout.ok { background: #0f766e; }
+.takes { width: 1300px; }
+.takes p { margin: 0; padding: 30px 0; border-bottom: 1px solid #e4e0d6; font-size: 52px; letter-spacing: -0.035em; font-weight: 600; }
+.takes p span { color: #0f766e; margin-right: 18px; }
+.takes code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.9em; background: #e8e3d6; border-radius: 10px; padding: 2px 12px; }
+
+
+.parent { position: relative; width: 820px; border: 3px dashed #0f766e; border-radius: 28px; padding: 72px 48px 48px; display: flex; flex-direction: column; }
+.tagline { position: absolute; top: 20px; left: 48px; font-size: 24px; font-weight: 650; color: #0f766e; }
+.tagline.in { top: -38px; left: 0; color: #404040; }
+.comp { position: relative; background: #fff; border: 1px solid #e4e0d6; border-radius: 20px; padding: 28px; display: grid; gap: 12px; margin-top: 40px; }
+.parent .comp:first-of-type { margin-top: 40px; }
+.bar { height: 22px; border-radius: 8px; background: #d6d1c4; } .w1 { width: 60%; background: #a8a294; } .w2 { width: 85%; }
+.gapl { height: 40px; margin: 0 auto -40px; position: relative; top: 0; font: 600 22px ui-monospace, Menlo, monospace; color: #0f766e; display:none; }
+.lone { width: 440px; outline: 3px dashed #b91c1c; outline-offset: 22px; margin: 0; }
+.x { position: absolute; right: -60px; top: -60px; width: 64px; height: 64px; border-radius: 50%; background: #b91c1c; color: #fff; font-size: 36px; display: grid; place-items: center; font-weight: 700; }
+.mlabel { position: absolute; bottom: -78px; left: 0; font: 600 24px ui-monospace, Menlo, monospace; color: #b91c1c; }
+
+</style>
+<body>
+<div class="frame">
+  <div class="kicker">Spacing · Lesson 2</div>
+  <h1>Two kinds of spacing</h1>
+  <div class="stage">
+<div class="parent">
+  <span class="tagline">Layout owns the gap between components</span>
+  <div class="comp"><span class="tagline in">Component owns padding + internal gap</span><div class="bar w1"></div><div class="bar w2"></div></div>
+  <div class="gapl">gap</div>
+  <div class="comp"><div class="bar w1"></div><div class="bar w2"></div></div>
+</div>
+<div class="comp lone"><div class="bar w1"></div><div class="bar w2"></div><span class="x">✕</span><span class="mlabel">margin: 22px</span></div>
+</div>
+</div>
+</body>
+</html>

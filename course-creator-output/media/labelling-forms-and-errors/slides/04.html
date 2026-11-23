@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<title>slide 04</title>
+<style>
+* { box-sizing: border-box; }
+html, body { margin: 0; width: 1920px; height: 1080px; overflow: hidden; background: #f3f0e8; color: #171717; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+.frame { position: relative; width: 1920px; height: 1080px; padding: 72px 112px 80px; display: flex; flex-direction: column; }
+.kicker { font-size: 22px; font-weight: 650; letter-spacing: 0.14em; text-transform: uppercase; color: #737373; }
+h1 { font-size: 64px; line-height: 1.05; letter-spacing: -0.035em; font-weight: 650; margin: 18px 0 0; }
+.stage { flex: 1; display: flex; align-items: center; justify-content: center; gap: 72px; }
+.card { background: #fff; border: 1px solid #e4e0d6; border-radius: 28px; padding: 48px 44px 40px; box-shadow: 0 18px 50px rgba(23,23,23,0.06); }
+.label { font-size: 22px; font-weight: 650; letter-spacing: 0.1em; text-transform: uppercase; color: #737373; margin: 0 0 18px; }
+.accent { color: #0f766e; }
+.bad { color: #b91c1c; }
+.note { font-size: 30px; line-height: 1.4; color: #404040; margin: 0; }
+pre { margin: 0; background: #171717; color: #f5f5f4; border-radius: 24px; padding: 44px 52px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 30px; line-height: 1.55; }
+pre .tag { color: #5eead4; } pre .val { color: #fcd34d; } pre .dim { color: #a3a3a3; } pre .hl { background: rgba(94,234,212,0.18); border-radius: 6px; padding: 0 6px; margin: 0 -6px; }
+.callout { position: absolute; font: 600 24px/1 ui-monospace, SFMono-Regular, Menlo, monospace; color: #fff; background: #b91c1c; border-radius: 10px; padding: 8px 12px; }
+.callout.ok { background: #0f766e; }
+.takes { width: 1300px; }
+.takes p { margin: 0; padding: 30px 0; border-bottom: 1px solid #e4e0d6; font-size: 52px; letter-spacing: -0.035em; font-weight: 600; }
+.takes p span { color: #0f766e; margin-right: 18px; }
+.takes code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.9em; background: #e8e3d6; border-radius: 10px; padding: 2px 12px; }
+
+
+.lbl2 { font-size: 22px; font-weight: 650; text-transform: uppercase; letter-spacing: .1em; margin-bottom: 14px; }
+.pane { background: #fff; border: 1px solid #e4e0d6; border-radius: 22px; padding: 36px; box-shadow: 0 18px 50px rgba(23,23,23,.06); }
+.flabel { font-size: 26px; font-weight: 600; display: block; margin-bottom: 10px; }
+.in { height: 64px; border: 2px solid #d4cfc3; border-radius: 12px; padding: 0 18px; display: flex; align-items: center; font-size: 26px; }
+.ph { color: #b5b5b5; } .ring { outline: 3px solid #14b8a6; outline-offset: 3px; }
+.sr { font: 500 26px ui-monospace, Menlo, monospace; background: #171717; color: #f5f5f4; border-radius: 14px; padding: 16px 22px; margin-top: 20px; }
+.sr::before { content: "🔊  "; } .sr b { color: #5eead4; font-weight: 600; }
+.hint { font-size: 22px; color: #737373; margin: 0 0 10px; }
+.err { font-size: 22px; color: #b91c1c; font-weight: 600; margin: 10px 0 0; display: flex; gap: 10px; align-items: center; }
+.err .ic { width: 26px; height: 26px; border-radius: 50%; background: #b91c1c; color: #fff; display: inline-grid; place-items: center; font-size: 16px; font-weight: 800; }
+.chk { list-style: none; margin: 0; padding: 0; } .chk li { font-size: 30px; padding: 14px 0; border-bottom: 1px solid #e4e0d6; display: flex; gap: 16px; }
+.chk .n::before { content: "✕"; color: #b91c1c; font-weight: 800; width: 30px; } .chk .y::before { content: "✓"; color: #0f766e; font-weight: 800; width: 30px; }
+
+</style>
+<body>
+<div class="frame">
+  <div class="kicker">Accessible components · Lesson 3</div>
+  <h1>Hints belong to the input</h1>
+  <div class="stage">
+<pre style="width:900px;font-size:25px">&lt;<span class="tag">label</span> for=<span class="val">"password"</span>&gt;Password&lt;/<span class="tag">label</span>&gt;
+&lt;<span class="tag">p</span> <span class="hl">id=<span class="val">"password-hint"</span></span>&gt;At least 12 characters.&lt;/<span class="tag">p</span>&gt;
+&lt;<span class="tag">input</span> id=<span class="val">"password"</span> type=<span class="val">"password"</span>
+  <span class="hl">aria-describedby=<span class="val">"password-hint"</span></span> /&gt;</pre>
+<div style="width:620px"><div class="pane"><span class="flabel">Password</span><p class="hint">At least 12 characters.</p><div class="in ring">••••••</div></div>
+<div class="sr"><b>Password</b>, edit text, <b>at least 12 characters.</b></div></div>
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,146 @@
+WEBVTT
+
+00:00:00.000 --> 00:00:04.660
+Once you have a type scale, the temptation
+is to use size for every distinction.
+
+00:00:05.010 --> 00:00:10.440
+In interfaces, where space is tight, weight
+and colour are often the better tools.
+
+00:00:10.680 --> 00:00:13.340
+You will limit yourself
+to two or three weights,
+
+00:00:13.450 --> 00:00:19.140
+check neutral colours against real backgrounds,
+and stop using colour as the only signal.
+
+00:00:19.480 --> 00:00:22.980
+Most products need regular, 400, for body.
+
+00:00:23.070 --> 00:00:28.560
+Medium or semibold, 500 to
+600, for labels and emphasis.
+
+00:00:29.040 --> 00:00:31.900
+Bold, 700, for a few headings.
+
+00:00:32.200 --> 00:00:36.380
+Loading five weights costs bandwidth
+and invites inconsistency.
+
+00:00:37.000 --> 00:00:41.000
+If you use a variable font you
+can pick any weight on its axis,
+
+00:00:41.280 --> 00:00:45.400
+but the same discipline applies:
+name a few and use them.
+
+00:00:45.650 --> 00:00:50.880
+A short set of neutral text colours gives
+you hierarchy without any change in size.
+
+00:00:51.260 --> 00:00:57.160
+On a white background, #737373
+has a contrast ratio of
+
+00:00:57.160 --> 00:01:03.720
+about 4.7 to 1, which passes
+the WCAG AA requirement of 4.5
+
+00:01:03.720 --> 00:01:09.520
+to 1 for normal text. Lighter greys often
+look elegant in a mockup and fail in
+
+00:01:09.520 --> 00:01:13.900
+practice. Check every text colour
+against its real background,
+
+00:01:14.040 --> 00:01:18.300
+including hover and disabled states
+that people still need to read.
+
+00:01:18.720 --> 00:01:22.760
+Before, a table used 14 pixel
+bold for column headers,
+
+00:01:22.980 --> 00:01:29.640
+14 regular for cells, and 12
+pixel light grey, #A3A3A3,
+
+00:01:29.640 --> 00:01:34.680
+for timestamps. The timestamps were
+hard to read and failed contrast.
+
+00:01:35.080 --> 00:01:38.960
+Headers step back through colour
+and gain clarity through weight.
+
+00:01:39.340 --> 00:01:43.360
+Timestamps are the same size as
+the cells, so they stay readable,
+
+00:01:43.510 --> 00:01:45.220
+but they are clearly secondary.
+
+00:01:45.670 --> 00:01:51.080
+Tabular numerals keep each digit the same
+width, so columns of numbers line up.
+
+00:01:51.260 --> 00:01:53.740
+Proportional digits vary in width.
+
+00:01:54.060 --> 00:01:57.040
+Tabular figures make
+numbers easy to compare.
+
+00:01:57.400 --> 00:02:01.940
+If the only difference between an error
+and normal text is that it is red,
+
+00:02:02.070 --> 00:02:04.400
+some people will not see the difference.
+
+00:02:04.710 --> 00:02:08.360
+Pair colour with an icon,
+a label such as “Error”,
+
+00:02:08.440 --> 00:02:09.820
+or a change in weight.
+
+00:02:10.310 --> 00:02:14.200
+Small uppercase labels benefit
+from a little extra tracking,
+
+00:02:14.360 --> 00:02:20.500
+around 0.04em to 0.08em.
+Large headings often
+
+00:02:20.500 --> 00:02:29.040
+look better with slightly negative
+tracking, around -0.01em to -0.02em.
+
+00:02:29.040 --> 00:02:31.620
+Body text should usually be left alone.
+
+00:02:31.960 --> 00:02:35.540
+Use two or three weights and
+a few neutral text colours.
+
+00:02:35.980 --> 00:02:40.000
+Check every text colour for contrast
+against its real background.
+
+00:02:40.370 --> 00:02:43.280
+Never let colour be the
+only signal of meaning.
+
+00:02:43.740 --> 00:02:48.020
+The next course stays with that last
+rule and takes it into components:
+
+00:02:48.450 --> 00:02:53.080
+focus, the right element, and
+labels people can actually use.

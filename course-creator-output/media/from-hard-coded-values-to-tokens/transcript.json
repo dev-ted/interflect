@@ -1,0 +1,185 @@
+{
+ "paragraphs": [
+  {
+   "start": 0.0,
+   "text": "A design token is a named design decision: a colour, a spacing step, a radius, a duration. Tokens let designers and engineers refer to the same decision by the same name, so changing it in one place changes it everywhere. You will audit what is actually in the code, collapse near-duplicates into primitives, and point a card at those names."
+  },
+  {
+   "start": 24.4,
+   "text": "Before naming anything, find out what is actually in use. A quick search of a stylesheet or component folder for hex codes and pixel values is usually revealing. It is common to find a dozen greys where three were intended, and borders in #E4E4E4, #E5E5E5, and #E6E6E6 that nobody can tell apart. Each near-duplicate is a decision someone made without a shared reference."
+  },
+  {
+   "start": 56.54,
+   "text": "Primitive tokens describe raw values with neutral names. They form your palette and scales. Map every audited value to its nearest primitive. The three almost-identical borders all become neutral-200. If a value has no sensible home, ask whether it is a real need or an accident."
+  },
+  {
+   "start": 77.95,
+   "text": "The card looks almost identical, but now it moves with the system. Change radius-2 and every card, input, and menu that uses it follows. The 7 pixel radius and the 15 pixel padding were not a different design. They were drift. They map to 8 and 16."
+  },
+  {
+   "start": 98.5,
+   "text": "Teams often keep tokens in a JSON file and generate CSS, Tailwind configuration, and design-tool variables from it. That is worth doing once more than one platform consumes the tokens. For a single web app, CSS custom properties in one file are a fine source of truth."
+  },
+  {
+   "start": 118.25,
+   "text": "Audit what is in use before you design a token set. Primitive tokens name raw values. Map every existing value to one. Keep a single source of truth, and generate other formats only when you need them. Next, primitives tell you what a value is. Semantic tokens tell you what it is for, which is what makes a theme possible."
+  }
+ ],
+ "cues": [
+  {
+   "start": 0.0,
+   "end": 3.8,
+   "text": "A design token is a named\ndesign decision: a colour,"
+  },
+  {
+   "start": 3.84,
+   "end": 6.94,
+   "text": "a spacing step, a radius, a duration."
+  },
+  {
+   "start": 7.82,
+   "end": 12.27,
+   "text": "Tokens let designers and engineers refer\nto the same decision by the same name,"
+  },
+  {
+   "start": 12.27,
+   "end": 15.6,
+   "text": "so changing it in one place\nchanges it everywhere."
+  },
+  {
+   "start": 16.1,
+   "end": 18.86,
+   "text": "You will audit what is\nactually in the code,"
+  },
+  {
+   "start": 18.9,
+   "end": 23.84,
+   "text": "collapse near-duplicates into primitives,\nand point a card at those names."
+  },
+  {
+   "start": 24.4,
+   "end": 28.14,
+   "text": "Before naming anything, find\nout what is actually in use."
+  },
+  {
+   "start": 28.43,
+   "end": 33.39,
+   "text": "A quick search of a stylesheet or component\nfolder for hex codes and pixel values is"
+  },
+  {
+   "start": 33.39,
+   "end": 39.1,
+   "text": "usually revealing. It is common to find\na dozen greys where three were intended,"
+  },
+  {
+   "start": 39.39,
+   "end": 46.04,
+   "text": "and borders in #E4E4E4, #E5E5E5,"
+  },
+  {
+   "start": 46.17,
+   "end": 51.0,
+   "text": "and #E6E6E6 that nobody can tell apart."
+  },
+  {
+   "start": 51.42,
+   "end": 56.02,
+   "text": "Each near-duplicate is a decision\nsomeone made without a shared reference."
+  },
+  {
+   "start": 56.54,
+   "end": 60.38,
+   "text": "Primitive tokens describe raw\nvalues with neutral names."
+  },
+  {
+   "start": 60.64,
+   "end": 62.82,
+   "text": "They form your palette and scales."
+  },
+  {
+   "start": 63.3,
+   "end": 66.68,
+   "text": "Map every audited value\nto its nearest primitive."
+  },
+  {
+   "start": 67.07,
+   "end": 72.06,
+   "text": "The three almost-identical\nborders all become neutral-200."
+  },
+  {
+   "start": 72.06,
+   "end": 77.4,
+   "text": "If a value has no sensible home, ask\nwhether it is a real need or an accident."
+  },
+  {
+   "start": 77.95,
+   "end": 82.56,
+   "text": "The card looks almost identical,\nbut now it moves with the system."
+  },
+  {
+   "start": 82.91,
+   "end": 88.7,
+   "text": "Change radius-2 and every card,\ninput, and menu that uses it follows."
+  },
+  {
+   "start": 89.25,
+   "end": 94.28,
+   "text": "The 7 pixel radius and the 15 pixel\npadding were not a different design."
+  },
+  {
+   "start": 94.38,
+   "end": 97.84,
+   "text": "They were drift. They map to 8 and 16."
+  },
+  {
+   "start": 98.5,
+   "end": 102.86,
+   "text": "Teams often keep tokens in a\nJSON file and generate CSS,"
+  },
+  {
+   "start": 103.1,
+   "end": 107.08,
+   "text": "Tailwind configuration, and\ndesign-tool variables from it."
+  },
+  {
+   "start": 107.39,
+   "end": 111.5,
+   "text": "That is worth doing once more than\none platform consumes the tokens."
+  },
+  {
+   "start": 112.02,
+   "end": 117.94,
+   "text": "For a single web app, CSS custom properties\nin one file are a fine source of truth."
+  },
+  {
+   "start": 118.25,
+   "end": 121.78,
+   "text": "Audit what is in use before\nyou design a token set."
+  },
+  {
+   "start": 122.09,
+   "end": 124.72,
+   "text": "Primitive tokens name raw values."
+  },
+  {
+   "start": 124.91,
+   "end": 127.4,
+   "text": "Map every existing value to one."
+  },
+  {
+   "start": 127.73,
+   "end": 132.76,
+   "text": "Keep a single source of truth, and generate\nother formats only when you need them."
+  },
+  {
+   "start": 133.05,
+   "end": 136.26,
+   "text": "Next, primitives tell you what a value is."
+  },
+  {
+   "start": 136.51,
+   "end": 141.54,
+   "text": "Semantic tokens tell you what it is for,\nwhich is what makes a theme possible."
+  }
+ ]
+}

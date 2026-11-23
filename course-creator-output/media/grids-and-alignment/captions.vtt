@@ -1,0 +1,164 @@
+WEBVTT
+
+00:00:00.000 --> 00:00:02.200
+A grid is not decoration.
+
+00:00:02.560 --> 00:00:06.640
+It is a promise that things which
+look aligned really are aligned,
+
+00:00:06.650 --> 00:00:10.120
+at every screen width, and
+with every length of content.
+
+00:00:10.640 --> 00:00:13.380
+Count the distinct left edges on a screen.
+
+00:00:13.610 --> 00:00:18.420
+Reducing them is often the single biggest
+improvement you can make to a busy layout.
+
+00:00:18.840 --> 00:00:22.000
+A dashboard with a heading,
+a filter bar, three cards,
+
+00:00:22.000 --> 00:00:27.320
+and a table might have seven different
+left edges if each was placed by eye.
+
+00:00:27.630 --> 00:00:30.180
+Each edge is a small visual event.
+
+00:00:30.370 --> 00:00:36.000
+Reducing them to two or three calms the screen
+more than a new colour or a new typeface.
+
+00:00:36.430 --> 00:00:40.140
+Twelve columns divide neatly
+into halves, thirds, quarters,
+
+00:00:40.140 --> 00:00:43.600
+and sixths, which is why
+the number is so common.
+
+00:00:43.890 --> 00:00:46.060
+You do not need to use all twelve.
+
+00:00:46.410 --> 00:00:51.520
+Most product screens use a few spans:
+full width, two thirds plus one third,
+
+00:00:51.540 --> 00:00:53.240
+or three equal cards.
+
+00:00:53.810 --> 00:00:57.260
+The page is a 12 column grid, gap 24,
+
+00:00:57.540 --> 00:01:00.200
+which is on the spacing
+scale from the last lesson.
+
+00:01:00.430 --> 00:01:06.480
+Max width 1200, centred, with
+16 pixels of inline padding.
+
+00:01:06.660 --> 00:01:10.160
+Main spans 8. The aside spans 4.
+
+00:01:10.360 --> 00:01:16.680
+Below 768 pixels both span the full
+grid, from line 1 to the last line.
+
+00:01:16.930 --> 00:01:21.680
+Use minmax 0, 1fr, not plain 1fr.
+
+00:01:21.970 --> 00:01:23.520
+Without the zero minimum,
+
+00:01:23.570 --> 00:01:28.960
+a long URL or a code block inside a column
+can force that column wider than its
+
+00:01:28.960 --> 00:01:30.840
+share and break the grid.
+
+00:01:31.230 --> 00:01:35.140
+1fr has an automatic
+minimum based on content.
+
+00:01:35.440 --> 00:01:41.160
+minmax of 0 and 1fr lets the column
+shrink so the grid stays even.
+
+00:01:41.550 --> 00:01:45.040
+Before: a profile header
+where the avatar, the name,
+
+00:01:45.040 --> 00:01:49.480
+and the action button are each
+centred in their own flex box.
+
+00:01:49.480 --> 00:01:54.940
+Text baselines do not line up, and the button
+floats a few pixels lower than the name.
+
+00:01:55.260 --> 00:01:59.260
+After: one row with align-items
+center for the avatar,
+
+00:01:59.260 --> 00:02:03.020
+and a shared baseline for the
+name and the button text.
+
+00:02:03.230 --> 00:02:08.560
+Gap 16 between avatar and text,
+gap 8 inside the meta row.
+
+00:02:08.830 --> 00:02:12.820
+The name and the button label now
+sit on the same invisible line,
+
+00:02:12.900 --> 00:02:15.100
+which is what the eye checks first.
+
+00:02:15.530 --> 00:02:18.800
+Sometimes mathematically
+aligned things look wrong.
+
+00:02:19.050 --> 00:02:24.440
+A play icon centred in a circle looks shifted
+left because its visual weight sits on
+
+00:02:24.440 --> 00:02:29.380
+one side. Round shapes look smaller
+than squares of the same size.
+
+00:02:29.430 --> 00:02:31.960
+Nudge these by a pixel or two.
+
+00:02:32.270 --> 00:02:38.080
+Align to what people see, then leave a
+comment so the next person does not undo it.
+
+00:02:38.180 --> 00:02:42.400
+Count the left edges and remove the
+ones you did not mean to create.
+
+00:02:42.760 --> 00:02:46.980
+Use a column grid with a small
+set of spans, and minmax 0,
+
+00:02:46.980 --> 00:02:50.180
+1fr to keep columns honest.
+
+00:02:50.480 --> 00:02:55.860
+Align text on baselines, and trust
+your eye for icons and round shapes.
+
+00:02:55.950 --> 00:02:59.260
+The next course takes the
+same discipline into type:
+
+00:02:59.520 --> 00:03:04.780
+a short scale of sizes, named by role,
+so you stop inventing font sizes.
