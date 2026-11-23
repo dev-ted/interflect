@@ -39,7 +39,7 @@ const LEVEL_LABEL: Record<CourseCardItem["level"], string> = {
 
 const plural = (n: number, word: string) => `${n} ${word}${n === 1 ? "" : "s"}`;
 
-export function CourseCard({ course }: { course: CourseCardItem }) {
+export function CourseCard({ course, wide = false }: { course: CourseCardItem; wide?: boolean }) {
   const progressPct =
     course.lessonCount > 0
       ? Math.round((course.completedLessons / course.lessonCount) * 100)
@@ -48,9 +48,13 @@ export function CourseCard({ course }: { course: CourseCardItem }) {
   return (
     <Link
       href={`/courses/${course.slug}`}
-      className="card group flex h-full flex-col overflow-hidden transition-colors duration-150 hover:border-mist"
+      className={`card group flex h-full flex-col overflow-hidden transition-colors duration-150 hover:border-mist ${wide ? "md:flex-row" : ""}`}
     >
-      <div className="aspect-video w-full overflow-hidden border-b border-line bg-subtle">
+      <div
+        className={`aspect-video w-full shrink-0 overflow-hidden border-b border-line bg-subtle ${
+          wide ? "md:w-[58%] md:border-r md:border-b-0" : ""
+        }`}
+      >
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={course.thumbnailUrl}
@@ -59,7 +63,7 @@ export function CourseCard({ course }: { course: CourseCardItem }) {
         />
       </div>
 
-      <div className="flex flex-1 flex-col gap-3 p-5">
+      <div className={`flex flex-1 flex-col gap-3 p-5 ${wide ? "md:justify-center md:p-8" : ""}`}>
         <div className="flex flex-wrap items-center gap-2">
           {course.tier === "pro" ? (
             <span className="chip">
@@ -74,19 +78,21 @@ export function CourseCard({ course }: { course: CourseCardItem }) {
               {plural(course.freePreviewCount, "free preview")}
             </span>
           )}
-          <span className="text-xs text-mist">
-            {course.category}, {LEVEL_LABEL[course.level].toLowerCase()}
-          </span>
         </div>
+        <p className="-mt-1 text-xs text-mist">
+          {course.category}, {LEVEL_LABEL[course.level].toLowerCase()}
+        </p>
 
-        <h3 className="text-lg leading-snug font-bold text-ink transition-colors duration-150 group-hover:text-primary">
+        <h3
+          className={`leading-snug font-semibold tracking-[-0.02em] text-ink ${wide ? "text-lg md:text-2xl" : "text-lg"}`}
+        >
           {course.title}
         </h3>
         <p className="line-clamp-2 text-sm leading-relaxed text-mist">
           {course.subtitle}
         </p>
 
-        <div className="mt-auto space-y-3 pt-2">
+        <div className={`space-y-3 pt-2 ${wide ? "md:mt-4" : "mt-auto"}`}>
           {course.isEnrolled && (
             <Progress value={progressPct} className="space-y-1.5">
               <div className="flex items-center justify-between text-xs">

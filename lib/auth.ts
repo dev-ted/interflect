@@ -7,9 +7,10 @@ export const PRO_PLAN_ID =
 export const TUTOR = {
   name: "Teddy",
   handle: "ted.code",
-  role: "Frontend engineer and instructor",
+  role: "Software developer",
   url: "https://frontendted.co.za/",
-  bio: "I teach UI/UX design and frontend craft by building and critiquing real interfaces with you. Every Interflect course is a hands-on project, so you finish with work you can show.",
+  tagline: "A software developer who crafts beautiful, responsive and engaging digital experiences.",
+  bio: "Interflect is where I share what I have learned over the years, and what I keep learning every day, so you can become a better UI developer too.",
 } as const;
 
 export function isAdminRole(metadata: unknown): boolean {

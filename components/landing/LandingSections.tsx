@@ -187,7 +187,7 @@ export function LandingSections() {
   return (
     <>
       {/* What you'll learn: a modular grid, each cell a working specimen */}
-      <section className="mx-auto max-w-6xl px-4 py-24 sm:px-6">
+      <section className="mx-auto max-w-6xl px-4 pt-12 pb-24 sm:px-6">
         <div className="max-w-2xl">
           <h2 className="text-[2.25rem] leading-[1.1] font-semibold tracking-[-0.035em] text-ink sm:text-[2.75rem]">
             The skills behind every good interface
@@ -198,9 +198,9 @@ export function LandingSections() {
           </p>
         </div>
 
-        <div className="mt-14 grid overflow-hidden rounded-[20px] border border-line bg-line [gap:1px] lg:grid-cols-3">
+        <div className="mt-12 grid gap-4 lg:grid-cols-3">
           {SKILLS.map((skill) => (
-            <article key={skill.title} className={`flex flex-col gap-8 bg-surface p-6 sm:p-8 ${skill.span}`}>
+            <article key={skill.title} className={`card flex flex-col justify-between gap-8 p-6 sm:p-7 ${skill.span}`}>
               <div className="flex min-h-28 items-end" aria-hidden="true">
                 {skill.specimen}
               </div>
@@ -230,21 +230,23 @@ export function LandingSections() {
             </Link>
           </div>
 
-          <div className="mt-10 grid gap-6 lg:grid-cols-3">
+          {/* The featured course runs full width; the rest sit in an even row below. */}
+          <div className="mt-10 grid gap-4 md:grid-cols-3">
             {courses === undefined ? (
               <>
-                <div className="h-96 animate-pulse rounded-[14px] bg-subtle motion-reduce:animate-none lg:col-span-2 lg:row-span-2 lg:h-auto" />
-                <div className="h-72 animate-pulse rounded-[14px] bg-subtle motion-reduce:animate-none" />
-                <div className="h-72 animate-pulse rounded-[14px] bg-subtle motion-reduce:animate-none" />
+                <div className="h-80 animate-pulse rounded-[14px] bg-subtle motion-reduce:animate-none md:col-span-3" />
+                {[0, 1, 2].map((i) => (
+                  <div key={i} className="h-80 animate-pulse rounded-[14px] bg-subtle motion-reduce:animate-none" />
+                ))}
               </>
             ) : !featured ? (
-              <p className="text-mist lg:col-span-3">New courses are on the way.</p>
+              <p className="text-mist md:col-span-3">New courses are on the way.</p>
             ) : (
               <>
-                <div className="lg:col-span-2 lg:row-span-2">
-                  <CourseCard course={featured} />
+                <div className="md:col-span-3">
+                  <CourseCard course={featured} wide />
                 </div>
-                {rest.slice(0, 2).map((course) => (
+                {rest.slice(0, 3).map((course) => (
                   <CourseCard key={course._id} course={course} />
                 ))}
               </>
@@ -321,11 +323,12 @@ export function LandingSections() {
             {TUTOR.name[0]}
           </span>
           <div className="max-w-2xl">
-            <h2 className="text-2xl font-semibold tracking-[-0.03em] text-ink">Taught by {TUTOR.name}</h2>
+            <h2 className="text-2xl font-semibold tracking-[-0.03em] text-ink">Behind Interflect</h2>
             <p className="mt-1 text-sm text-mist">
-              {TUTOR.role}, @{TUTOR.handle}
+              {TUTOR.name}, {TUTOR.role.toLowerCase()}, @{TUTOR.handle}
             </p>
-            <p className="mt-5 text-lg leading-relaxed text-ink">{TUTOR.bio}</p>
+            <p className="mt-5 text-xl leading-snug font-medium tracking-[-0.01em] text-ink">{TUTOR.tagline}</p>
+            <p className="mt-3 text-lg leading-relaxed text-mist">{TUTOR.bio}</p>
             <a
               href={TUTOR.url}
               target="_blank"
@@ -342,12 +345,12 @@ export function LandingSections() {
 
       {/* Free vs Pro */}
       <section className="mx-auto max-w-6xl px-4 pb-24 sm:px-6">
-        <div className="grid overflow-hidden rounded-[20px] border border-line bg-line [gap:1px] md:grid-cols-2">
+        <div className="grid gap-4 md:grid-cols-2">
           {[
             { name: "Free", price: "$0", items: FREE },
             { name: "Pro", price: "From $24 a month", items: PRO },
           ].map((plan) => (
-            <div key={plan.name} className="bg-surface p-6 sm:p-8">
+            <div key={plan.name} className="card p-6 sm:p-7">
               <div className="flex items-baseline justify-between gap-4">
                 <h3 className="text-lg font-semibold text-ink">{plan.name}</h3>
                 <span className="text-sm text-mist">{plan.price}</span>
