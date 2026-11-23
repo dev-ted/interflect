@@ -105,7 +105,7 @@ export function WidgetBoundary({
         </div>
       )}
     >
-      {children}
+      {className ? <div className={`flex flex-col [&>*]:flex-1 ${className}`}>{children}</div> : children}
     </Boundary>
   );
 }

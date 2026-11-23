@@ -20,6 +20,7 @@ import {
 import { toast } from "@ui-sdk/react/toast";
 import { CheckCircle2, Crown, Lock, PlayCircle } from "lucide-react";
 import { api } from "@/convex/_generated/api";
+import { TrackButton } from "@/components/dashboard/TrackButton";
 import { usePageContext } from "@/components/PageContextProvider";
 import { isAdminRole, PRO_PLAN_SLUG } from "@/lib/auth";
 
@@ -188,6 +189,10 @@ export function CourseDetailClient({ slug }: { slug: string }) {
             </Unauthenticated>
 
             {lessonLink}
+
+            <Authenticated>
+              <TrackButton courseId={course._id} className="btn btn-ghost btn-lg" />
+            </Authenticated>
 
             {isPro && (
               <Show
