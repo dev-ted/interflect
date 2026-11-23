@@ -1426,7 +1426,7 @@ async function runSeed(ctx: MutationCtx) {
       estimatedHours: courseData.estimatedHours,
       tags: courseData.tags,
       tutorName: "Teddy",
-      tutorTitle: "Frontend engineer and instructor",
+      tutorTitle: "Software developer",
       order: cIdx,
       createdAt: now,
       updatedAt: now,

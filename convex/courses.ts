@@ -563,7 +563,7 @@ export const createCourse = mutation({
       estimatedHours: args.estimatedHours,
       tags: args.tags,
       tutorName: args.tutorName ?? "Teddy",
-      tutorTitle: args.tutorTitle ?? "Frontend engineer and instructor",
+      tutorTitle: args.tutorTitle ?? "Software developer",
       order: nextOrder,
       createdAt: now,
       updatedAt: now,

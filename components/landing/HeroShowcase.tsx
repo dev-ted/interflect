@@ -39,7 +39,7 @@ export function HeroShowcase() {
         className="bg-grid pointer-events-none absolute inset-0 opacity-60 [mask-image:radial-gradient(ellipse_70%_60%_at_50%_30%,black,transparent)]"
         aria-hidden="true"
       />
-      <div className="relative mx-auto grid max-w-6xl items-center gap-14 px-4 pt-16 pb-24 sm:px-6 lg:grid-cols-[1fr_1.05fr] lg:gap-16 lg:pt-24 lg:pb-32">
+      <div className="relative mx-auto grid max-w-6xl items-center gap-14 px-4 pt-16 pb-12 sm:px-6 lg:grid-cols-[1fr_1.05fr] lg:gap-16 lg:pt-24 lg:pb-16">
         <div>
           <h1 className="text-[3rem] leading-[0.98] font-semibold tracking-[-0.045em] text-ink sm:text-[4.5rem]">
             Think better.

@@ -162,7 +162,7 @@ export function CourseDetailClient({ slug }: { slug: string }) {
           </h1>
           <p className="mt-3 max-w-2xl text-mist sm:text-lg">{course.subtitle}</p>
           <p className="mt-4 text-sm text-mist">
-            Taught by <span className="font-semibold text-ink">{course.tutorName}</span>
+            By <span className="font-semibold text-ink">{course.tutorName}</span>
             {course.tutorTitle && `, ${course.tutorTitle}`}
           </p>
 
