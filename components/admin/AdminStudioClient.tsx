@@ -18,6 +18,11 @@ import {
 } from "@ui-sdk/react/alert-dialog";
 import { DialogClose } from "@ui-sdk/react/dialog";
 import {
+  SegmentedControl,
+  SegmentedControlIndicator,
+  SegmentedControlItem,
+} from "@ui-sdk/react/segmented-control";
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -35,6 +40,7 @@ import {
   Loader2,
   Pencil,
   Plus,
+  Search,
   Trash2,
 } from "lucide-react";
 import { api } from "@/convex/_generated/api";
@@ -45,13 +51,13 @@ import {
   SettingSwitch,
   StudioDialog,
   TAB_CLASS,
-  TAB_LIST_CLASS,
   TextField,
   slugify,
 } from "./LessonEditorDialog";
 
 type CourseLevel = "beginner" | "intermediate" | "advanced";
 type CourseTier = "free" | "pro";
+type StatusFilter = "all" | "published" | "draft";
 
 const LEVEL_OPTIONS: Array<{ value: CourseLevel; label: string }> = [
   { value: "beginner", label: "Beginner" },
@@ -67,6 +73,9 @@ const TIER_OPTIONS: Array<{ value: CourseTier; label: string }> = [
 const DEFAULT_THUMBNAIL =
   "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=1200&q=80";
 
+// ponytail: globals.css has no .skeleton class yet; swap to it once it lands.
+const SKELETON = "rounded-md bg-subtle motion-safe:animate-pulse";
+
 function formatDuration(seconds: number): string {
   const mins = Math.floor(seconds / 60);
   const secs = seconds % 60;
@@ -75,6 +84,10 @@ function formatDuration(seconds: number): string {
 
 function plural(count: number, word: string) {
   return `${count} ${word}${count === 1 ? "" : "s"}`;
+}
+
+function errorText(error: unknown, fallback: string) {
+  return error instanceof Error ? error.message : fallback;
 }
 
 /* ── Course form (shared by "New course" and the Settings tab) ─────── */
@@ -100,13 +113,13 @@ const NEW_COURSE: CourseValues = {
   subtitle: "",
   description: "",
   thumbnailUrl: DEFAULT_THUMBNAIL,
-  category: "Full-Stack Engineering",
+  category: "UI design",
   level: "intermediate",
   tier: "pro",
   published: false,
   featured: false,
   estimatedHours: "6",
-  tags: "Next.js 16, React 19, TypeScript",
+  tags: "UI design, Figma, CSS",
 };
 
 function valuesFromCourse(course: Doc<"courses">): CourseValues {
@@ -172,16 +185,16 @@ function OptionSelect<T extends string>({
         <SelectValue />
         <ChevronDown className="h-4 w-4 text-mist" aria-hidden="true" />
       </SelectTrigger>
-      <SelectContent className="z-50 min-w-(--anchor-width) origin-(--transform-origin) rounded-md border border-line bg-surface p-1 text-ink shadow-card transition-[opacity,scale] duration-150 ease-(--ease-out) data-starting-style:scale-96 data-starting-style:opacity-0 data-ending-style:scale-96 data-ending-style:opacity-0 motion-reduce:transition-opacity">
+      <SelectContent className="z-50 min-w-(--anchor-width) origin-(--transform-origin) rounded-[10px] border border-line bg-surface p-1 text-ink shadow-card transition-[opacity,scale] duration-150 ease-(--ease-out) data-starting-style:scale-96 data-starting-style:opacity-0 data-ending-style:scale-96 data-ending-style:opacity-0 motion-reduce:transition-opacity">
         {items.map((opt) => (
           <SelectItem
             key={opt.value}
             value={opt.value}
-            className="flex h-9 cursor-pointer items-center justify-between gap-3 rounded-[5px] px-2.5 text-sm outline-none data-highlighted:bg-subtle"
+            className="flex h-9 cursor-pointer items-center justify-between gap-3 rounded-md px-2.5 text-sm outline-none data-highlighted:bg-subtle"
           >
             {opt.label}
             <SelectItemIndicator>
-              <Check className="h-3.5 w-3.5 text-primary" aria-hidden="true" />
+              <Check className="h-3.5 w-3.5 text-accent-ink" aria-hidden="true" />
             </SelectItemIndicator>
           </SelectItem>
         ))}
@@ -197,8 +210,8 @@ function CourseForm({
   onSubmit,
   bodyClassName,
   footerClassName,
-  footerStart,
   footerEnd,
+  saveBar,
 }: {
   initial: CourseValues;
   isNew: boolean;
@@ -206,65 +219,90 @@ function CourseForm({
   onSubmit: (args: CourseArgs) => Promise<void>;
   bodyClassName?: string;
   footerClassName?: string;
-  footerStart?: ReactNode;
   footerEnd?: ReactNode;
+  /** Show a sticky save bar only while there are unsaved changes. */
+  saveBar?: boolean;
 }) {
   const [values, setValues] = useState(initial);
   const [slugTouched, setSlugTouched] = useState(!isNew);
   const [saving, setSaving] = useState(false);
+  const [errors, setErrors] = useState<{ title?: string; slug?: string }>({});
+
+  const dirty = JSON.stringify(values) !== JSON.stringify(initial);
 
   function set<K extends keyof CourseValues>(key: K, value: CourseValues[K]) {
     setValues((prev) => ({ ...prev, [key]: value }));
   }
 
+  function discard() {
+    setValues(initial);
+    setSlugTouched(!isNew);
+    setErrors({});
+  }
+
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const args = toCourseArgs(values);
-    if (!args.title || !args.slug) {
-      toast.error("Add a title and a slug to save the course.");
-      return;
-    }
+    const nextErrors = {
+      title: args.title ? undefined : "Add a course title.",
+      slug: args.slug ? undefined : "Use letters or numbers in the slug.",
+    };
+    setErrors(nextErrors);
+    if (nextErrors.title || nextErrors.slug) return;
+
     setSaving(true);
     try {
       await onSubmit(args);
     } catch (error) {
       toast.error(
-        error instanceof Error
-          ? error.message
-          : "Couldn't save the course. Check your connection and try again.",
+        errorText(
+          error,
+          "Couldn't save the course. Check your connection and try again.",
+        ),
       );
     } finally {
       setSaving(false);
     }
   }
 
+  const submitButton = (
+    <button type="submit" disabled={saving} className="btn btn-primary">
+      {saving && <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />}
+      {submitLabel}
+    </button>
+  );
+
   return (
-    <form onSubmit={handleSubmit} className="flex min-h-0 flex-1 flex-col">
+    <form noValidate onSubmit={handleSubmit} className="flex min-h-0 flex-1 flex-col">
       <div className={`space-y-4 ${bodyClassName ?? ""}`}>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <TextField
             label="Title"
             required
             value={values.title}
-            onChange={(title) =>
+            error={errors.title}
+            onChange={(title) => {
+              setErrors((prev) => ({ ...prev, title: undefined }));
               setValues((prev) => ({
                 ...prev,
                 title,
                 slug: slugTouched ? prev.slug : slugify(title),
-              }))
-            }
-            placeholder="Production AI systems"
+              }));
+            }}
+            placeholder="Interface typography"
           />
           <TextField
             label="Slug"
             required
             mono
             value={values.slug}
+            error={errors.slug}
             onChange={(slug) => {
               setSlugTouched(true);
+              setErrors((prev) => ({ ...prev, slug: undefined }));
               set("slug", slug);
             }}
-            placeholder="production-ai-systems"
+            placeholder="interface-typography"
           />
         </div>
 
@@ -293,7 +331,7 @@ function CourseForm({
             <img
               src={values.thumbnailUrl}
               alt="Thumbnail preview"
-              className="hidden h-10 w-full rounded-md border border-line object-cover sm:block"
+              className="hidden h-10 w-full rounded-[10px] border border-line object-cover sm:block"
             />
           )}
         </div>
@@ -355,39 +393,68 @@ function CourseForm({
         </div>
       </div>
 
-      <div className={`flex items-center gap-2 ${footerClassName ?? ""}`}>
-        {footerStart}
-        <span className="flex-1" />
-        {footerEnd}
-        <button type="submit" disabled={saving} className="btn btn-primary">
-          {saving && <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />}
-          {submitLabel}
-        </button>
-      </div>
+      {saveBar ? (
+        dirty && (
+          <div className="sticky bottom-4 z-10 mx-auto mt-5 flex w-full max-w-xl items-center gap-2 rounded-full border border-line bg-surface py-2 pr-2 pl-5 shadow-card">
+            <p className="min-w-0 flex-1 truncate text-sm text-mist">
+              Unsaved changes
+            </p>
+            <button
+              type="button"
+              onClick={discard}
+              disabled={saving}
+              className="btn btn-ghost btn-sm"
+            >
+              Discard
+            </button>
+            <button type="submit" disabled={saving} className="btn btn-primary btn-sm">
+              {saving && (
+                <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden="true" />
+              )}
+              {submitLabel}
+            </button>
+          </div>
+        )
+      ) : (
+        <div className={`flex items-center justify-end gap-2 ${footerClassName ?? ""}`}>
+          {footerEnd}
+          {submitButton}
+        </div>
+      )}
     </form>
   );
 }
 
 /* ── Small bits ─────────────────────────────────────────────────────── */
 
-function VideoStatus({
+function VideoChip({
   status,
   hasPlaybackId,
 }: {
   status: "idle" | "waiting" | "ready" | "errored";
   hasPlaybackId: boolean;
 }) {
-  if (status === "errored") return <span className="text-danger">Video error</span>;
-  if (hasPlaybackId) return <span className="text-sage">Video ready</span>;
-  if (status === "waiting") return <span>Video processing</span>;
-  return <span>No video</span>;
+  const [dot, label] =
+    status === "errored"
+      ? ["bg-danger", "Video error"]
+      : hasPlaybackId
+        ? ["bg-success", "Video ready"]
+        : status === "waiting"
+          ? ["bg-warning", "Processing"]
+          : ["bg-mist/50", "No video"];
+  return (
+    <span className="chip">
+      <span aria-hidden="true" className={`size-1.5 rounded-full ${dot}`} />
+      {label}
+    </span>
+  );
 }
 
 function StatusDot({ published }: { published: boolean }) {
   return (
     <span
       aria-hidden="true"
-      className={`size-1.5 shrink-0 rounded-full ${published ? "bg-sage" : "bg-mist/60"}`}
+      className={`size-1.5 shrink-0 rounded-full ${published ? "bg-success" : "bg-mist/50"}`}
     />
   );
 }
@@ -398,14 +465,54 @@ interface ConfirmDeleteState {
   label: string;
 }
 
+const KIND_LABEL = { course: "Course", module: "Module", lesson: "Lesson" };
+
+function CourseListSkeleton() {
+  return (
+    <div className="space-y-1" aria-hidden="true">
+      {[0, 1, 2, 3].map((i) => (
+        <div key={i} className="px-4 py-3">
+          <div className={`h-4 w-4/5 ${SKELETON}`} />
+          <div className={`mt-2 h-3 w-1/2 ${SKELETON}`} />
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function EditorSkeleton() {
+  return (
+    <div className="space-y-4" aria-hidden="true">
+      <div className="card p-5">
+        <div className={`h-6 w-2/3 ${SKELETON}`} />
+        <div className={`mt-3 h-5 w-48 ${SKELETON}`} />
+      </div>
+      {[0, 1].map((i) => (
+        <div key={i} className="card p-5">
+          <div className={`h-4 w-40 ${SKELETON}`} />
+          {[0, 1, 2].map((j) => (
+            <div key={j} className={`mt-4 h-10 ${SKELETON}`} />
+          ))}
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export function AdminSkeleton() {
   return (
-    <div className="motion-safe:animate-pulse" aria-hidden="true">
-      <div className="h-8 w-48 rounded-md bg-subtle" />
-      <div className="mt-2 h-4 w-72 max-w-full rounded-md bg-subtle" />
-      <div className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-[18rem_1fr]">
-        <div className="h-72 rounded-xl bg-subtle" />
-        <div className="h-112 rounded-xl bg-subtle" />
+    <div aria-hidden="true">
+      <div className={`h-7 w-40 ${SKELETON}`} />
+      <div className={`mt-2 h-4 w-72 max-w-full ${SKELETON}`} />
+      <div className="mt-6 grid grid-cols-1 items-start gap-6 lg:grid-cols-[18rem_1fr]">
+        <div className="card p-3">
+          <div className={`h-10 ${SKELETON}`} />
+          <div className={`mt-2 h-8 ${SKELETON}`} />
+          <div className="mt-2">
+            <CourseListSkeleton />
+          </div>
+        </div>
+        <EditorSkeleton />
       </div>
     </div>
   );
@@ -444,7 +551,10 @@ function AdminStudioAuthenticated() {
   const deleteLesson = useMutation(api.courses.deleteLesson);
   const seedSampleCourses = useMutation(api.seed.seedSampleCoursesAdmin);
 
+  const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
   const [seeding, setSeeding] = useState(false);
+  const [publishing, setPublishing] = useState(false);
   const [newCourseOpen, setNewCourseOpen] = useState(false);
 
   const [moduleDialogOpen, setModuleDialogOpen] = useState(false);
@@ -453,6 +563,7 @@ function AdminStudioAuthenticated() {
   );
   const [modTitle, setModTitle] = useState("");
   const [modDescription, setModDescription] = useState("");
+  const [modTitleError, setModTitleError] = useState<string>();
   const [savingModule, setSavingModule] = useState(false);
 
   const [lessonEditorOpen, setLessonEditorOpen] = useState(false);
@@ -481,11 +592,7 @@ function AdminStudioAuthenticated() {
         );
       }
     } catch (error) {
-      toast.error(
-        error instanceof Error
-          ? error.message
-          : "Couldn't add the sample courses. Try again.",
-      );
+      toast.error(errorText(error, "Couldn't add the sample courses. Try again."));
     } finally {
       setSeeding(false);
     }
@@ -494,15 +601,30 @@ function AdminStudioAuthenticated() {
   async function handleCreateCourse(args: CourseArgs) {
     const id = await createCourse({
       ...args,
-      subtitle: args.subtitle || "Hands-on production engineering course.",
+      subtitle: args.subtitle || "A hands-on course in interface craft.",
       description:
         args.description ||
-        "Step-by-step video lessons, code walkthroughs, and quizzes.",
-      category: args.category || "Full-Stack Engineering",
+        "Step-by-step video lessons, worked examples and quizzes.",
+      category: args.category || "UI design",
     });
     setSelectedCourseId(id);
     setNewCourseOpen(false);
-    toast.success(`Created "${args.title}".`);
+    toast.success("Course created");
+  }
+
+  async function handleTogglePublish(course: Doc<"courses">) {
+    setPublishing(true);
+    try {
+      await updateCourse({
+        courseId: course._id,
+        ...toCourseArgs({ ...valuesFromCourse(course), published: !course.published }),
+      });
+      toast.success(course.published ? "Moved to drafts" : "Course published");
+    } catch (error) {
+      toast.error(errorText(error, "Couldn't change the course status. Try again."));
+    } finally {
+      setPublishing(false);
+    }
   }
 
   function openLessonEditor(mod: Doc<"modules">, lesson: Doc<"lessons"> | null) {
@@ -515,6 +637,7 @@ function AdminStudioAuthenticated() {
     setEditingModule(mod);
     setModTitle(mod?.title ?? "");
     setModDescription(mod?.description ?? "");
+    setModTitleError(undefined);
     setModuleDialogOpen(true);
   }
 
@@ -524,7 +647,7 @@ function AdminStudioAuthenticated() {
 
     const cleanTitle = modTitle.trim();
     if (!cleanTitle) {
-      toast.error("Add a module title to save.");
+      setModTitleError("Add a module title.");
       return;
     }
 
@@ -536,22 +659,18 @@ function AdminStudioAuthenticated() {
           title: cleanTitle,
           description: modDescription.trim(),
         });
-        toast.success("Module saved.");
+        toast.success("Module saved");
       } else {
         await createModule({
           courseId: courseDetail._id,
           title: cleanTitle,
           description: modDescription.trim(),
         });
-        toast.success("Module added.");
+        toast.success("Module added");
       }
       setModuleDialogOpen(false);
     } catch (error) {
-      toast.error(
-        error instanceof Error
-          ? error.message
-          : "Couldn't save the module. Try again.",
-      );
+      toast.error(errorText(error, "Couldn't save the module. Try again."));
     } finally {
       setSavingModule(false);
     }
@@ -577,31 +696,56 @@ function AdminStudioAuthenticated() {
           lessonId: confirmDelete.id as Id<"lessons">,
         });
       }
-      toast.success(`Deleted "${confirmDelete.label}".`);
+      toast.success(`${KIND_LABEL[confirmDelete.kind]} deleted`);
       setConfirmDelete(null);
     } catch (error) {
-      toast.error(
-        error instanceof Error
-          ? error.message
-          : "Couldn't delete it. Try again.",
-      );
+      toast.error(errorText(error, "Couldn't delete it. Try again."));
     } finally {
       setDeleting(false);
     }
   }
 
+  const query = search.trim().toLowerCase();
+  const visibleCourses = courses?.filter(
+    (c) =>
+      (statusFilter === "all" ||
+        c.published === (statusFilter === "published")) &&
+      (!query || c.title.toLowerCase().includes(query)),
+  );
   const publishedCourses = courses?.filter((c) => c.published).length ?? 0;
   const totalLessonsCount =
     courses?.reduce((sum, c) => sum + c.lessonCount, 0) ?? 0;
   const detailLessonCount =
     courseDetail?.modules.reduce((sum, m) => sum + m.lessons.length, 0) ?? 0;
 
+  const emptyActions = (
+    <div className="mt-5 flex flex-wrap justify-center gap-2">
+      <button
+        type="button"
+        onClick={() => setNewCourseOpen(true)}
+        className="btn btn-primary"
+      >
+        <Plus className="h-4 w-4" aria-hidden="true" />
+        New course
+      </button>
+      <button
+        type="button"
+        onClick={handleSeedCourses}
+        disabled={seeding}
+        className="btn btn-secondary"
+      >
+        {seeding && <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />}
+        Seed sample courses
+      </button>
+    </div>
+  );
+
   return (
     <>
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-extrabold">Admin studio</h1>
-          <p className="mt-1 text-sm text-mist">
+          <h2 className="sr-only">Courses</h2>
+          <p className="text-sm text-mist">
             {courses === undefined
               ? "Loading courses…"
               : `${plural(courses.length, "course")}, ${publishedCourses} published, ${plural(totalLessonsCount, "lesson")} in total.`}
@@ -622,129 +766,183 @@ function AdminStudioAuthenticated() {
         </div>
       </div>
 
-      <div className="mt-8 grid grid-cols-1 items-start gap-6 lg:grid-cols-[18rem_1fr]">
-        <nav aria-label="Courses" className="card p-2 lg:sticky lg:top-6">
-          <h2 className="px-2 pt-1 pb-2 text-sm font-semibold">Courses</h2>
-          {courses === undefined ? (
-            <div className="space-y-1 motion-safe:animate-pulse" aria-hidden="true">
-              {[0, 1, 2].map((i) => (
-                <div key={i} className="h-14 rounded-md bg-subtle" />
-              ))}
-            </div>
-          ) : courses.length === 0 ? (
-            <p className="px-2 pb-2 text-sm text-mist">
-              No courses yet. Create one, or add the sample courses to explore
-              the studio.
-            </p>
-          ) : (
-            <ul className="space-y-0.5">
-              {courses.map((course) => {
-                const isSelected = activeCourseId === course._id;
-                return (
-                  <li key={course._id}>
-                    <button
-                      type="button"
-                      onClick={() => setSelectedCourseId(course._id)}
-                      aria-current={isSelected ? "true" : undefined}
-                      className={`w-full cursor-pointer rounded-md px-2.5 py-2 text-left transition-colors duration-150 ${
-                        isSelected ? "bg-subtle" : "hover:bg-subtle/60"
-                      }`}
-                    >
-                      <span className="line-clamp-2 text-sm font-medium">
-                        {course.title}
-                      </span>
-                      <span className="mt-0.5 flex items-center gap-1.5 text-xs text-mist">
-                        <StatusDot published={course.published} />
-                        {course.published ? "Published" : "Draft"}
-                        {course.tier === "pro" && (
-                          <span className="font-medium text-ink">Pro</span>
-                        )}
-                        <span className="ml-auto tabular-nums">
-                          {plural(course.lessonCount, "lesson")}
-                        </span>
-                      </span>
-                    </button>
-                  </li>
-                );
-              })}
-            </ul>
-          )}
-          <div className="mt-2 border-t border-line pt-2">
-            <button
-              type="button"
-              onClick={handleSeedCourses}
-              disabled={seeding}
-              className="btn btn-ghost btn-sm w-full justify-start text-mist"
-            >
-              {seeding && (
-                <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden="true" />
-              )}
-              Seed sample courses
-            </button>
+      <div className="mt-6 grid grid-cols-1 items-start gap-6 lg:grid-cols-[18rem_1fr]">
+        <nav aria-label="Course list" className="card p-3 lg:sticky lg:top-6">
+          <div className="relative">
+            <Search
+              className="pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-mist"
+              aria-hidden="true"
+            />
+            <input
+              type="search"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search courses"
+              aria-label="Search courses"
+              className="field pl-9"
+            />
           </div>
+          <SegmentedControl
+            aria-label="Filter by status"
+            value={statusFilter}
+            onValueChange={(next) => {
+              if (next) setStatusFilter(next as StatusFilter);
+            }}
+            className="relative isolate mt-2 flex w-full rounded-full bg-subtle p-0.5"
+          >
+            <SegmentedControlIndicator className="absolute top-(--segmented-control-indicator-top) left-(--segmented-control-indicator-left) -z-10 h-(--segmented-control-indicator-height) w-(--segmented-control-indicator-width) rounded-full bg-surface shadow-sm transition-[left,width] duration-200 ease-(--ease-out) data-[activation-direction=none]:transition-none motion-reduce:transition-none" />
+            {(["all", "published", "draft"] as const).map((value) => (
+              <SegmentedControlItem
+                key={value}
+                value={value}
+                className="h-7 flex-1 cursor-pointer rounded-full text-xs font-medium text-mist transition-colors duration-150 data-checked:text-ink"
+              >
+                {value === "all" ? "All" : value === "published" ? "Published" : "Draft"}
+              </SegmentedControlItem>
+            ))}
+          </SegmentedControl>
+
+          <div className="mt-3">
+            {visibleCourses === undefined ? (
+              <CourseListSkeleton />
+            ) : courses?.length === 0 ? (
+              <p className="px-2 py-3 text-sm text-mist">No courses yet.</p>
+            ) : visibleCourses.length === 0 ? (
+              <div className="px-2 py-3 text-sm">
+                <p className="text-mist">No courses match.</p>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSearch("");
+                    setStatusFilter("all");
+                  }}
+                  className="btn btn-ghost btn-sm mt-1 -ml-2"
+                >
+                  Clear filters
+                </button>
+              </div>
+            ) : (
+              <ul className="max-h-80 space-y-0.5 overflow-y-auto lg:max-h-none">
+                {visibleCourses.map((course) => {
+                  const isSelected = activeCourseId === course._id;
+                  return (
+                    <li key={course._id}>
+                      <button
+                        type="button"
+                        onClick={() => setSelectedCourseId(course._id)}
+                        aria-current={isSelected ? "true" : undefined}
+                        className={`relative w-full cursor-pointer rounded-xl py-2.5 pr-3 pl-4 text-left transition-colors duration-150 ${
+                          isSelected
+                            ? "bg-subtle before:absolute before:inset-y-2.5 before:left-1.5 before:w-0.5 before:rounded-full before:bg-accent"
+                            : "hover:bg-subtle/60"
+                        }`}
+                      >
+                        <span className="line-clamp-2 text-sm font-medium">
+                          {course.title}
+                        </span>
+                        <span className="mt-1 flex items-center gap-1.5 text-xs text-mist">
+                          <StatusDot published={course.published} />
+                          {course.published ? "Published" : "Draft"}
+                          <span className="h-3 w-px bg-line" aria-hidden="true" />
+                          <span className="tabular-nums">
+                            {plural(course.lessonCount, "lesson")}
+                          </span>
+                          <span className="ml-auto font-medium">
+                            {course.tier === "pro" ? "Pro" : "Free"}
+                          </span>
+                        </span>
+                      </button>
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
+          </div>
+
+          {courses !== undefined && courses.length > 0 && (
+            <div className="mt-2 border-t border-line pt-2">
+              <button
+                type="button"
+                onClick={handleSeedCourses}
+                disabled={seeding}
+                className="btn btn-ghost btn-sm w-full justify-start text-mist"
+              >
+                {seeding && (
+                  <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden="true" />
+                )}
+                Seed sample courses
+              </button>
+            </div>
+          )}
         </nav>
 
         <section aria-label="Course editor" className="min-w-0">
-          {!activeCourseId ? (
+          {courses === undefined ? (
+            <EditorSkeleton />
+          ) : !activeCourseId ? (
             <div className="card flex min-h-80 flex-col items-center justify-center p-10 text-center">
-              <h2 className="text-lg font-bold">Create your first course</h2>
+              <h3 className="text-lg font-bold">No courses yet</h3>
               <p className="mt-1 max-w-sm text-sm text-mist">
                 A course holds modules, and modules hold lessons with video,
-                notes and a quiz.
+                notes and a quiz. Start one, or add the sample courses.
               </p>
-              <div className="mt-5 flex flex-wrap justify-center gap-2">
-                <button
-                  type="button"
-                  onClick={() => setNewCourseOpen(true)}
-                  className="btn btn-primary"
-                >
-                  New course
-                </button>
-                <button
-                  type="button"
-                  onClick={handleSeedCourses}
-                  disabled={seeding}
-                  className="btn btn-secondary"
-                >
-                  Seed sample courses
-                </button>
-              </div>
+              {emptyActions}
             </div>
           ) : courseDetail === undefined ? (
-            <div className="card h-112 motion-safe:animate-pulse" aria-hidden="true" />
+            <EditorSkeleton />
           ) : courseDetail === null ? (
             <div className="card p-10 text-center text-sm text-mist">
               This course no longer exists. Pick another one from the list.
             </div>
           ) : (
-            <div className="card overflow-hidden">
-              <div className="flex flex-wrap items-start justify-between gap-4 px-5 pt-5 pb-4">
-                <div className="min-w-0">
-                  <h2 className="text-xl font-bold">{courseDetail.title}</h2>
-                  <div className="mt-2 flex flex-wrap items-center gap-2">
-                    <span className="chip">
-                      <StatusDot published={courseDetail.published} />
-                      {courseDetail.published ? "Published" : "Draft"}
-                    </span>
-                    <span className="chip">
-                      {courseDetail.tier === "pro" ? "Pro" : "Free"}
-                    </span>
-                    <span className="truncate font-mono text-xs text-mist">
-                      /courses/{courseDetail.slug}
-                    </span>
+            <Tabs defaultValue="curriculum" className="space-y-4">
+              <div className="card">
+                <div className="flex flex-wrap items-start justify-between gap-4 p-5">
+                  <div className="min-w-0">
+                    <h3 className="text-xl font-bold tracking-tight text-balance">
+                      {courseDetail.title}
+                    </h3>
+                    <div className="mt-2 flex flex-wrap items-center gap-1.5">
+                      <span className="chip">
+                        <StatusDot published={courseDetail.published} />
+                        {courseDetail.published ? "Published" : "Draft"}
+                      </span>
+                      <span className="chip">
+                        {courseDetail.tier === "pro" ? "Pro" : "Free"}
+                      </span>
+                      <span className="chip">
+                        {plural(courseDetail.modules.length, "module")}, {plural(detailLessonCount, "lesson")}
+                      </span>
+                      <span className="truncate font-mono text-xs text-mist">
+                        /courses/{courseDetail.slug}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="flex shrink-0 items-center gap-2">
+                    <Link
+                      href={`/courses/${courseDetail.slug}`}
+                      className="btn btn-secondary btn-sm"
+                    >
+                      <Eye className="h-3.5 w-3.5" aria-hidden="true" />
+                      Preview
+                    </Link>
+                    <button
+                      type="button"
+                      onClick={() => handleTogglePublish(courseDetail)}
+                      disabled={publishing}
+                      className={`btn btn-sm ${courseDetail.published ? "btn-secondary" : "btn-primary"}`}
+                    >
+                      {publishing && (
+                        <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden="true" />
+                      )}
+                      {courseDetail.published ? "Unpublish" : "Publish"}
+                    </button>
                   </div>
                 </div>
-                <Link
-                  href={`/courses/${courseDetail.slug}`}
-                  className="btn btn-secondary btn-sm"
+                <TabsList
+                  aria-label="Course sections"
+                  className="flex gap-5 border-t border-line px-5"
                 >
-                  <Eye className="h-3.5 w-3.5" aria-hidden="true" />
-                  Preview
-                </Link>
-              </div>
-
-              <Tabs defaultValue="curriculum">
-                <TabsList aria-label="Course sections" className={TAB_LIST_CLASS}>
                   <TabsTab value="curriculum" className={TAB_CLASS}>
                     Curriculum
                   </TabsTab>
@@ -752,40 +950,38 @@ function AdminStudioAuthenticated() {
                     Settings
                   </TabsTab>
                 </TabsList>
+              </div>
 
-                <TabsPanel value="curriculum" className="space-y-4 p-5">
-                  <div className="flex flex-wrap items-center justify-between gap-3">
-                    <p className="text-sm text-mist">
-                      {plural(courseDetail.modules.length, "module")},{" "}
-                      {plural(detailLessonCount, "lesson")}
+              <TabsPanel value="curriculum" className="space-y-4">
+                {courseDetail.modules.length === 0 ? (
+                  <div className="card flex flex-col items-center px-6 py-12 text-center">
+                    <p className="text-sm font-semibold">No modules yet</p>
+                    <p className="mt-1 text-sm text-mist">
+                      Add a module, then add lessons to it.
                     </p>
                     <button
                       type="button"
                       onClick={() => openModuleDialog(null)}
-                      className="btn btn-secondary btn-sm"
+                      className="btn btn-primary btn-sm mt-4"
                     >
                       <Plus className="h-3.5 w-3.5" aria-hidden="true" />
                       Add module
                     </button>
                   </div>
-
-                  {courseDetail.modules.length === 0 ? (
-                    <div className="rounded-md border border-dashed border-line px-6 py-10 text-center">
-                      <p className="text-sm font-medium">No modules yet</p>
-                      <p className="mt-1 text-sm text-mist">
-                        Add a module, then add lessons to it.
-                      </p>
-                    </div>
-                  ) : (
-                    courseDetail.modules.map((mod) => (
+                ) : (
+                  <>
+                    {courseDetail.modules.map((mod, modIdx) => (
                       <section
                         key={mod._id}
                         aria-label={mod.title}
-                        className="rounded-md border border-line"
+                        className="card overflow-hidden"
                       >
-                        <div className="flex flex-wrap items-start justify-between gap-2 border-b border-line bg-subtle/50 px-4 py-3">
+                        <div className="flex flex-wrap items-start justify-between gap-3 px-5 py-4">
                           <div className="min-w-0">
-                            <h3 className="text-sm font-semibold">{mod.title}</h3>
+                            <p className="text-xs font-medium text-mist">
+                              Module {modIdx + 1}, {plural(mod.lessons.length, "lesson")}
+                            </p>
+                            <h4 className="mt-0.5 font-semibold">{mod.title}</h4>
                             {mod.description && (
                               <p className="mt-0.5 text-sm text-mist">
                                 {mod.description}
@@ -796,7 +992,7 @@ function AdminStudioAuthenticated() {
                             <button
                               type="button"
                               onClick={() => openLessonEditor(mod, null)}
-                              className="btn btn-ghost btn-sm"
+                              className="btn btn-secondary btn-sm"
                             >
                               <Plus className="h-3.5 w-3.5" aria-hidden="true" />
                               Add lesson
@@ -827,37 +1023,40 @@ function AdminStudioAuthenticated() {
                         </div>
 
                         {mod.lessons.length === 0 ? (
-                          <p className="px-4 py-4 text-sm text-mist">
+                          <p className="border-t border-line px-5 py-4 text-sm text-mist">
                             No lessons in this module yet.
                           </p>
                         ) : (
-                          <ul className="divide-y divide-line">
-                            {mod.lessons.map((lesson) => (
+                          <ul className="divide-y divide-line border-t border-line">
+                            {mod.lessons.map((lesson, lessonIdx) => (
                               <li
                                 key={lesson._id}
-                                className="flex items-center justify-between gap-3 px-4 py-2.5"
+                                className="flex items-start gap-3 px-5 py-3 transition-colors duration-150 hover:bg-subtle/40 sm:items-center"
                               >
-                                <div className="min-w-0">
+                                <span className="mt-0.5 grid size-6 shrink-0 place-items-center rounded-full bg-subtle text-xs font-medium text-mist tabular-nums sm:mt-0">
+                                  {lessonIdx + 1}
+                                </span>
+                                <div className="min-w-0 flex-1">
                                   <p className="truncate text-sm font-medium">
                                     {lesson.title}
                                   </p>
-                                  <p className="mt-0.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-mist">
-                                    <VideoStatus
+                                  <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
+                                    <VideoChip
                                       status={lesson.muxStatus}
                                       hasPlaybackId={Boolean(lesson.muxPlaybackId)}
                                     />
-                                    <span>
+                                    <span className="chip">
                                       {plural(lesson.quiz?.length ?? 0, "question")}
                                     </span>
-                                    <span className="tabular-nums">
+                                    <span className="chip tabular-nums">
                                       {formatDuration(lesson.durationSeconds)}
                                     </span>
                                     {lesson.isFreePreview && (
-                                      <span className="font-medium text-ink">
+                                      <span className="chip bg-accent/10 text-accent-ink">
                                         Free preview
                                       </span>
                                     )}
-                                  </p>
+                                  </div>
                                 </div>
                                 <div className="flex shrink-0 items-center gap-1">
                                   <button
@@ -888,41 +1087,56 @@ function AdminStudioAuthenticated() {
                           </ul>
                         )}
                       </section>
-                    ))
-                  )}
-                </TabsPanel>
+                    ))}
+                    <button
+                      type="button"
+                      onClick={() => openModuleDialog(null)}
+                      className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-[14px] border border-dashed border-line px-5 py-4 text-sm font-medium text-mist transition-colors duration-150 hover:border-accent hover:text-ink"
+                    >
+                      <Plus className="h-4 w-4" aria-hidden="true" />
+                      Add module
+                    </button>
+                  </>
+                )}
+              </TabsPanel>
 
-                <TabsPanel value="settings">
+              <TabsPanel value="settings" className="space-y-4">
+                <div className="card p-5">
                   <CourseForm
                     key={`${courseDetail._id}-${courseDetail.updatedAt}`}
                     initial={valuesFromCourse(courseDetail)}
                     isNew={false}
-                    submitLabel="Save course"
-                    bodyClassName="p-5"
-                    footerClassName="border-t border-line px-5 py-4"
+                    submitLabel="Save"
+                    saveBar
                     onSubmit={async (args) => {
                       await updateCourse({ courseId: courseDetail._id, ...args });
-                      toast.success("Course saved.");
+                      toast.success("Course saved");
                     }}
-                    footerStart={
-                      <button
-                        type="button"
-                        onClick={() =>
-                          setConfirmDelete({
-                            kind: "course",
-                            id: courseDetail._id,
-                            label: courseDetail.title,
-                          })
-                        }
-                        className="btn btn-ghost text-danger"
-                      >
-                        Delete course
-                      </button>
-                    }
                   />
-                </TabsPanel>
-              </Tabs>
-            </div>
+                </div>
+                <div className="card flex flex-wrap items-center justify-between gap-3 p-5">
+                  <div>
+                    <h4 className="text-sm font-semibold">Delete course</h4>
+                    <p className="mt-0.5 text-sm text-mist">
+                      Removes its modules, lessons and enrollments for good.
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setConfirmDelete({
+                        kind: "course",
+                        id: courseDetail._id,
+                        label: courseDetail.title,
+                      })
+                    }
+                    className="btn btn-secondary text-danger"
+                  >
+                    Delete course
+                  </button>
+                </div>
+              </TabsPanel>
+            </Tabs>
           )}
         </section>
       </div>
@@ -962,13 +1176,17 @@ function AdminStudioAuthenticated() {
         title={editingModule ? "Edit module" : "Add module"}
         description="A module groups related lessons."
       >
-        <form onSubmit={handleSaveModule}>
+        <form noValidate onSubmit={handleSaveModule}>
           <div className="space-y-4 px-5 py-5">
             <TextField
               label="Title"
               required
               value={modTitle}
-              onChange={setModTitle}
+              error={modTitleError}
+              onChange={(v) => {
+                setModTitle(v);
+                setModTitleError(undefined);
+              }}
               placeholder="Foundations"
             />
             <TextField
@@ -998,7 +1216,7 @@ function AdminStudioAuthenticated() {
         }}
       >
         <AlertDialogBackdrop className="fixed inset-0 z-50 bg-night/60 transition-opacity duration-200 ease-(--ease-out) data-starting-style:opacity-0 data-ending-style:opacity-0" />
-        <AlertDialogContent className="fixed top-1/2 left-1/2 z-50 w-[calc(100vw-2rem)] max-w-md -translate-x-1/2 -translate-y-1/2 rounded-xl border border-line bg-surface p-5 text-ink shadow-card transition-[opacity,scale] duration-200 ease-(--ease-out) data-starting-style:scale-96 data-starting-style:opacity-0 data-ending-style:scale-96 data-ending-style:opacity-0 motion-reduce:transition-opacity">
+        <AlertDialogContent className="fixed top-1/2 left-1/2 z-50 w-[calc(100vw-2rem)] max-w-md -translate-x-1/2 -translate-y-1/2 rounded-[14px] border border-line bg-surface p-5 text-ink shadow-card transition-[opacity,scale] duration-200 ease-(--ease-out) data-starting-style:scale-96 data-starting-style:opacity-0 data-ending-style:scale-96 data-ending-style:opacity-0 motion-reduce:transition-opacity motion-reduce:data-starting-style:scale-100 motion-reduce:data-ending-style:scale-100">
           <AlertDialogTitle className="text-lg font-bold">
             Delete this {confirmDelete?.kind}?
           </AlertDialogTitle>

@@ -49,6 +49,8 @@ interface TextFieldProps {
   step?: number;
   mono?: boolean;
   className?: string;
+  /** Inline error shown under the control; marks it invalid. */
+  error?: string;
 }
 
 export function TextField({
@@ -61,10 +63,16 @@ export function TextField({
   step,
   mono,
   className,
+  error,
   ...rest
 }: TextFieldProps) {
   const id = useId();
-  const fieldClass = `field mt-1.5${mono ? " font-mono text-xs" : ""}`;
+  const errorId = `${id}-error`;
+  const fieldClass = `field mt-1.5${mono ? " font-mono text-xs" : ""}${error ? " border-danger" : ""}`;
+  const a11y = {
+    "aria-invalid": error ? true : undefined,
+    "aria-describedby": error ? errorId : undefined,
+  };
   return (
     <div className={className}>
       <label htmlFor={id} className="block text-sm font-medium">
@@ -76,6 +84,7 @@ export function TextField({
           rows={rows}
           onChange={(e) => onChange(e.target.value)}
           className={fieldClass}
+          {...a11y}
           {...rest}
         />
       ) : (
@@ -87,8 +96,14 @@ export function TextField({
           step={step}
           onChange={(e) => onChange(e.target.value)}
           className={fieldClass}
+          {...a11y}
           {...rest}
         />
+      )}
+      {error && (
+        <p id={errorId} className="mt-1.5 text-xs text-danger">
+          {error}
+        </p>
       )}
     </div>
   );
@@ -106,7 +121,7 @@ export function SettingSwitch({
   onCheckedChange: (checked: boolean) => void;
 }) {
   return (
-    <label className="flex cursor-pointer items-center justify-between gap-4 rounded-md border border-line px-3 py-2.5">
+    <label className="flex cursor-pointer items-center justify-between gap-4 rounded-[10px] border border-line bg-surface px-3.5 py-3 transition-colors duration-150 hover:bg-subtle/60">
       <span className="min-w-0">
         <span className="block text-sm font-medium">{label}</span>
         {description && (
@@ -116,9 +131,9 @@ export function SettingSwitch({
       <Switch
         checked={checked}
         onCheckedChange={(next) => onCheckedChange(next)}
-        className="relative inline-flex h-6 w-10 shrink-0 items-center rounded-full bg-mist/40 transition-colors duration-150 data-checked:bg-primary"
+        className="relative inline-flex h-6 w-10 shrink-0 items-center rounded-full bg-mist/40 transition-colors duration-150 data-checked:bg-accent"
       >
-        <SwitchThumb className="block size-5 translate-x-0.5 rounded-full bg-white shadow-sm transition-transform duration-200 ease-(--ease-out) data-checked:translate-x-4.5 motion-reduce:transition-none" />
+        <SwitchThumb className="block size-5 translate-x-0.5 rounded-full bg-surface shadow-sm transition-transform duration-200 ease-(--ease-out) data-checked:translate-x-4.5 motion-reduce:transition-none" />
       </Switch>
     </label>
   );
@@ -143,7 +158,7 @@ export function StudioDialog({
     <Dialog open={open} onOpenChange={(next) => onOpenChange(next)}>
       <DialogBackdrop className="fixed inset-0 z-50 bg-night/60 transition-opacity duration-200 ease-(--ease-out) data-starting-style:opacity-0 data-ending-style:opacity-0" />
       <DialogContent
-        className={`fixed top-1/2 left-1/2 z-50 flex max-h-[90dvh] w-[calc(100vw-2rem)] -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-xl border border-line bg-surface text-ink shadow-card transition-[opacity,scale] duration-200 ease-(--ease-out) data-starting-style:scale-96 data-starting-style:opacity-0 data-ending-style:scale-96 data-ending-style:opacity-0 motion-reduce:transition-opacity ${className}`}
+        className={`fixed top-1/2 left-1/2 z-50 flex max-h-[90dvh] w-[calc(100vw-2rem)] -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-xl border border-line bg-surface text-ink shadow-card transition-[opacity,scale] duration-200 ease-(--ease-out) data-starting-style:scale-96 data-starting-style:opacity-0 data-ending-style:scale-96 data-ending-style:opacity-0 motion-reduce:transition-opacity motion-reduce:data-starting-style:scale-100 motion-reduce:data-ending-style:scale-100 ${className}`}
       >
         <div className="flex items-start justify-between gap-4 border-b border-line px-5 py-4">
           <div className="min-w-0">
@@ -246,11 +261,25 @@ function LessonEditorForm({
   >(lesson?.muxStatus ?? "idle");
   const [quiz, setQuiz] = useState<QuizQuestion[]>(() => normalizeQuiz(lesson));
   const [saving, setSaving] = useState(false);
+  const [tab, setTab] = useState("details");
+  // Keys: "title", "slug", or a quiz question id.
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
+  function clearError(key: string) {
+    setErrors((prev) => {
+      if (!(key in prev)) return prev;
+      const next = { ...prev };
+      delete next[key];
+      return next;
+    });
+  }
 
   function handleTitleChange(nextTitle: string) {
     setTitle(nextTitle);
+    clearError("title");
     if (!slugTouched) {
       setSlug(slugify(nextTitle));
+      clearError("slug");
     }
   }
 
@@ -280,6 +309,7 @@ function LessonEditorForm({
 
   function updateQuizQuestion(id: string, patch: Partial<QuizQuestion>) {
     setQuiz((prev) => prev.map((q) => (q.id === id ? { ...q, ...patch } : q)));
+    clearError(id);
   }
 
   async function handleSave(event: React.FormEvent<HTMLFormElement>) {
@@ -289,26 +319,20 @@ function LessonEditorForm({
     const cleanSlug = slugify(slug || title);
     const cleanSummary = summary.trim();
 
-    if (!cleanTitle) {
-      toast.error("Add a lesson title to save.");
+    const nextErrors: Record<string, string> = {};
+    if (!cleanTitle) nextErrors.title = "Add a lesson title.";
+    if (!cleanSlug) nextErrors.slug = "Use letters or numbers in the slug.";
+    for (const q of quiz) {
+      if (!q.question.trim()) nextErrors[q.id] = "Add a prompt for this question.";
+      else if (q.options.some((opt) => !opt.trim()))
+        nextErrors[q.id] = "Fill in all four answers.";
+    }
+    if (Object.keys(nextErrors).length > 0) {
+      setErrors(nextErrors);
+      setTab(nextErrors.title || nextErrors.slug ? "details" : "quiz");
       return;
     }
-    if (!cleanSlug) {
-      toast.error("Add a slug using letters or numbers to save.");
-      return;
-    }
-
-    for (let i = 0; i < quiz.length; i++) {
-      const q = quiz[i];
-      if (!q.question.trim()) {
-        toast.error(`Question ${i + 1} needs a prompt.`);
-        return;
-      }
-      if (q.options.some((opt) => !opt.trim())) {
-        toast.error(`Question ${i + 1} needs all four answers filled in.`);
-        return;
-      }
-    }
+    setErrors({});
 
     const mins = Math.max(0, Number.parseInt(durationMinutes || "0", 10) || 0);
     const secs = Math.max(
@@ -379,8 +403,14 @@ function LessonEditorForm({
   }
 
   return (
-    <form onSubmit={handleSave} className="flex min-h-0 flex-1 flex-col">
-      <Tabs defaultValue="details" className="flex min-h-0 flex-1 flex-col">
+    <form noValidate onSubmit={handleSave} className="flex min-h-0 flex-1 flex-col">
+      <Tabs
+        value={tab}
+        onValueChange={(next) => {
+          if (next) setTab(next);
+        }}
+        className="flex min-h-0 flex-1 flex-col"
+      >
         <TabsList aria-label="Lesson editor sections" className={TAB_LIST_CLASS}>
           <TabsTab value="details" className={TAB_CLASS}>
             Details
@@ -388,7 +418,7 @@ function LessonEditorForm({
           <TabsTab value="video" className={TAB_CLASS}>
             Video
             {muxPlaybackId.trim() && (
-              <span className="size-1.5 rounded-full bg-sage" aria-hidden="true" />
+              <span className="size-1.5 rounded-full bg-success" aria-hidden="true" />
             )}
           </TabsTab>
           <TabsTab value="markdown" className={TAB_CLASS}>
@@ -396,7 +426,9 @@ function LessonEditorForm({
           </TabsTab>
           <TabsTab value="quiz" className={TAB_CLASS}>
             Quiz
-            <span className="text-xs text-mist">{quiz.length}</span>
+            <span className="rounded-full bg-subtle px-1.5 text-xs text-mist tabular-nums">
+              {quiz.length}
+            </span>
           </TabsTab>
         </TabsList>
 
@@ -408,16 +440,19 @@ function LessonEditorForm({
                 required
                 value={title}
                 onChange={handleTitleChange}
-                placeholder="Cache components and Suspense"
+                placeholder="Spacing systems that scale"
+                error={errors.title}
               />
               <TextField
                 label="Slug"
                 required
                 mono
                 value={slug}
+                error={errors.slug}
                 onChange={(next) => {
                   setSlugTouched(true);
                   setSlug(next);
+                  clearError("slug");
                 }}
                 placeholder="cache-components-and-suspense"
               />
@@ -508,7 +543,7 @@ function LessonEditorForm({
               </TabsPanel>
 
               <TabsPanel value="preview">
-                <div className="min-h-80 rounded-md border border-line p-5">
+                <div className="min-h-80 rounded-[10px] border border-line p-5">
                   {markdownContent.trim() ? (
                     <MarkdownContent content={markdownContent} />
                   ) : (
@@ -537,7 +572,7 @@ function LessonEditorForm({
             </div>
 
             {quiz.length === 0 ? (
-              <div className="rounded-md border border-dashed border-line px-6 py-10 text-center">
+              <div className="rounded-[14px] border border-dashed border-line px-6 py-10 text-center">
                 <p className="text-sm font-medium">No questions yet</p>
                 <p className="mt-1 text-sm text-mist">
                   Add a question to check what learners took away.
@@ -547,7 +582,9 @@ function LessonEditorForm({
               quiz.map((q, qIdx) => (
                 <div
                   key={q.id}
-                  className="space-y-3 rounded-md border border-line p-4"
+                  className={`space-y-3 rounded-[14px] border bg-surface p-4 ${
+                    errors[q.id] ? "border-danger" : "border-line"
+                  }`}
                 >
                   <div className="flex items-center justify-between gap-2">
                     <h3 className="text-sm font-semibold">Question {qIdx + 1}</h3>
@@ -585,7 +622,7 @@ function LessonEditorForm({
                           <div
                             key={letter}
                             className={`flex items-center gap-2 rounded-md border px-2.5 ${
-                              isCorrect ? "border-sage" : "border-line"
+                              isCorrect ? "border-accent bg-accent/5" : "border-line"
                             }`}
                           >
                             <input
@@ -596,7 +633,7 @@ function LessonEditorForm({
                                 updateQuizQuestion(q.id, { correctIndex: optIdx })
                               }
                               aria-label={`Answer ${letter} is correct`}
-                              className="size-4 shrink-0 cursor-pointer accent-sage"
+                              className="size-4 shrink-0 cursor-pointer accent-(--accent)"
                             />
                             <input
                               type="text"
@@ -614,7 +651,7 @@ function LessonEditorForm({
                             />
                             {isCorrect && (
                               <Check
-                                className="h-4 w-4 shrink-0 text-sage"
+                                className="h-4 w-4 shrink-0 text-accent-ink"
                                 aria-hidden="true"
                               />
                             )}
@@ -633,6 +670,9 @@ function LessonEditorForm({
                     }
                     placeholder="Why the correct answer is right."
                   />
+                  {errors[q.id] && (
+                    <p className="text-xs text-danger">{errors[q.id]}</p>
+                  )}
                 </div>
               ))
             )}
