@@ -5,6 +5,7 @@ import { useQuery } from "convex/react";
 import { Check, ExternalLink, Loader2 } from "lucide-react";
 import { api } from "@/convex/_generated/api";
 import { TUTOR } from "@/lib/auth";
+import { PRO_ENABLED } from "@/convex/lib/features";
 import { LogoMark } from "@/components/brand/Logo";
 import { CourseCard, type CourseCardItem } from "./CourseCard";
 import { StartLearning } from "./HeroShowcase";
@@ -222,7 +223,9 @@ export function LandingSections() {
                 Start with the fundamentals
               </h2>
               <p className="mt-3 text-mist">
-                Begin with a free course, or try the preview lessons in any Pro course first.
+                {PRO_ENABLED
+                  ? "Begin with a free course, or try the preview lessons in any Pro course first."
+                  : "Every course is free while Interflect is new. Pick one and start."}
               </p>
             </div>
             <Link href="/courses" className="btn btn-secondary">
@@ -276,7 +279,7 @@ export function LandingSections() {
       {/* Tutor (Pro) */}
       <section className="mx-auto grid max-w-6xl items-center gap-14 px-4 py-24 sm:px-6 lg:grid-cols-2">
         <div className="max-w-md">
-          <span className="chip">Pro</span>
+          {PRO_ENABLED && <span className="chip">Pro</span>}
           <h2 className="mt-4 text-[2.25rem] leading-[1.1] font-semibold tracking-[-0.035em] text-ink">
             Ask why, not just how
           </h2>
@@ -284,9 +287,15 @@ export function LandingSections() {
             The Interflect tutor knows the lesson you are on. Paste a screenshot description or a
             snippet and it explains what is working, what is not, and what to change.
           </p>
-          <Link href="/pricing" className="btn btn-primary mt-8">
-            See Pro
-          </Link>
+          {PRO_ENABLED ? (
+            <Link href="/pricing" className="btn btn-primary mt-8">
+              See Pro
+            </Link>
+          ) : (
+            <div className="mt-8">
+              <StartLearning className="btn btn-primary" />
+            </div>
+          )}
         </div>
 
         <figure className="card space-y-4 p-5 sm:p-6">
@@ -343,7 +352,8 @@ export function LandingSections() {
         </div>
       </section>
 
-      {/* Free vs Pro */}
+      {/* Free vs Pro (hidden while everything is free) */}
+      {PRO_ENABLED && (
       <section className="mx-auto max-w-6xl px-4 pb-24 sm:px-6">
         <div className="grid gap-4 md:grid-cols-2">
           {[
@@ -370,6 +380,7 @@ export function LandingSections() {
           Compare plans
         </Link>
       </section>
+      )}
 
       {/* Closing panel */}
       <section className="px-4 pb-24 sm:px-6">
@@ -380,7 +391,7 @@ export function LandingSections() {
             <h2 className="text-[2.25rem] leading-[1.1] font-semibold tracking-[-0.035em] text-ink sm:text-[2.75rem]">
               Build your eye for good design.
             </h2>
-            <p className="mt-4 text-mist">Start with a free course. Go Pro when you want the full library.</p>
+            <p className="mt-4 text-mist">{PRO_ENABLED ? "Start with a free course. Go Pro when you want the full library." : "Every course is free. Sign up and start with the fundamentals."}</p>
             <div className="mt-8">
               <StartLearning className="btn btn-primary btn-lg" />
             </div>

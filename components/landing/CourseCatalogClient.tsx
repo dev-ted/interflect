@@ -18,6 +18,7 @@ import {
 } from "@ui-sdk/react/select";
 import { api } from "@/convex/_generated/api";
 import { CourseCard, type CourseCardItem } from "./CourseCard";
+import { PRO_ENABLED } from "@/convex/lib/features";
 
 type TierFilter = "all" | "free" | "pro";
 
@@ -109,8 +110,9 @@ export function CourseCatalogClient() {
     <>
       <h1 className="text-3xl font-extrabold sm:text-4xl">Courses</h1>
       <p className="mt-2 max-w-2xl text-mist">
-        Build real projects with Teddy. Pro courses open with free preview
-        lessons, so you can try the teaching before you upgrade.
+        {PRO_ENABLED
+          ? "Pro courses open with free preview lessons, so you can try them before you upgrade."
+          : "Every course is free while Interflect is new. Pick one and start."}
       </p>
 
       <div className="mt-8 flex flex-col gap-3 lg:flex-row lg:items-center">
@@ -130,6 +132,7 @@ export function CourseCatalogClient() {
         </div>
 
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+          {PRO_ENABLED && (
           <SegmentedControl
             aria-label="Plan"
             value={tier}
@@ -149,6 +152,7 @@ export function CourseCatalogClient() {
               </SegmentedControlItem>
             ))}
           </SegmentedControl>
+          )}
 
           <div className="grid grid-cols-2 gap-3 sm:flex">
             <FilterSelect label="Level" items={LEVELS} value={level} onChange={setLevel} />

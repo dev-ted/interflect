@@ -19,6 +19,7 @@ import { usePageContext } from "@/components/PageContextProvider";
 import { MarkdownContent } from "@/components/course/MarkdownContent";
 import { VukoraQuizCard } from "@/components/vukora/VukoraQuizCard";
 import { isAdminRole, PRO_PLAN_SLUG } from "@/lib/auth";
+import { PRO_ENABLED } from "@/convex/lib/features";
 import type { InteractiveQuizPayload, PageLearningContext } from "@/lib/types";
 
 interface ChatMessage {
@@ -84,7 +85,8 @@ export function VukoraWidget() {
 
   const hasProAccess = Boolean(
     isAuthenticated &&
-      (has?.({ plan: PRO_PLAN_SLUG }) ||
+      (!PRO_ENABLED ||
+        has?.({ plan: PRO_PLAN_SLUG }) ||
         has?.({ feature: "vukora_ai" }) ||
         has?.({ feature: "pro_courses" }) ||
         isAdminRole(user?.publicMetadata)),
@@ -213,7 +215,7 @@ export function VukoraWidget() {
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2">
               <PopoverTitle className="text-sm font-bold">Interflect tutor</PopoverTitle>
-              <span className="chip h-5 px-2">Pro</span>
+              {PRO_ENABLED && <span className="chip h-5 px-2">Pro</span>}
             </div>
             <p className="truncate text-xs text-mist">Viewing {viewingLabel}</p>
           </div>
@@ -239,17 +241,19 @@ export function VukoraWidget() {
               </h3>
               <p className="text-sm leading-relaxed text-mist">
                 The Interflect tutor reads the lesson you are on, explains concepts and
-                code, checks your progress and builds quick quizzes. It comes with
-                the Pro plan.
+                code, checks your progress and builds quick quizzes.
+                {PRO_ENABLED ? " It comes with the Pro plan." : " It’s free with an account."}
               </p>
             </div>
             <div className="mt-auto space-y-2">
-              <Link href="/pricing" onClick={() => setOpen(false)} className="btn btn-sun w-full">
-                See Pro plans
-              </Link>
+              {PRO_ENABLED && (
+                <Link href="/pricing" onClick={() => setOpen(false)} className="btn btn-sun w-full">
+                  See Pro plans
+                </Link>
+              )}
               {!isAuthenticated && (
                 <SignInButton mode="modal">
-                  <button type="button" onClick={() => setOpen(false)} className="btn btn-secondary w-full">
+                  <button type="button" onClick={() => setOpen(false)} className={`btn w-full ${PRO_ENABLED ? "btn-secondary" : "btn-primary"}`}>
                     Sign in
                   </button>
                 </SignInButton>

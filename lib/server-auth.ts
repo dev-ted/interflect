@@ -1,4 +1,5 @@
 import { auth } from "@clerk/nextjs/server";
+import { PRO_ENABLED } from "@/convex/lib/features";
 import { isAdminRole, PRO_PLAN_SLUG } from "./auth";
 
 export interface ServerAuthContext {
@@ -38,6 +39,7 @@ export async function getServerAuthContext(): Promise<ServerAuthContext> {
     userId,
     isAdmin,
     isPro,
-    hasProAccess: isPro || isAdmin,
+    // While Pro is switched off, every signed-in user has full access.
+    hasProAccess: !PRO_ENABLED || isPro || isAdmin,
   };
 }

@@ -4,7 +4,7 @@ import { CourseCatalogClient } from "@/components/landing/CourseCatalogClient";
 export const metadata: Metadata = {
   title: "Courses",
   description:
-    "Free and Pro full-stack and AI engineering courses with video lessons, written guides and quizzes.",
+    "Courses in UI design, UX, accessibility, design systems and frontend craft, with video lessons, notes and quizzes.",
 };
 
 export default function CoursesPage() {

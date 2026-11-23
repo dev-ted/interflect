@@ -1,9 +1,10 @@
 import Link from "next/link";
+import { PRO_ENABLED } from "@/convex/lib/features";
 import { Logo } from "@/components/brand/Logo";
 
 const LINKS = [
   { href: "/courses", label: "Courses" },
-  { href: "/pricing", label: "Pricing" },
+  ...(PRO_ENABLED ? [{ href: "/pricing", label: "Pricing" }] : []),
   { href: "/dashboard", label: "My learning" },
   { href: "/brand", label: "Brand" },
 ];

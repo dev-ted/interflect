@@ -8,6 +8,7 @@ import {
   type AuthFn,
 } from "eve/channels/auth";
 import { eveChannel } from "eve/channels/eve";
+import { PRO_ENABLED } from "../../../../convex/lib/features";
 
 function extractSessionCookie(cookieHeader: string | null): string | null {
   if (!cookieHeader) return null;
@@ -93,7 +94,7 @@ const clerkProAuth: AuthFn<Request> = withAuthChallenges(
     }
 
     const isAdmin = hasAdminClaim(claims);
-    const isPro = isAdmin || hasProClaim(claims);
+    const isPro = !PRO_ENABLED || isAdmin || hasProClaim(claims);
 
     if (!isPro) {
       throw new ForbiddenError({

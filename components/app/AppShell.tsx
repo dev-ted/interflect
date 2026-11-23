@@ -16,6 +16,7 @@ import { Logo } from "@/components/brand/Logo";
 import { ThemeToggle } from "@/components/brand/ThemeToggle";
 import { SidebarMobileDrawer, SidebarProvider } from "@/components/ui/sidebar";
 import { isAdminRole, PRO_PLAN_SLUG } from "@/lib/auth";
+import { PRO_ENABLED } from "@/convex/lib/features";
 
 type Has = (p: { plan: string } | { feature: string }) => boolean;
 const isPro = (has: Has) =>
@@ -59,16 +60,18 @@ function SidebarBody() {
       </nav>
 
       <div className="mt-auto flex flex-col gap-4">
-        {!isAdmin && (
+        {PRO_ENABLED && !isAdmin && (
           <Authenticated>
             <Show when={(has) => isPro(has)} fallback={<UpgradeCard />}>
               {null}
             </Show>
           </Authenticated>
         )}
-        <Unauthenticated>
-          <UpgradeCard />
-        </Unauthenticated>
+        {PRO_ENABLED && (
+          <Unauthenticated>
+            <UpgradeCard />
+          </Unauthenticated>
+        )}
 
         <div className="flex flex-col gap-3 border-t border-line pt-4">
           <Authenticated>

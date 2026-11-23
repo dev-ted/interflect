@@ -1,5 +1,6 @@
 import type { ActionCtx, MutationCtx, QueryCtx } from "../_generated/server";
 import type { UserIdentity } from "convex/server";
+import { PRO_ENABLED } from "./features";
 
 type AuthCtx = QueryCtx | MutationCtx | ActionCtx;
 
@@ -30,6 +31,7 @@ export function isAdminIdentity(identity: UserIdentity | null): boolean {
 
 export function isProIdentity(identity: UserIdentity | null): boolean {
   if (!identity) return false;
+  if (!PRO_ENABLED) return true;
   if (isAdminIdentity(identity)) return true;
   const record = identity as Record<string, unknown>;
   const pla = typeof record.pla === "string" ? record.pla : "";
