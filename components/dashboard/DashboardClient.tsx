@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { SignInButton, useUser } from "@clerk/nextjs";
 import { Authenticated, AuthLoading, Unauthenticated, useMutation, useQuery } from "convex/react";
@@ -21,7 +21,7 @@ import {
 import { toast } from "@ui-sdk/react/toast";
 import { Check, Play, SlidersHorizontal } from "lucide-react";
 import { api } from "@/convex/_generated/api";
-import { Skeleton, WidgetBoundary, WidgetSkeleton, EmptyState } from "@/components/app/states";
+import { EmptyState, Skeleton, useClock, WidgetBoundary, WidgetSkeleton } from "@/components/app/states";
 import {
   ActivityChart,
   Delta,
@@ -120,13 +120,7 @@ function Dashboard() {
   const show = (id: string) => !hiddenWidgets.includes(id);
 
   // Queries can't read the clock, so pass it in (rounded to the minute) with the timezone.
-  const [clock, setClock] = useState<{ now: number; tz: number } | null>(null);
-  useEffect(() => {
-    const tick = () => setClock({ now: Math.floor(Date.now() / 60_000) * 60_000, tz: -new Date().getTimezoneOffset() });
-    tick();
-    const id = setInterval(tick, 5 * 60_000);
-    return () => clearInterval(id);
-  }, []);
+  const clock = useClock();
 
   const save = (patch: { range?: Range; hiddenWidgets?: string[] }) =>
     updateSettings(patch).catch(() => toast.error("Couldn’t save your dashboard settings. Try again."));
