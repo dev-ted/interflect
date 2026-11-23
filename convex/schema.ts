@@ -112,4 +112,21 @@ export default defineSchema({
     .index("by_user_and_lesson", ["userId", "lessonId"])
     .index("by_user", ["userId"])
     .index("by_clerk_user_id", ["clerkUserId"]),
+
+  learnerSettings: defineTable({
+    userId: v.string(),
+    weeklyGoal: v.number(),
+    hiddenWidgets: v.array(v.string()),
+    range: v.union(v.literal("7d"), v.literal("30d"), v.literal("90d")),
+    updatedAt: v.number(),
+  }).index("by_user", ["userId"]),
+
+  trackedCourses: defineTable({
+    userId: v.string(),
+    courseId: v.id("courses"),
+    targetDate: v.optional(v.number()),
+    createdAt: v.number(),
+  })
+    .index("by_user", ["userId"])
+    .index("by_user_and_course", ["userId", "courseId"]),
 });
