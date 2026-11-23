@@ -44,3 +44,12 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# local agent worktrees
+.claude/worktrees/
+
+# generated lesson media: narration audio, rendered slides and videos live in Convex storage, not git
+course-creator-output/media/**/*.mp3
+course-creator-output/media/**/*.mp4
+course-creator-output/media/**/*.png
+__pycache__/
