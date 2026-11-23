@@ -1,30 +1,39 @@
 import { auth } from "@clerk/nextjs/server";
 import { generateText, stepCountIs, tool } from "ai";
 import { ConvexHttpClient } from "convex/browser";
+import { cacheLife } from "next/cache";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { api } from "@/convex/_generated/api";
+import { courseLengthSeconds, formatLearningTime } from "@/lib/learning-time";
 import { getServerAuthContext } from "@/lib/server-auth";
+import { TUTOR_ENABLED } from "@/convex/lib/features";
 import type {
   InteractiveQuizPayload,
   PageLearningContext,
   QuizQuestion,
 } from "@/lib/types";
 
+const MAX_HISTORY_CHARS = 24_000;
+
 const requestSchema = z.object({
   messages: z
     .array(
       z.object({
         role: z.enum(["user", "assistant"]),
-        content: z.string().min(1).max(8000),
+        content: z.string().min(1).max(4000),
       }),
     )
     .min(1)
-    .max(40),
+    .max(40)
+    // Bound what one request can cost: the whole history, not just each message.
+    .refine((m) => m.reduce((n, x) => n + x.content.length, 0) <= MAX_HISTORY_CHARS, {
+      message: "Conversation too long. Start a new chat.",
+    }),
   pageContext: z
     .object({
-      pathname: z.string(),
-      pageTitle: z.string(),
+      pathname: z.string().max(300),
+      pageTitle: z.string().max(300),
       pageType: z.enum([
         "home",
         "courses",
@@ -35,13 +44,13 @@ const requestSchema = z.object({
         "admin",
         "other",
       ]),
-      courseSlug: z.string().optional(),
-      courseTitle: z.string().optional(),
+      courseSlug: z.string().max(200).optional(),
+      courseTitle: z.string().max(200).optional(),
       courseTier: z.enum(["free", "pro"]).optional(),
-      moduleTitle: z.string().optional(),
-      lessonSlug: z.string().optional(),
-      lessonTitle: z.string().optional(),
-      lessonSummary: z.string().optional(),
+      moduleTitle: z.string().max(200).optional(),
+      lessonSlug: z.string().max(200).optional(),
+      lessonTitle: z.string().max(200).optional(),
+      lessonSummary: z.string().max(1000).optional(),
     })
     .optional(),
 });
@@ -92,6 +101,14 @@ interface CatalogCourseSummary {
   modules: CatalogModuleSummary[];
 }
 
+function catalogCourseLength(course: CatalogCourseSummary): string {
+  const lessonSeconds = course.modules.reduce(
+    (sum, mod) => sum + mod.lessons.reduce((inner, lesson) => inner + lesson.durationSeconds, 0),
+    0,
+  );
+  return formatLearningTime(courseLengthSeconds(lessonSeconds, course.estimatedHours)) || "length not set";
+}
+
 interface ActiveLessonData {
   courseSlug: string;
   courseTitle: string;
@@ -137,6 +154,14 @@ function createConvexClient(token?: string | null): ConvexHttpClient | null {
     client.setAuth(token);
   }
   return client;
+}
+
+/** The published catalog is the same for everyone: cache it briefly instead of querying Convex per message. */
+async function getPublicCatalog(): Promise<CatalogSnapshotData | null> {
+  "use cache";
+  cacheLife("minutes");
+  const client = createConvexClient();
+  return client ? await client.query(api.courses.getCatalogSnapshot, {}) : null;
 }
 
 function extractHeadingsAndBullets(markdown: string): {
@@ -447,7 +472,7 @@ function buildFallbackResponse(params: {
     const firstCourse = catalog?.courses[0];
     return {
       reply: firstCourse
-        ? `You haven't enrolled in any courses yet! A great place to start is **${firstCourse.title}** (${firstCourse.level}, ~${firstCourse.estimatedHours}h) — ${firstCourse.subtitle}.\n\nEnroll in a course and complete lessons to track your progress, or ask me for a **quick quiz** anytime.`
+        ? `You haven't enrolled in any courses yet! A great place to start is **${firstCourse.title}** (${firstCourse.level}, ${catalogCourseLength(firstCourse)}) — ${firstCourse.subtitle}.\n\nEnroll in a course and complete lessons to track your progress, or ask me for a **quick quiz** anytime.`
         : "You don't have any recorded lesson completions yet. Open any course lesson to start tracking progress, and I'll tailor your next steps automatically!",
       quizzes,
       toolCalls,
@@ -499,7 +524,7 @@ function buildFallbackResponse(params: {
         (sum, mod) => sum + mod.lessons.length,
         0,
       );
-      return `- **${course.title}** (${course.tier.toUpperCase()} · ${course.level} · ${lessonTotal} lessons · ~${course.estimatedHours}h) — ${course.subtitle}`;
+      return `- **${course.title}** (${course.tier.toUpperCase()} · ${course.level} · ${lessonTotal} lessons · ${catalogCourseLength(course)}) — ${course.subtitle}`;
     });
 
     const contextHeader = pageContext?.courseTitle
@@ -521,6 +546,9 @@ function buildFallbackResponse(params: {
 }
 
 export async function POST(request: Request) {
+  if (!TUTOR_ENABLED) {
+    return NextResponse.json({ error: "The Interflect tutor isn't available yet." }, { status: 404 });
+  }
   const authContext = await getServerAuthContext();
 
   if (!authContext.isAuthenticated || !authContext.userId) {
@@ -550,7 +578,7 @@ export async function POST(request: Request) {
   const parsed = requestSchema.safeParse(body);
   if (!parsed.success) {
     return NextResponse.json(
-      { error: "Invalid chat payload.", details: parsed.error.flatten() },
+      { error: parsed.error.issues[0]?.message ?? "Invalid chat payload." },
       { status: 400 },
     );
   }
@@ -564,15 +592,34 @@ export async function POST(request: Request) {
     (await getToken({ template: "convex" }).catch(() => null)) ??
     (await getToken().catch(() => null));
 
-  const publicConvex = createConvexClient();
   const authedConvex = createConvexClient(convexToken);
+  if (!authedConvex || !convexToken) {
+    return NextResponse.json({ error: "Authentication required." }, { status: 401 });
+  }
 
-  const [catalogSnapshot, userProgress] = await Promise.all([
-    publicConvex
-      ? publicConvex
+  // Each message can be a paid model call: rate-limit per learner and overall before doing any work.
+  const quota = await authedConvex.mutation(api.rateLimits.consumeTutorMessage, {}).catch(() => null);
+  if (!quota?.ok) {
+    const retryAfterSeconds = Math.max(1, Math.ceil((quota?.retryAfter ?? 60_000) / 1000));
+    return NextResponse.json(
+      {
+        error: `You've sent a lot of messages in a short time. Try again in ${
+          retryAfterSeconds < 120 ? `${retryAfterSeconds} seconds` : `${Math.ceil(retryAfterSeconds / 60)} minutes`
+        }.`,
+      },
+      { status: 429, headers: { "Retry-After": String(retryAfterSeconds) } },
+    );
+  }
+
+  const [catalog, lessonSnapshot, userProgress] = await Promise.all([
+    getPublicCatalog().catch(() => null),
+    // Lesson text is access-checked, so fetch it as the learner, without rescanning the catalog.
+    pageContext?.courseSlug && pageContext.lessonSlug
+      ? authedConvex
           .query(api.courses.getCatalogSnapshot, {
-            courseSlug: pageContext?.courseSlug,
-            lessonSlug: pageContext?.lessonSlug,
+            courseSlug: pageContext.courseSlug,
+            lessonSlug: pageContext.lessonSlug,
+            lessonOnly: true,
           })
           .catch(() => null)
       : Promise.resolve(null),
@@ -582,6 +629,10 @@ export async function POST(request: Request) {
           .catch(() => null)
       : Promise.resolve(null),
   ]);
+
+  const catalogSnapshot: CatalogSnapshotData | null = catalog
+    ? { courses: catalog.courses, activeLesson: lessonSnapshot?.activeLesson ?? null }
+    : null;
 
   const toolCallsUsed = new Set<string>();
   const collectedQuizzes: InteractiveQuizPayload[] = [];
@@ -672,16 +723,10 @@ export async function POST(request: Request) {
                   courses: catalogSnapshot.courses,
                 };
               }
-              if (!publicConvex) {
-                return { totalCourses: 0, courses: [] };
-              }
-              const fresh = await publicConvex.query(
-                api.courses.getCatalogSnapshot,
-                {},
-              );
+              const fresh = await getPublicCatalog();
               return {
-                totalCourses: fresh.courses.length,
-                courses: fresh.courses,
+                totalCourses: fresh?.courses.length ?? 0,
+                courses: fresh?.courses ?? [],
               };
             },
           }),
@@ -701,17 +746,14 @@ export async function POST(request: Request) {
               ) {
                 return { found: true, lesson: catalogSnapshot.activeLesson };
               }
-              if (!publicConvex) {
-                return { found: false, error: "Catalog unavailable." };
-              }
-              const fresh = await publicConvex.query(
+              const fresh = await authedConvex.query(
                 api.courses.getCatalogSnapshot,
-                { courseSlug, lessonSlug },
+                { courseSlug, lessonSlug, lessonOnly: true },
               );
               if (!fresh.activeLesson) {
                 return {
                   found: false,
-                  error: `Lesson "${lessonSlug}" in "${courseSlug}" not found.`,
+                  error: `Lesson "${lessonSlug}" in "${courseSlug}" not found, or it needs Pro.`,
                 };
               }
               return { found: true, lesson: fresh.activeLesson };

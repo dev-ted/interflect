@@ -16,6 +16,7 @@
   "dependencies": {
     "@clerk/backend": "^3.31.1",
     "@clerk/nextjs": "^7.10.4",
+    "@convex-dev/rate-limiter": "^0.4.3",
     "@mux/ts": "^16.2.0",
     "@ui-sdk/core": "0.1.0-beta.10",
     "@ui-sdk/react": "0.1.0-beta.10",

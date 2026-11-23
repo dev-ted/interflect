@@ -362,6 +362,10 @@ p {
   color: var(--ink);
   line-height: 1.75;
   font-size: 1rem;
+  max-width: 960px;
+}
+/* Reading text stays on a comfortable measure. A wide preview may use the column. */
+.lesson-prose > :not([data-wide]) {
   max-width: 70ch;
 }
 .lesson-prose h1 {
@@ -454,6 +458,8 @@ p {
 /* Syntax colors sit on the fixed night background. */
 .hljs-keyword,
 .hljs-selector-tag,
+.hljs-tag,
+.hljs-name,
 .hljs-literal {
   color: #9aa6ff;
 }
@@ -464,12 +470,20 @@ p {
 }
 .hljs-title,
 .hljs-section,
-.hljs-title.function_ {
+.hljs-title.function_,
+.hljs-selector-class,
+.hljs-selector-id {
   color: #ffc24d;
+}
+.hljs-attribute,
+.hljs-selector-pseudo,
+.hljs-selector-attr {
+  color: #7ec8ff;
 }
 .hljs-number,
 .hljs-built_in,
-.hljs-type {
+.hljs-type,
+.hljs-meta {
   color: #f59fb7;
 }
 .hljs-comment {

@@ -9,6 +9,7 @@ import {
   ProgressValue,
 } from "@ui-sdk/react/progress";
 import { BookOpen, CheckCircle2, Clock, Crown } from "lucide-react";
+import { courseLengthSeconds, formatLearningTime } from "@/lib/learning-time";
 
 export interface CourseCardItem {
   _id: string;
@@ -44,6 +45,9 @@ export function CourseCard({ course, wide = false }: { course: CourseCardItem; w
     course.lessonCount > 0
       ? Math.round((course.completedLessons / course.lessonCount) * 100)
       : 0;
+  const lengthLabel = formatLearningTime(
+    courseLengthSeconds(course.totalDurationSeconds, course.estimatedHours),
+  );
 
   return (
     <Link
@@ -114,10 +118,12 @@ export function CourseCard({ course, wide = false }: { course: CourseCardItem; w
               {plural(course.lessonCount, "lesson")} in{" "}
               {plural(course.moduleCount, "module")}
             </span>
-            <span className="inline-flex items-center gap-1 tabular-nums">
-              <Clock className="h-3.5 w-3.5" aria-hidden="true" />
-              {course.estimatedHours}h
-            </span>
+            {lengthLabel ? (
+              <span className="inline-flex items-center gap-1 tabular-nums">
+                <Clock className="h-3.5 w-3.5" aria-hidden="true" />
+                {lengthLabel}
+              </span>
+            ) : null}
           </div>
         </div>
       </div>

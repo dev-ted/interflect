@@ -3,6 +3,8 @@ import { mutation, query } from "./_generated/server";
 import type { Doc, Id } from "./_generated/dataModel";
 import type { QueryCtx } from "./_generated/server";
 import { getOptionalIdentity, requireAdmin, requireIdentity } from "./lib/auth";
+import { thumbnailUrlFor } from "./lib/media";
+import { rateLimiter } from "./lib/rateLimits";
 
 const DAY = 86_400_000;
 const rangeValidator = v.union(v.literal("7d"), v.literal("30d"), v.literal("90d"));
@@ -50,6 +52,7 @@ export const updateMySettings = mutation({
   },
   handler: async (ctx, args) => {
     const identity = await requireIdentity(ctx);
+    await rateLimiter.limit(ctx, "progressWrite", { key: identity.tokenIdentifier, throws: true });
     if (args.weeklyGoal !== undefined && (args.weeklyGoal < 1 || args.weeklyGoal > 14)) {
       throw new Error("Weekly goal must be between 1 and 14 lessons.");
     }
@@ -59,7 +62,7 @@ export const updateMySettings = mutation({
       .unique();
     const patch = {
       ...(args.weeklyGoal !== undefined && { weeklyGoal: Math.round(args.weeklyGoal) }),
-      ...(args.hiddenWidgets !== undefined && { hiddenWidgets: args.hiddenWidgets.slice(0, 20) }),
+      ...(args.hiddenWidgets !== undefined && { hiddenWidgets: args.hiddenWidgets.slice(0, 20).map((w) => w.slice(0, 40)) }),
       ...(args.range !== undefined && { range: args.range }),
       updatedAt: Date.now(),
     };
@@ -97,6 +100,7 @@ export const trackCourse = mutation({
   args: { courseId: v.id("courses"), targetDate: v.optional(v.union(v.number(), v.null())) },
   handler: async (ctx, args) => {
     const identity = await requireIdentity(ctx);
+    await rateLimiter.limit(ctx, "progressWrite", { key: identity.tokenIdentifier, throws: true });
     const course = await ctx.db.get("courses", args.courseId);
     if (!course || !course.published) throw new Error("Course not found.");
     const existing = await ctx.db
@@ -125,6 +129,7 @@ export const untrackCourse = mutation({
   args: { courseId: v.id("courses") },
   handler: async (ctx, args) => {
     const identity = await requireIdentity(ctx);
+    await rateLimiter.limit(ctx, "progressWrite", { key: identity.tokenIdentifier, throws: true });
     const existing = await ctx.db
       .query("trackedCourses")
       .withIndex("by_user_and_course", (q) =>
@@ -263,7 +268,7 @@ export const getMyInsights = query({
             courseId: course._id,
             slug: course.slug,
             title: course.title,
-            thumbnailUrl: course.thumbnailUrl,
+            thumbnailUrl: await thumbnailUrlFor(ctx, course),
             completedLessons: done,
             totalLessons: lessons.length,
             percent,

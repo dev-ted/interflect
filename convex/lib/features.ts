@@ -8,6 +8,12 @@
  */
 export const PRO_ENABLED = false;
 
+/**
+ * The Interflect AI tutor. Off until the AI Gateway is connected: hides the chat widget and
+ * the landing-page tutor section, and the /api/vukora/chat route refuses requests.
+ */
+export const TUTOR_ENABLED = false;
+
 /** What learners see: the stored tier while Pro is on, "free" while it is off. */
 export function publicCourse<T extends { tier: "free" | "pro" }>(course: T): T {
   return PRO_ENABLED ? course : { ...course, tier: "free" };

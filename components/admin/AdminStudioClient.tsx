@@ -33,6 +33,7 @@ import {
 } from "@ui-sdk/react/select";
 import { Tabs, TabsList, TabsPanel, TabsTab } from "@ui-sdk/react/tabs";
 import { toast } from "@ui-sdk/react/toast";
+import { StorageUploader } from "./StorageUploader";
 import {
   Check,
   ChevronDown,
@@ -44,6 +45,7 @@ import {
   Trash2,
 } from "lucide-react";
 import { api } from "@/convex/_generated/api";
+import { formatLearningTime } from "@/lib/learning-time";
 import type { Doc, Id } from "@/convex/_generated/dataModel";
 import {
   DIALOG_FOOTER_CLASS,
@@ -77,9 +79,7 @@ const DEFAULT_THUMBNAIL =
 const SKELETON = "rounded-md bg-subtle motion-safe:animate-pulse";
 
 function formatDuration(seconds: number): string {
-  const mins = Math.floor(seconds / 60);
-  const secs = seconds % 60;
-  return `${mins}:${secs.toString().padStart(2, "0")}`;
+  return formatLearningTime(seconds) || "0 min";
 }
 
 function plural(count: number, word: string) {
@@ -118,7 +118,7 @@ const NEW_COURSE: CourseValues = {
   tier: "pro",
   published: false,
   featured: false,
-  estimatedHours: "6",
+  estimatedHours: "0",
   tags: "UI design, Figma, CSS",
 };
 
@@ -139,6 +139,11 @@ function valuesFromCourse(course: Doc<"courses">): CourseValues {
   };
 }
 
+function hoursFromField(value: string) {
+  const hours = Number.parseFloat(value);
+  return Number.isFinite(hours) && hours > 0 ? Math.round(hours * 100) / 100 : 0;
+}
+
 function toCourseArgs(v: CourseValues) {
   return {
     title: v.title.trim(),
@@ -151,7 +156,7 @@ function toCourseArgs(v: CourseValues) {
     tier: v.tier,
     published: v.published,
     featured: v.featured,
-    estimatedHours: Math.max(1, Number.parseFloat(v.estimatedHours || "1") || 1),
+    estimatedHours: hoursFromField(v.estimatedHours),
     tags: v.tags
       .split(",")
       .map((t) => t.trim())
@@ -206,6 +211,8 @@ function OptionSelect<T extends string>({
 function CourseForm({
   initial,
   isNew,
+  courseId,
+  thumbnailPreviewUrl,
   submitLabel,
   onSubmit,
   bodyClassName,
@@ -215,6 +222,8 @@ function CourseForm({
 }: {
   initial: CourseValues;
   isNew: boolean;
+  courseId?: Id<"courses">;
+  thumbnailPreviewUrl?: string;
   submitLabel: string;
   onSubmit: (args: CourseArgs) => Promise<void>;
   bodyClassName?: string;
@@ -223,6 +232,7 @@ function CourseForm({
   /** Show a sticky save bar only while there are unsaved changes. */
   saveBar?: boolean;
 }) {
+  const setCourseThumbnail = useMutation(api.files.setCourseThumbnail);
   const [values, setValues] = useState(initial);
   const [slugTouched, setSlugTouched] = useState(!isNew);
   const [saving, setSaving] = useState(false);
@@ -326,15 +336,31 @@ function CourseForm({
             value={values.thumbnailUrl}
             onChange={(v) => set("thumbnailUrl", v)}
           />
-          {values.thumbnailUrl.trim() && (
+          {(thumbnailPreviewUrl || values.thumbnailUrl.trim()) && (
             /* eslint-disable-next-line @next/next/no-img-element */
             <img
-              src={values.thumbnailUrl}
+              src={thumbnailPreviewUrl || values.thumbnailUrl}
               alt="Thumbnail preview"
               className="hidden h-10 w-full rounded-[10px] border border-line object-cover sm:block"
             />
           )}
         </div>
+        <StorageUploader
+          accept="image/png,image/jpeg,image/webp,image/svg+xml"
+          label="Upload thumbnail"
+          hint="PNG, JPG, WebP or SVG. Stored in Convex and shown on the course card."
+          rejectMessage="That file isn’t an image. Choose a PNG, JPG, WebP or SVG."
+          currentUrl={thumbnailPreviewUrl}
+          disabledReason={
+            courseId
+              ? undefined
+              : "Create the course first. You can upload the thumbnail from its settings."
+          }
+          onStored={async (storageId) => {
+            if (!courseId) return null;
+            return await setCourseThumbnail({ courseId, storageId });
+          }}
+        />
 
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
           <TextField
@@ -359,15 +385,19 @@ function CourseForm({
               onChange={(v) => set("tier", v)}
             />
           </div>
-          <TextField
-            label="Hours"
-            type="number"
-            min={1}
-            step={0.5}
-            value={values.estimatedHours}
-            onChange={(v) => set("estimatedHours", v)}
-            className="col-span-2 sm:col-span-1"
-          />
+          <div className="col-span-2 sm:col-span-1">
+            <TextField
+              label="Hours before lessons"
+              type="number"
+              min={0}
+              step={0.01}
+              value={values.estimatedHours}
+              onChange={(v) => set("estimatedHours", v)}
+            />
+            <p className="mt-1.5 text-xs text-mist">
+              Cards use the sum of lesson times once lessons exist. This is only the fallback.
+            </p>
+          </div>
         </div>
 
         <TextField
@@ -431,12 +461,16 @@ function VideoChip({
   status,
   hasPlaybackId,
   hasLink = false,
+  hasStorage = false,
 }: {
   status: "idle" | "waiting" | "ready" | "errored";
   hasPlaybackId: boolean;
   hasLink?: boolean;
+  hasStorage?: boolean;
 }) {
-  const [dot, label] = hasLink
+  const [dot, label] = hasStorage
+    ? ["bg-success", "Stored video"]
+    : hasLink
     ? ["bg-success", "Video link"]
     : status === "errored"
       ? ["bg-danger", "Video error"]
@@ -1048,6 +1082,7 @@ function AdminStudioAuthenticated() {
                                       status={lesson.muxStatus}
                                       hasPlaybackId={Boolean(lesson.muxPlaybackId)}
                                       hasLink={Boolean(lesson.videoUrl)}
+                                      hasStorage={Boolean(lesson.videoStorageId)}
                                     />
                                     <span className="chip">
                                       {plural(lesson.quiz?.length ?? 0, "question")}
@@ -1109,6 +1144,8 @@ function AdminStudioAuthenticated() {
                   <CourseForm
                     key={`${courseDetail._id}-${courseDetail.updatedAt}`}
                     initial={valuesFromCourse(courseDetail)}
+                    courseId={courseDetail._id}
+                    thumbnailPreviewUrl={courseDetail.thumbnailPreviewUrl}
                     isNew={false}
                     submitLabel="Save"
                     saveBar
