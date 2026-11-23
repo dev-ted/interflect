@@ -1,6 +1,7 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 import { getOptionalIdentity, requireIdentity } from "./lib/auth";
+import { publicCourse } from "./lib/features";
 
 export const enroll = mutation({
   args: { courseId: v.id("courses") },
@@ -203,7 +204,7 @@ export const getMyLearningDashboard = query({
             thumbnailUrl: course.thumbnailUrl,
             category: course.category,
             level: course.level,
-            tier: course.tier,
+            tier: publicCourse(course).tier,
             enrolledAt: enrollment.enrolledAt,
             totalLessons: orderedLessons.length,
             completedLessons: completedCount,
@@ -265,7 +266,7 @@ export const getUserProgressForAgent = query({
           return {
             slug: course.slug,
             title: course.title,
-            tier: course.tier,
+            tier: publicCourse(course).tier,
             completedCount: completed.length,
             totalLessons: lessons.length,
             completedLessons: completed.map((l) => ({

@@ -8,6 +8,7 @@ import {
   requireAdmin,
 } from "./lib/auth";
 import { quizQuestionValidator } from "./schema";
+import { publicCourse } from "./lib/features";
 
 export const listPublished = query({
   args: {
@@ -22,7 +23,8 @@ export const listPublished = query({
       .query("courses")
       .withIndex("by_published_and_order", (q) => q.eq("published", true))
       .order("asc")
-      .take(maxCourses);
+      .take(maxCourses)
+      .then((rows) => rows.map(publicCourse));
 
     const filtered = courses.filter((c) => {
       if (args.tier && c.tier !== args.tier) return false;
@@ -99,10 +101,11 @@ export const getCourseBySlug = query({
   handler: async (ctx, args) => {
     const identity = await getOptionalIdentity(ctx);
     const isAdmin = isAdminIdentity(identity);
-    const course = await ctx.db
+    const stored = await ctx.db
       .query("courses")
       .withIndex("by_slug", (q) => q.eq("slug", args.slug))
       .unique();
+    const course = stored && publicCourse(stored);
 
     if (!course || (!course.published && !isAdmin)) {
       return null;
@@ -191,10 +194,11 @@ export const getLessonBySlug = query({
     const isAdmin = isAdminIdentity(identity);
     const hasProAccess = isProIdentity(identity);
 
-    const course = await ctx.db
+    const stored = await ctx.db
       .query("courses")
       .withIndex("by_slug", (q) => q.eq("slug", args.courseSlug))
       .unique();
+    const course = stored && publicCourse(stored);
 
     if (!course || (!course.published && !isAdmin)) {
       return null;
@@ -359,7 +363,8 @@ export const getCatalogSnapshot = query({
       .query("courses")
       .withIndex("by_published_and_order", (q) => q.eq("published", true))
       .order("asc")
-      .take(50);
+      .take(50)
+      .then((rows) => rows.map(publicCourse));
 
     const catalog = await Promise.all(
       courses.map(async (course) => {

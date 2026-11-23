@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { PRO_ENABLED } from "@/convex/lib/features";
 import { SignInButton, SignUpButton, UserButton } from "@clerk/nextjs";
 import { Authenticated, Unauthenticated } from "convex/react";
 import { Menu } from "lucide-react";
@@ -10,7 +11,7 @@ import { SidebarMobileDrawer, SidebarProvider } from "@/components/ui/sidebar";
 
 const LINKS = [
   { href: "/courses", label: "Courses" },
-  { href: "/pricing", label: "Pricing" },
+  ...(PRO_ENABLED ? [{ href: "/pricing", label: "Pricing" }] : []),
 ];
 
 export function MarketingNav() {
