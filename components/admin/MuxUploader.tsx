@@ -8,6 +8,11 @@ import {
   ProgressTrack,
   ProgressValue,
 } from "@ui-sdk/react/progress";
+import {
+  FileInput,
+  FileInputDropzone,
+  FileInputTrigger,
+} from "@ui-sdk/react/file-input";
 import { AlertCircle, CheckCircle2, Loader2, UploadCloud } from "lucide-react";
 
 const DEMO_MUX_PLAYBACK_ID = "BV3YZtogl89mg9VcNBhhnHm02Y34zI1nlMuMQfAbl3dM";
@@ -54,7 +59,6 @@ export function MuxUploader({
   onUploaded,
   onClear,
 }: MuxUploaderProps) {
-  const fileInputId = useId();
   const playbackInputId = useId();
 
   const [phase, setPhase] = useState<UploadPhase>("idle");
@@ -66,7 +70,7 @@ export function MuxUploader({
   const xhrRef = useRef<XMLHttpRequest | null>(null);
   const pollTimerRef = useRef<number | null>(null);
   const cancelledRef = useRef(false);
-  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const [lastFile, setLastFile] = useState<File | null>(null);
 
   function cleanupActiveTransfer() {
     cancelledRef.current = true;
@@ -92,9 +96,6 @@ export function MuxUploader({
     setProgress(0);
     setStatusMessage(null);
     setErrorMessage(null);
-    if (fileInputRef.current) {
-      fileInputRef.current.value = "";
-    }
   }
 
   function uploadFileDirect(url: string, file: File): Promise<void> {
@@ -122,7 +123,7 @@ export function MuxUploader({
         } else {
           reject(
             new Error(
-              `Mux rejected the upload (status ${xhr.status}). Try again.`,
+              `Mux rejected the upload (status ${xhr.status}). Try again, or choose a smaller file.`,
             ),
           );
         }
@@ -175,7 +176,7 @@ export function MuxUploader({
           data.status === "timed_out"
         ) {
           setPhase("error");
-          setErrorMessage(`Mux stopped the upload (${data.status}). Choose the file again to retry.`);
+          setErrorMessage(`Mux stopped the upload (${data.status}). Try again, or choose a different file.`);
           return;
         }
 
@@ -217,12 +218,10 @@ export function MuxUploader({
     await tick();
   }
 
-  async function handleFileSelect(event: React.ChangeEvent<HTMLInputElement>) {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
+  async function startUpload(file: File) {
     cleanupActiveTransfer();
     cancelledRef.current = false;
+    setLastFile(file);
     setFileName(file.name);
     setProgress(0);
     setErrorMessage(null);
@@ -241,7 +240,8 @@ export function MuxUploader({
 
       if (!createRes.ok || !createData.uploadUrl || !createData.uploadId) {
         throw new Error(
-          createData.error || "Couldn't start an upload with Mux. Check the Mux keys in your environment.",
+          createData.error ||
+            "Mux didn't accept the upload request. Check the Mux keys in your environment, then try again.",
         );
       }
 
@@ -260,12 +260,10 @@ export function MuxUploader({
       if (cancelledRef.current) return;
       setPhase("error");
       setErrorMessage(
-        error instanceof Error ? error.message : "The upload failed. Choose the file again to retry.",
+        error instanceof Error
+          ? error.message
+          : "The upload failed before it finished. Try again.",
       );
-    } finally {
-      if (fileInputRef.current) {
-        fileInputRef.current.value = "";
-      }
     }
   }
 
@@ -287,37 +285,41 @@ export function MuxUploader({
           </span>
         </div>
 
-        <label
-          htmlFor={fileInputId}
-          className={`mt-2 flex flex-col items-center justify-center rounded-md border border-dashed px-4 py-8 text-center transition-colors duration-150 ${
-            isBusy
-              ? "pointer-events-none border-primary bg-subtle"
-              : "cursor-pointer border-line hover:border-primary hover:bg-subtle"
-          } has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-primary`}
+        <FileInput
+          accept="video/*"
+          value={[]}
+          disabled={isBusy}
+          onValueChange={(files) => {
+            if (files[0]) void startUpload(files[0]);
+          }}
+          onReject={() => {
+            setPhase("error");
+            setErrorMessage(
+              "That file isn\u2019t a video. Choose an MP4, MOV, WebM or MKV file and try again.",
+            );
+          }}
         >
-          {isBusy ? (
-            <Loader2 className="h-6 w-6 animate-spin text-primary" aria-hidden="true" />
-          ) : (
-            <UploadCloud className="h-6 w-6 text-mist" aria-hidden="true" />
-          )}
-          <span className="mt-2 text-sm font-medium">
-            {isBusy ? statusMessage || "Working\u2026" : "Choose a video file"}
-          </span>
-          <span className="mt-0.5 text-xs text-mist">
-            {fileName && isBusy
-              ? fileName
-              : "MP4, MOV, WebM or MKV. Uploads straight to Mux."}
-          </span>
-          <input
-            ref={fileInputRef}
-            id={fileInputId}
-            type="file"
-            accept="video/*"
-            disabled={isBusy}
-            onChange={handleFileSelect}
-            className="sr-only"
-          />
-        </label>
+          <FileInputDropzone className="mt-2 flex flex-col items-center justify-center rounded-[14px] border border-dashed border-line bg-surface px-4 py-8 text-center transition-colors duration-150 data-disabled:border-accent data-disabled:bg-subtle data-drag-accept:border-accent data-drag-accept:bg-accent/5 data-drag-reject:border-danger data-drag-reject:bg-danger/5">
+            {isBusy ? (
+              <Loader2 className="h-6 w-6 animate-spin text-accent-ink" aria-hidden="true" />
+            ) : (
+              <UploadCloud className="h-6 w-6 text-mist" aria-hidden="true" />
+            )}
+            <p className="mt-2 text-sm font-medium">
+              {isBusy ? statusMessage || "Working\u2026" : "Drop a video here"}
+            </p>
+            <p className="mt-0.5 text-xs text-mist">
+              {fileName && isBusy
+                ? fileName
+                : "MP4, MOV, WebM or MKV. Uploads straight to Mux."}
+            </p>
+            {!isBusy && (
+              <FileInputTrigger className="btn btn-secondary btn-sm mt-3">
+                Choose a file
+              </FileInputTrigger>
+            )}
+          </FileInputDropzone>
+        </FileInput>
 
         {isBusy && (
           <Progress
@@ -344,23 +346,37 @@ export function MuxUploader({
               </span>
             </div>
             <ProgressTrack className="h-1.5 w-full overflow-hidden rounded-full bg-subtle">
-              <ProgressIndicator className="h-full rounded-full bg-primary data-indeterminate:w-full data-indeterminate:motion-safe:animate-pulse" />
+              <ProgressIndicator className="h-full rounded-full bg-accent data-indeterminate:w-full data-indeterminate:motion-safe:animate-pulse" />
             </ProgressTrack>
           </Progress>
         )}
 
         {phase === "ready" && statusMessage && (
-          <p role="status" className="mt-3 flex items-center gap-2 text-sm text-sage">
+          <p role="status" className="mt-3 flex items-center gap-2 text-sm text-success">
             <CheckCircle2 className="h-4 w-4 shrink-0" aria-hidden="true" />
             {statusMessage}
           </p>
         )}
 
         {errorMessage && (
-          <p role="alert" className="mt-3 flex items-start gap-2 text-sm text-danger">
+          <div
+            role="alert"
+            className="mt-3 flex items-start gap-2 rounded-[10px] border border-danger/30 bg-danger/5 px-3 py-2.5 text-sm text-danger"
+          >
             <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
-            {errorMessage}
-          </p>
+            <p className="min-w-0 flex-1">{errorMessage}</p>
+            {phase === "error" && lastFile && (
+              <button
+                type="button"
+                onClick={() => {
+                  void startUpload(lastFile);
+                }}
+                className="btn btn-ghost btn-sm -my-1 shrink-0"
+              >
+                Try again
+              </button>
+            )}
+          </div>
         )}
       </div>
 
@@ -401,7 +417,7 @@ export function MuxUploader({
       </div>
 
       {hasPlaybackId && (
-        <figure className="overflow-hidden rounded-md border border-line bg-night">
+        <figure className="overflow-hidden rounded-[14px] border border-line bg-night">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={`https://image.mux.com/${encodeURIComponent(playbackId.trim())}/thumbnail.jpg?width=640&fit_mode=smartcrop`}
