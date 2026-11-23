@@ -330,6 +330,33 @@ p {
   }
 }
 
+/* ── Loading skeleton: a quiet shimmer, static under reduced motion ──── */
+.skeleton {
+  background: linear-gradient(
+      90deg,
+      transparent 0%,
+      color-mix(in oklab, var(--ink) 4%, transparent) 50%,
+      transparent 100%
+    )
+    var(--subtle);
+  background-size: 200% 100%;
+  border-radius: 8px;
+  animation: if-shimmer 1.6s linear infinite;
+}
+@keyframes if-shimmer {
+  from {
+    background-position: 100% 0;
+  }
+  to {
+    background-position: -100% 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .skeleton {
+    animation: none;
+  }
+}
+
 /* ── Lesson markdown ────────────────────────────────────────────────── */
 .lesson-prose {
   color: var(--ink);

@@ -1,4 +1,6 @@
 import { internalMutation, mutation } from "./_generated/server";
+import { v } from "convex/values";
+import type { Doc } from "./_generated/dataModel";
 import type { MutationCtx } from "./_generated/server";
 import { requireAdmin } from "./lib/auth";
 
@@ -1487,6 +1489,8 @@ export const seedSampleCoursesAdmin = mutation({
 });
 
 const RESET_TABLES = [
+  "trackedCourses",
+  "learnerSettings",
   "quizAttempts",
   "lessonProgress",
   "enrollments",
@@ -1507,5 +1511,133 @@ export const resetContent = internalMutation({
       }
     }
     return await runSeed(ctx);
+  },
+});
+
+/**
+ * Dev only: ~60 days of realistic activity so the dashboard and admin charts have something to show.
+ * Gives `clerkUserId` a learning history (with a tracked course and a weekly goal) and adds 14 demo learners.
+ * Run: npx convex run seed:seedDemoActivity '{"clerkUserId":"user_..."}'
+ */
+export const seedDemoActivity = internalMutation({
+  args: { clerkUserId: v.string() },
+  handler: async (ctx, { clerkUserId }) => {
+    const issuer = process.env.CLERK_JWT_ISSUER_DOMAIN;
+    if (!issuer) throw new Error("Set CLERK_JWT_ISSUER_DOMAIN first.");
+    const DAY = 86_400_000;
+    const now = Date.now();
+
+    // Small deterministic PRNG so reruns produce the same shape.
+    let seed = 42;
+    const rand = () => {
+      seed = (seed * 1664525 + 1013904223) % 4294967296;
+      return seed / 4294967296;
+    };
+    const at = (daysAgo: number) => now - daysAgo * DAY - Math.floor(rand() * 8 * 3_600_000);
+
+    const courses = (await ctx.db.query("courses").withIndex("by_order").take(20)).filter((c) => c.published);
+    const lessonsByCourse = new Map<string, Doc<"lessons">[]>();
+    for (const c of courses) {
+      const lessons = await ctx.db
+        .query("lessons")
+        .withIndex("by_course", (q) => q.eq("courseId", c._id))
+        .take(100);
+      lessonsByCourse.set(c._id, lessons.sort((a, b) => a.order - b.order));
+    }
+    // Lessons later in a course are a little harder.
+    const difficulty = (i: number) => 0.92 - i * 0.07;
+
+    async function learn(userId: string, clerk: string, plan: { course: (typeof courses)[number]; startDaysAgo: number; share: number }[], extraQuizDays: number[]) {
+      for (const { course, startDaysAgo, share } of plan) {
+        await ctx.db.insert("enrollments", { userId, clerkUserId: clerk, courseId: course._id, enrolledAt: at(startDaysAgo) });
+        const lessons = lessonsByCourse.get(course._id) ?? [];
+        const count = Math.round(lessons.length * share);
+        for (let i = 0; i < count; i++) {
+          const daysAgo = Math.max(0, Math.round(startDaysAgo - ((i + 1) * startDaysAgo) / (count + 1)));
+          const completedAt = at(daysAgo);
+          await ctx.db.insert("lessonProgress", {
+            userId,
+            clerkUserId: clerk,
+            courseId: course._id,
+            lessonId: lessons[i]._id,
+            completed: true,
+            completedAt,
+            updatedAt: completedAt,
+          });
+          const total = lessons[i].quiz?.length ?? 3;
+          const score = Math.min(total, Math.max(0, Math.round(total * (difficulty(i) - 0.15 + rand() * 0.3))));
+          await ctx.db.insert("quizAttempts", {
+            userId,
+            clerkUserId: clerk,
+            courseId: course._id,
+            lessonId: lessons[i]._id,
+            score,
+            total,
+            answers: Array.from({ length: total }, () => 0),
+            completedAt: completedAt + 600_000,
+          });
+        }
+      }
+      // Extra quiz retakes on other days, so the calendar and streak look lived in.
+      const all = plan.flatMap(({ course }) => lessonsByCourse.get(course._id) ?? []);
+      for (const daysAgo of extraQuizDays) {
+        const lesson = all[Math.floor(rand() * all.length)];
+        if (!lesson) continue;
+        const total = lesson.quiz?.length ?? 3;
+        await ctx.db.insert("quizAttempts", {
+          userId,
+          clerkUserId: clerk,
+          courseId: lesson.courseId,
+          lessonId: lesson._id,
+          score: Math.min(total, Math.round(total * (0.6 + rand() * 0.4))),
+          total,
+          answers: Array.from({ length: total }, () => 0),
+          completedAt: at(daysAgo),
+        });
+      }
+    }
+
+    // You: three courses on the go, active on most recent days.
+    const userId = `${issuer}|${clerkUserId}`;
+    await learn(
+      userId,
+      clerkUserId,
+      courses.slice(0, 3).map((course, i) => ({ course, startDaysAgo: 58 - i * 16, share: [1, 0.67, 0.34][i] ?? 0.3 })),
+      [0, 1, 2, 3, 5, 6, 9, 12, 13, 17, 20, 24, 27, 31, 33, 38, 41, 45, 50, 54],
+    );
+    if (courses[2]) {
+      await ctx.db.insert("trackedCourses", {
+        userId,
+        courseId: courses[2]._id,
+        targetDate: now + 21 * DAY,
+        createdAt: now - 20 * DAY,
+      });
+    }
+    if (courses[1]) {
+      await ctx.db.insert("trackedCourses", { userId, courseId: courses[1]._id, targetDate: now + 6 * DAY, createdAt: now - 30 * DAY });
+    }
+    await ctx.db.insert("learnerSettings", {
+      userId,
+      weeklyGoal: 4,
+      hiddenWidgets: [],
+      range: "30d",
+      updatedAt: now,
+    });
+
+    // 14 demo learners for the admin overview.
+    for (let n = 1; n <= 14; n++) {
+      const picks = courses.filter(() => rand() < 0.55);
+      await learn(
+        `demo|learner-${n}`,
+        `demo_learner_${n}`,
+        (picks.length ? picks : courses.slice(0, 1)).map((course) => ({
+          course,
+          startDaysAgo: 5 + Math.floor(rand() * 55),
+          share: rand(),
+        })),
+        Array.from({ length: Math.floor(rand() * 4) }, () => Math.floor(rand() * 40)),
+      );
+    }
+    return { learners: 15, courses: courses.length };
   },
 });
