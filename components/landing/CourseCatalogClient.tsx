@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, type CSSProperties } from "react";
 import { useQuery } from "convex/react";
 import { Check, ChevronDown, Search } from "lucide-react";
 import {
@@ -184,8 +184,10 @@ export function CourseCatalogClient() {
             </p>
           </div>
         ) : (
-          filtered.map((course) => (
-            <CourseCard key={course._id} course={course as CourseCardItem} />
+          filtered.map((course, i) => (
+            <div key={course._id} className="enter" style={{ "--enter-i": i } as CSSProperties}>
+              <CourseCard course={course as CourseCardItem} />
+            </div>
           ))
         )}
       </div>

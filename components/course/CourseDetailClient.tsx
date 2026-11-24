@@ -132,7 +132,8 @@ export function CourseDetailClient({ slug }: { slug: string }) {
   );
 
   return (
-    <>
+    // Fades the page in when the course arrives, instead of swapping out the skeleton.
+    <div className="enter">
       <nav aria-label="Breadcrumb" className="mb-4 text-sm text-mist">
         <ol className="flex min-w-0 items-center gap-2">
           <li>
@@ -328,7 +329,7 @@ export function CourseDetailClient({ slug }: { slug: string }) {
                   <ProgressValue className="text-sm font-semibold tabular-nums" />
                 </div>
                 <ProgressTrack className="mt-3 h-2 w-full overflow-hidden rounded-full bg-subtle">
-                  <ProgressIndicator className="h-full rounded-full bg-sun" />
+                  <ProgressIndicator className="h-full rounded-full bg-sun transition-[width] duration-250 ease-(--ease-out) motion-reduce:transition-none" />
                 </ProgressTrack>
               </Progress>
               <p className="mt-2 text-xs text-mist">
@@ -357,6 +358,6 @@ export function CourseDetailClient({ slug }: { slug: string }) {
           </div>
         </aside>
       </div>
-    </>
+    </div>
   );
 }

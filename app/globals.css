@@ -357,6 +357,72 @@ p {
   }
 }
 
+/* ── Scroll reveal (landing page only) ─────────────────────────────────
+   Driven by scroll position, so it needs no JavaScript and never hides content
+   before hydration. Browsers without scroll timelines just show the page still.
+   --reveal-i offsets items in a row so they arrive one after another. */
+@keyframes if-reveal {
+  from {
+    opacity: 0;
+    translate: 0 16px;
+  }
+}
+@keyframes if-reveal-fade {
+  from {
+    opacity: 0;
+  }
+}
+@supports (animation-timeline: view()) {
+  .reveal {
+    animation-name: if-reveal;
+    animation-duration: auto;
+    animation-timing-function: var(--ease-out);
+    animation-fill-mode: both;
+    animation-timeline: view();
+    animation-range: entry calc(10% + var(--reveal-i, 0) * 6%) cover 28%;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .reveal {
+      animation-name: if-reveal-fade;
+    }
+  }
+}
+
+/* ── Weekly goal reached: one short pulse of the count ─────────────── */
+@keyframes if-goal-pop {
+  40% {
+    scale: 1.06;
+  }
+}
+.goal-pop {
+  animation: if-goal-pop 320ms var(--ease-out);
+}
+@media (prefers-reduced-motion: reduce) {
+  .goal-pop {
+    animation: none;
+  }
+}
+
+/* ── Enter: content arriving after a loading state ─────────────────────
+   Plays once on mount (@starting-style). --enter-i staggers the first six. */
+.enter {
+  transition:
+    opacity 250ms var(--ease-out),
+    translate 250ms var(--ease-out);
+  transition-delay: calc(min(var(--enter-i, 0), 5) * 40ms);
+  @starting-style {
+    opacity: 0;
+    translate: 0 8px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .enter {
+    @starting-style {
+      translate: none;
+    }
+  }
+}
+
 /* ── Lesson markdown ────────────────────────────────────────────────── */
 .lesson-prose {
   color: var(--ink);

@@ -85,7 +85,7 @@ function CourseOutline({
           <ProgressValue className="text-mist tabular-nums" />
         </div>
         <ProgressTrack className="mt-2.5 h-1.5 w-full overflow-hidden rounded-full bg-subtle">
-          <ProgressIndicator className="h-full rounded-full bg-sun" />
+          <ProgressIndicator className="h-full rounded-full bg-sun transition-[width] duration-250 ease-(--ease-out) motion-reduce:transition-none" />
         </ProgressTrack>
       </Progress>
 

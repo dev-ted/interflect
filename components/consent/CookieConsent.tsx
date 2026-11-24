@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useSyncExternalStore } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import Script from "next/script";
 import { Cookie } from "lucide-react";
-import { getServerSnapshot, getSnapshot, openConsentSettings, setConsent, subscribe } from "@/lib/consent";
+import { type Consent, getServerSnapshot, getSnapshot, openConsentSettings, setConsent, subscribe } from "@/lib/consent";
 
 // Google Tag Manager container. Production only, so local work never sends test traffic.
 const GTM_ID = process.env.NODE_ENV === "production" ? "GTM-N73G9KCG" : null;
@@ -14,6 +14,16 @@ export function CookieConsent() {
   const granted = state.startsWith("granted");
   const open = state.endsWith(":open");
   const reopened = open && !state.startsWith("unset");
+
+  // Leave the way it arrived: fade and drop for 150ms, then save the choice.
+  const [closing, setClosing] = useState(false);
+  const choose = (value: Consent) => {
+    setClosing(true);
+    window.setTimeout(() => {
+      setConsent(value);
+      setClosing(false);
+    }, 150);
+  };
 
   const firstAction = useRef<HTMLButtonElement>(null);
   useEffect(() => {
@@ -32,7 +42,10 @@ export function CookieConsent() {
       {open && (
         <section
           aria-labelledby="cookie-consent-title"
-          className="card fixed inset-x-4 bottom-4 z-50 p-5 transition-[opacity,translate] duration-200 ease-(--ease-out) starting:translate-y-2 starting:opacity-0 motion-reduce:starting:translate-y-0 sm:inset-x-auto sm:bottom-6 sm:left-6 sm:max-w-md sm:p-6"
+          inert={closing}
+          className={`card fixed inset-x-4 bottom-4 z-50 p-5 transition-[opacity,translate] ease-(--ease-out) starting:translate-y-2 starting:opacity-0 motion-reduce:starting:translate-y-0 sm:inset-x-auto sm:bottom-6 sm:left-6 sm:max-w-md sm:p-6 ${
+            closing ? "translate-y-2 opacity-0 duration-150 motion-reduce:translate-y-0" : "duration-200"
+          }`}
         >
           <div className="flex items-start gap-3">
             <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-subtle" aria-hidden="true">
@@ -52,12 +65,12 @@ export function CookieConsent() {
             <button
               ref={firstAction}
               type="button"
-              onClick={() => setConsent("denied")}
+              onClick={() => choose("denied")}
               className="btn btn-secondary"
             >
               Decline
             </button>
-            <button type="button" onClick={() => setConsent("granted")} className="btn btn-primary">
+            <button type="button" onClick={() => choose("granted")} className="btn btn-primary">
               Accept analytics
             </button>
           </div>

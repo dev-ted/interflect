@@ -1,5 +1,6 @@
 "use client";
 
+import type { CSSProperties } from "react";
 import Link from "next/link";
 import { useQuery } from "convex/react";
 import { Check, ExternalLink, Loader2 } from "lucide-react";
@@ -9,6 +10,10 @@ import { PRO_ENABLED, TUTOR_ENABLED } from "@/convex/lib/features";
 import { LogoMark } from "@/components/brand/Logo";
 import { CourseCard, type CourseCardItem } from "./CourseCard";
 import { StartLearning } from "./HeroShowcase";
+
+/** Staggers items in a row of scroll reveals (see .reveal in globals.css). */
+const revealAt = (i: number) => ({ "--reveal-i": i }) as CSSProperties;
+const enterAt = (i: number) => ({ "--enter-i": i }) as CSSProperties;
 
 /* ── Specimens: each skill shown as a small piece of real interface ───── */
 
@@ -189,7 +194,7 @@ export function LandingSections() {
     <>
       {/* What you'll learn: a modular grid, each cell a working specimen */}
       <section className="mx-auto max-w-6xl px-4 pt-12 pb-24 sm:px-6">
-        <div className="max-w-2xl">
+        <div className="reveal max-w-2xl">
           <h2 className="text-[2.25rem] leading-[1.1] font-semibold tracking-[-0.035em] text-ink sm:text-[2.75rem]">
             The skills behind every good interface
           </h2>
@@ -200,8 +205,12 @@ export function LandingSections() {
         </div>
 
         <div className="mt-12 grid gap-4 lg:grid-cols-3">
-          {SKILLS.map((skill) => (
-            <article key={skill.title} className={`card flex flex-col justify-between gap-8 p-6 sm:p-7 ${skill.span}`}>
+          {SKILLS.map((skill, i) => (
+            <article
+              key={skill.title}
+              style={revealAt(i % 3)}
+              className={`reveal card flex flex-col justify-between gap-8 p-6 sm:p-7 ${skill.span}`}
+            >
               <div className="flex min-h-28 items-end" aria-hidden="true">
                 {skill.specimen}
               </div>
@@ -217,7 +226,7 @@ export function LandingSections() {
       {/* Courses: one featured, the rest stacked beside it */}
       <section className="border-t border-line">
         <div className="mx-auto max-w-6xl px-4 py-24 sm:px-6">
-          <div className="flex flex-wrap items-end justify-between gap-4">
+          <div className="reveal flex flex-wrap items-end justify-between gap-4">
             <div className="max-w-xl">
               <h2 className="text-[2.25rem] leading-[1.1] font-semibold tracking-[-0.035em] text-ink">
                 Start with the fundamentals
@@ -234,7 +243,7 @@ export function LandingSections() {
           </div>
 
           {/* The featured course runs full width; the rest sit in an even row below. */}
-          <div className="mt-10 grid gap-4 md:grid-cols-3">
+          <div className="reveal mt-10 grid gap-4 md:grid-cols-3">
             {courses === undefined ? (
               <>
                 <div className="h-80 animate-pulse rounded-[14px] bg-subtle motion-reduce:animate-none md:col-span-3" />
@@ -246,11 +255,13 @@ export function LandingSections() {
               <p className="text-mist md:col-span-3">New courses are on the way.</p>
             ) : (
               <>
-                <div className="md:col-span-3">
+                <div className="enter md:col-span-3">
                   <CourseCard course={featured} wide />
                 </div>
-                {rest.slice(0, 3).map((course) => (
-                  <CourseCard key={course._id} course={course} />
+                {rest.slice(0, 3).map((course, i) => (
+                  <div key={course._id} className="enter" style={enterAt(i + 1)}>
+                    <CourseCard course={course} />
+                  </div>
                 ))}
               </>
             )}
@@ -261,12 +272,12 @@ export function LandingSections() {
       {/* How a lesson works: a real sequence, so it is numbered */}
       <section className="border-y border-line bg-subtle/50">
         <div className="mx-auto max-w-6xl px-4 py-24 sm:px-6">
-          <h2 className="max-w-xl text-[2.25rem] leading-[1.1] font-semibold tracking-[-0.035em] text-ink">
+          <h2 className="reveal max-w-xl text-[2.25rem] leading-[1.1] font-semibold tracking-[-0.035em] text-ink">
             How a lesson works
           </h2>
           <ol className="mt-12 grid gap-10 md:grid-cols-3 md:gap-8">
             {STEPS.map((step, i) => (
-              <li key={step.title} className="border-t border-line pt-6 first:border-accent">
+              <li key={step.title} style={revealAt(i)} className="reveal border-t border-line pt-6 first:border-accent">
                 <span className="font-mono text-xs text-mist tabular-nums">0{i + 1}</span>
                 <h3 className="mt-3 text-lg font-semibold text-ink">{step.title}</h3>
                 <p className="mt-2 leading-relaxed text-mist">{step.body}</p>
@@ -326,7 +337,7 @@ export function LandingSections() {
 
       {/* Instructor */}
       <section className="border-t border-line">
-        <div className="mx-auto grid max-w-6xl gap-8 px-4 py-20 sm:px-6 md:grid-cols-[auto_1fr] md:gap-12">
+        <div className="reveal mx-auto grid max-w-6xl gap-8 px-4 py-20 sm:px-6 md:grid-cols-[auto_1fr] md:gap-12">
           <span
             aria-hidden="true"
             className="grid h-20 w-20 place-items-center rounded-full bg-primary text-3xl font-semibold text-on-primary"
@@ -386,7 +397,7 @@ export function LandingSections() {
 
       {/* Closing panel */}
       <section className="px-4 pb-24 sm:px-6">
-        <div className="night relative mx-auto max-w-6xl overflow-hidden rounded-[20px] px-6 py-16 sm:px-12 sm:py-20">
+        <div className="reveal night relative mx-auto max-w-6xl overflow-hidden rounded-[20px] px-6 py-16 sm:px-12 sm:py-20">
           <div className="bg-grid absolute inset-0 opacity-50 [mask-image:linear-gradient(to_left,black,transparent_70%)]" aria-hidden="true" />
           <LogoMark className="absolute -right-6 -bottom-10 h-64 w-64 text-ink/90 sm:h-80 sm:w-80" />
           <div className="relative max-w-lg">

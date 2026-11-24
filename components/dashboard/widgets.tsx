@@ -175,6 +175,13 @@ export function GoalRing({ done, goal }: { done: number; goal: number }) {
   const c = 2 * Math.PI * r;
   const share = Math.min(1, done / goal);
   const met = done >= goal;
+  // Celebrate reaching the goal while the page is open, never on load: compare with the last render.
+  const [prevMet, setPrevMet] = useState(met);
+  const [celebrations, setCelebrations] = useState(0);
+  if (met !== prevMet) {
+    setPrevMet(met);
+    if (met) setCelebrations((n) => n + 1);
+  }
 
   const save = async () => {
     try {
@@ -240,7 +247,10 @@ export function GoalRing({ done, goal }: { done: number; goal: number }) {
           </svg>
           <div className="absolute inset-0 grid place-items-center text-center">
             <div>
-              <p className="text-3xl font-semibold tracking-[-0.03em] text-ink tabular-nums">
+              <p
+                key={celebrations}
+                className={`text-3xl font-semibold tracking-[-0.03em] text-ink tabular-nums ${celebrations ? "goal-pop" : ""}`}
+              >
                 {done}
                 <span className="text-lg text-mist">/{goal}</span>
               </p>
@@ -248,7 +258,7 @@ export function GoalRing({ done, goal }: { done: number; goal: number }) {
             </div>
           </div>
         </div>
-        <p className="text-sm text-mist" aria-live="polite">
+        <p className={`text-sm transition-colors duration-200 ${met ? "font-medium text-accent-ink" : "text-mist"}`} aria-live="polite">
           {met ? "Goal met. Nice work." : `${goal - done} more to reach your goal.`}
         </p>
       </div>
