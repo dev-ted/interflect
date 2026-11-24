@@ -402,11 +402,11 @@ export function LandingSections() {
       <section className="px-4 pb-24 sm:px-6">
         <div className="reveal night relative mx-auto max-w-6xl overflow-hidden rounded-[20px] px-6 py-16 sm:px-12 sm:py-20">
           <div className="bg-grid absolute inset-0 opacity-50 [mask-image:linear-gradient(to_left,black,transparent_70%)]" aria-hidden="true" />
-          {/* Same fade as the grid but full strength, so the streaks glow on the right. */}
+          {/* Same fade as the grid but full strength, so the streaks glow on the right. Columns 9 and 12 cover phones. */}
           <div className="absolute inset-0 [mask-image:linear-gradient(to_left,black,transparent_70%)]" aria-hidden="true">
-            <GridBeams rows={[[2, 7.5, 3.3], [3, 7, 1.2], [6, 6, 5.1], [9, 8.5, 4.4], [11, 7, 0.2], [13, 6.5, 2.6]]} cols={[[26, 7.5, 2.4], [30, 8, 0.5], [34, 6.5, 4.6], [38, 7, 3.7], [41, 8.5, 1.5], [44, 9, 5.9], [47, 7, 3.0]]} />
+            <GridBeams rows={[[2, 7.5, 3.3], [3, 7, 1.2], [6, 6, 5.1], [9, 8.5, 4.4], [11, 7, 0.2], [13, 6.5, 2.6]]} cols={[[9, 7, 1.0], [12, 8, 3.9], [26, 7.5, 2.4], [30, 8, 0.5], [34, 6.5, 4.6], [38, 7, 3.7], [41, 8.5, 1.5], [44, 9, 5.9], [47, 7, 3.0]]} />
           </div>
-          <LogoMark className="absolute -right-6 -bottom-10 h-64 w-64 text-ink/90 sm:h-80 sm:w-80" />
+          <LogoMark className="absolute -right-6 -bottom-10 hidden text-ink/90 sm:block sm:h-80 sm:w-80" />
           <div className="relative max-w-lg">
             <h2 className="text-[2.25rem] leading-[1.1] font-semibold tracking-[-0.035em] text-ink sm:text-[2.75rem]">
               Build your eye for good design.
