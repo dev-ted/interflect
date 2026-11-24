@@ -25,6 +25,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@ui-sdk/react/tooltip";
 import { usePreference } from "@ui-sdk/react/preferences";
 import { Logo } from "@/components/brand/Logo";
 import { ThemeToggle } from "@/components/brand/ThemeToggle";
+import { CookieSettingsButton } from "@/components/consent/CookieConsent";
 import { SidebarMobileDrawer, SidebarProvider } from "@/components/ui/sidebar";
 import { sidebarState } from "@/lib/color-scheme";
 import { isAdminRole, PRO_PLAN_SLUG } from "@/lib/auth";
@@ -156,6 +157,7 @@ function SidebarBody({ rail = false }: { rail?: boolean }) {
             <span className="text-xs text-mist">Theme</span>
             <ThemeToggle />
           </div>
+          <CookieSettingsButton className="px-1 text-xs text-mist rail-collapsed:hidden" />
           {rail && (
             <div className="hidden rail-collapsed:block">
               <ThemeToggle vertical />

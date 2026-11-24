@@ -1,12 +1,12 @@
 import { ClerkProvider } from "@clerk/nextjs";
 import type { Metadata } from "next";
 import { Instrument_Sans, JetBrains_Mono } from "next/font/google";
-import Script from "next/script";
 import { Suspense } from "react";
 import ConvexClientProvider from "@/components/ConvexClientProvider";
 import { PageContextProvider } from "@/components/PageContextProvider";
 import { AppPreferences } from "@/components/brand/AppPreferences";
 import { VukoraWidget } from "@/components/vukora/VukoraWidget";
+import { CookieConsent } from "@/components/consent/CookieConsent";
 import { TUTOR_ENABLED } from "@/convex/lib/features";
 import "./globals.css";
 
@@ -22,9 +22,6 @@ const jetbrainsMono = JetBrains_Mono({
   weight: ["400", "500"],
 });
 
-// Google Tag Manager. Production only, so local development doesn't send test traffic.
-const GTM_ID = process.env.NODE_ENV === "production" ? "GTM-N73G9KCG" : null;
-
 export const metadata: Metadata = {
   title: { default: "Interflect: think better, design better", template: "%s | Interflect" },
   description:
@@ -39,22 +36,6 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${instrument.variable} ${jetbrainsMono.variable} h-full`}
     >
       <body className="flex min-h-full flex-col">
-        {GTM_ID && (
-          <>
-            <Script id="gtm" strategy="afterInteractive">
-              {`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','${GTM_ID}');`}
-            </Script>
-            <noscript>
-              <iframe
-                src={`https://www.googletagmanager.com/ns.html?id=${GTM_ID}`}
-                height="0"
-                width="0"
-                style={{ display: "none", visibility: "hidden" }}
-                title="Google Tag Manager"
-              />
-            </noscript>
-          </>
-        )}
         <AppPreferences>
           <ClerkProvider
             appearance={{
@@ -76,6 +57,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             <ConvexClientProvider>
               <PageContextProvider>
                 {children}
+                <CookieConsent />
                 {TUTOR_ENABLED && (
                   <Suspense fallback={null}>
                     <VukoraWidget />

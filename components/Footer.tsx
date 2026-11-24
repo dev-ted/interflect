@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { PRO_ENABLED } from "@/convex/lib/features";
 import { Logo } from "@/components/brand/Logo";
+import { CookieSettingsButton } from "@/components/consent/CookieConsent";
 
 const LINKS = [
   { href: "/courses", label: "Courses" },
@@ -26,6 +27,7 @@ export function Footer() {
               {l.label}
             </Link>
           ))}
+          <CookieSettingsButton />
         </nav>
       </div>
       <div className="mx-auto flex max-w-6xl flex-wrap justify-between gap-2 border-t border-line px-4 py-5 text-xs text-mist sm:px-6">
