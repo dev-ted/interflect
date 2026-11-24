@@ -321,6 +321,46 @@ p {
   background-position: -1px -1px;
 }
 
+/* Light streaks flowing along the grid lines (GridBeams). Lines sit at 24n - 1px, matching .bg-grid. */
+.grid-beam {
+  position: absolute;
+  --len: 220px;
+  --beam: linear-gradient(var(--dir), transparent, color-mix(in oklab, var(--accent) 90%, white) 70%, white 96%, transparent);
+  background: var(--beam) no-repeat;
+  filter: drop-shadow(0 0 3px var(--accent)) drop-shadow(0 0 8px var(--accent));
+  animation: var(--anim) var(--dur) cubic-bezier(.77, 0, .175, 1) var(--delay) infinite backwards;
+}
+.grid-beam-x {
+  --dir: to right;
+  --anim: grid-beam-x;
+  left: 0;
+  right: 0;
+  top: calc(var(--at) * 24px - 1px);
+  height: 1px;
+  background-size: var(--len) 100%;
+}
+.grid-beam-y {
+  --dir: to bottom;
+  --anim: grid-beam-y;
+  top: 0;
+  bottom: 0;
+  left: calc(var(--at) * 24px - 1px);
+  width: 1px;
+  background-size: 100% var(--len);
+}
+/* Travel for the first 60% of each cycle, then rest off-screen so the grid breathes between passes. */
+@keyframes grid-beam-x {
+  0% { background-position: calc(-1 * var(--len)) 0; }
+  60%, 100% { background-position: calc(100% + var(--len)) 0; }
+}
+@keyframes grid-beam-y {
+  0% { background-position: 0 calc(-1 * var(--len)); }
+  60%, 100% { background-position: 0 calc(100% + var(--len)); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .grid-beam { display: none; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

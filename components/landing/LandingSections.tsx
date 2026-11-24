@@ -1,6 +1,7 @@
 "use client";
 
 import type { CSSProperties } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { useQuery } from "convex/react";
 import { Check, ExternalLink, Loader2 } from "lucide-react";
@@ -9,6 +10,7 @@ import { TUTOR } from "@/lib/auth";
 import { PRO_ENABLED, TUTOR_ENABLED } from "@/convex/lib/features";
 import { LogoMark } from "@/components/brand/Logo";
 import { CourseCard, type CourseCardItem } from "./CourseCard";
+import { GridBeams } from "./GridBeams";
 import { StartLearning } from "./HeroShowcase";
 
 /** Staggers items in a row of scroll reveals (see .reveal in globals.css). */
@@ -338,16 +340,17 @@ export function LandingSections() {
       {/* Instructor */}
       <section className="border-t border-line">
         <div className="reveal mx-auto grid max-w-6xl gap-8 px-4 py-20 sm:px-6 md:grid-cols-[auto_1fr] md:gap-12">
-          <span
-            aria-hidden="true"
-            className="grid h-20 w-20 place-items-center rounded-full bg-primary text-3xl font-semibold text-on-primary"
-          >
-            {TUTOR.name[0]}
-          </span>
+          <Image
+            src={TUTOR.avatar}
+            alt={`Illustrated avatar of ${TUTOR.name}`}
+            width={128}
+            height={128}
+            className="h-32 w-32 -rotate-3 rounded-2xl border border-line shadow-sm motion-safe:transition-transform motion-safe:duration-200 motion-safe:ease-[cubic-bezier(.23,1,.32,1)] hover:rotate-3 hover:scale-105"
+          />
           <div className="max-w-2xl">
             <h2 className="text-2xl font-semibold tracking-[-0.03em] text-ink">Behind Interflect</h2>
             <p className="mt-1 text-sm text-mist">
-              {TUTOR.name}, {TUTOR.role.toLowerCase()}, @{TUTOR.handle}
+              {TUTOR.name} <span className="font-mono text-accent-ink">“{TUTOR.nickname}”</span>, {TUTOR.role.toLowerCase()}
             </p>
             <p className="mt-5 text-xl leading-snug font-medium tracking-[-0.01em] text-ink">{TUTOR.tagline}</p>
             <p className="mt-3 text-lg leading-relaxed text-mist">{TUTOR.bio}</p>
@@ -399,6 +402,10 @@ export function LandingSections() {
       <section className="px-4 pb-24 sm:px-6">
         <div className="reveal night relative mx-auto max-w-6xl overflow-hidden rounded-[20px] px-6 py-16 sm:px-12 sm:py-20">
           <div className="bg-grid absolute inset-0 opacity-50 [mask-image:linear-gradient(to_left,black,transparent_70%)]" aria-hidden="true" />
+          {/* Same fade as the grid but full strength, so the streaks glow on the right. */}
+          <div className="absolute inset-0 [mask-image:linear-gradient(to_left,black,transparent_70%)]" aria-hidden="true">
+            <GridBeams rows={[[2, 7.5, 3.3], [3, 7, 1.2], [6, 6, 5.1], [9, 8.5, 4.4], [11, 7, 0.2], [13, 6.5, 2.6]]} cols={[[26, 7.5, 2.4], [30, 8, 0.5], [34, 6.5, 4.6], [38, 7, 3.7], [41, 8.5, 1.5], [44, 9, 5.9], [47, 7, 3.0]]} />
+          </div>
           <LogoMark className="absolute -right-6 -bottom-10 h-64 w-64 text-ink/90 sm:h-80 sm:w-80" />
           <div className="relative max-w-lg">
             <h2 className="text-[2.25rem] leading-[1.1] font-semibold tracking-[-0.035em] text-ink sm:text-[2.75rem]">

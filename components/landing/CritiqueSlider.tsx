@@ -3,6 +3,11 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Play } from "lucide-react";
 import { Slider, SliderControl, SliderThumb, SliderTrack } from "@ui-sdk/react/slider";
+import { GridBeams } from "./GridBeams";
+
+// Rendered in both the before and after layers with the same timing, so a streak crosses the seam unbroken.
+const PANEL_ROWS: [number, number, number][] = [[3, 6, 0.6], [7, 7, 4.1], [11, 6.5, 2.0], [15, 7.5, 3.4]];
+const PANEL_COLS: [number, number, number][] = [[2, 6.5, 3.0], [5, 7, 2.2], [10, 6, 0.3], [14, 6.5, 4.8], [17, 7.5, 1.4]];
 
 /** A redline: the measured gap between two blocks, labelled like a design spec. */
 function Gap({ size, label = true }: { size: 8 | 16 | 24; label?: boolean }) {
@@ -119,6 +124,7 @@ export function CritiqueSlider() {
   return (
     <figure className="w-full">
       <div className="bg-grid relative aspect-[5/6] overflow-hidden rounded-[20px] border border-line bg-subtle select-none sm:aspect-square">
+        <GridBeams rows={PANEL_ROWS} cols={PANEL_COLS} />
         <div className="absolute inset-0 grid place-items-center">
           {/* An invisible copy of the refined card sizes the rough one, so both line up at the seam. */}
           <div className="grid w-[min(340px,84%)]">
@@ -135,6 +141,7 @@ export function CritiqueSlider() {
           style={{ clipPath: `inset(0 0 0 ${split}%)` }}
         >
           <div className="bg-grid absolute inset-0" aria-hidden="true" />
+          <GridBeams rows={PANEL_ROWS} cols={PANEL_COLS} />
           <div className="relative w-[min(340px,84%)]">
             <AfterCard />
           </div>
