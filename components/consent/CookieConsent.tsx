@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import Link from "next/link";
 import Script from "next/script";
 import { Cookie } from "lucide-react";
 import { type Consent, getServerSnapshot, getSnapshot, openConsentSettings, setConsent, subscribe } from "@/lib/consent";
@@ -57,7 +58,10 @@ export function CookieConsent() {
               </h2>
               <p className="mt-1.5 text-sm leading-relaxed text-mist text-pretty">
                 We’d like to use analytics to see which lessons help and where people get stuck. Those cookies
-                only load if you accept. Sign-in cookies stay on, because the site needs them to work.
+                only load if you accept. Sign-in cookies stay on, because the site needs them to work.{" "}
+                <Link href="/cookies" className="text-accent-ink underline underline-offset-4">
+                  Cookie policy
+                </Link>
               </p>
             </div>
           </div>

@@ -8,6 +8,9 @@ const LINKS = [
   ...(PRO_ENABLED ? [{ href: "/pricing", label: "Pricing" }] : []),
   { href: "/dashboard", label: "My learning" },
   { href: "/brand", label: "Brand" },
+  { href: "/terms", label: "Terms" },
+  { href: "/privacy", label: "Privacy" },
+  { href: "/cookies", label: "Cookies" },
 ];
 
 export function Footer() {
